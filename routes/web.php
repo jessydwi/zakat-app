@@ -10,6 +10,10 @@ use App\Http\Controllers\AdminController;
 |--------------------------------------------------------------------------
 */
 
+Route::get('/home', function () {
+    return view('welcome'); // atau view publik lain
+})->name('home');
+
 // Redirect root URL langsung ke halaman login
 Route::get('/', function () {
     return redirect()->route('login');
