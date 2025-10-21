@@ -11,11 +11,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $totalZakat = TransaksiZakat::sum('nominal');
-        $jumlahMuzakki = Muzakki::count();
-        $jumlahMustahik = Mustahik::count();
-
-        return view('admin.dashboard', compact('totalZakat', 'jumlahMuzakki', 'jumlahMustahik'));
+        return view('admin.dashboard');
     }
 }
 
