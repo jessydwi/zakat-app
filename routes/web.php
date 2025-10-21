@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MuzakkiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,9 +12,13 @@ use App\Http\Controllers\AdminController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/home', function () {
-    return view('welcome'); // atau view publik lain
-})->name('home');
+// Route login
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest')
+    ->name('login');
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('guest');
 
 // Redirect root URL langsung ke halaman login
 Route::get('/', function () {
@@ -39,6 +45,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Tambahan route admin bisa kamu letakkan di sini
     // Route::resource('/zakat', ZakatController::class);
     // Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
+});
+
+Route::middleware(['auth', 'role:muzakki'])->prefix('muzakki')->group(function () {
+    Route::get('/dashboard', [MuzakkiController::class, 'dashboard'])->name('muzakki.dashboard');
 });
 
 // Autentikasi Breeze
