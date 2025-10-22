@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\MetodePembayaran;
+
 
 class TransaksiZakat extends Model
 {
@@ -33,7 +35,7 @@ class TransaksiZakat extends Model
     }
 
     // Relasi ke metode pembayaran
-    public function metodePembayaran(): BelongsTo
+    public function metode(): BelongsTo
     {
         return $this->belongsTo(MetodePembayaran::class, 'metode_id');
     }

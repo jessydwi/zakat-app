@@ -21,4 +21,10 @@ class Muzakki extends Model
     {
         return $this->hasMany(TransaksiZakat::class, 'muzakki_id');
     }
+
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriMustahik::class, 'kategori_id');
+    }
+
 }

@@ -83,7 +83,7 @@
         data: {
             labels: [
                 @foreach($grafikZakat as $data)
-                    "{{ \Carbon\Carbon::create()->month($data->bulan)->translatedFormat('F') }}",
+                    "{{\Carbon\Carbon::createFromDate(null, $data->bulan)->translatedFormat('F') }}",
                 @endforeach
             ],
             datasets: [{
