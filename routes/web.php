@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\MuzakkiController;
+use App\Http\Controllers\MuzakiController;
+use App\Http\Controllers\TransaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,8 +48,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 });
 
-Route::middleware(['auth', 'role:muzakki'])->prefix('muzakki')->group(function () {
-    Route::get('/dashboard', [MuzakkiController::class, 'dashboard'])->name('muzakki.dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/muzaki/dashboard', [MuzakiController::class, 'dashboard'])->name('muzaki.dashboard');
+    Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('muzaki.bayar');
+    Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('muzaki.kalkulator');
+    Route::get('/riwayat', [MuzakiController::class, 'riwayat'])->name('muzaki.riwayat');
+    Route::get('/informasi-zakat', [MuzakiController::class, 'informasi'])->name('muzaki.informasi');
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
 });
 
 // Autentikasi Breeze
