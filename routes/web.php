@@ -69,5 +69,9 @@ Route::middleware(['auth', 'role:muzakki'])->prefix('muzakki')->group(function (
     Route::get('/dashboard', [MuzakkiController::class, 'dashboard'])->name('muzakki.dashboard');
 });
 
+Route::get('/home', function () {
+    return view('publish');
+})->name('publish');
+
 // Autentikasi Breeze
 require __DIR__.'/auth.php';
