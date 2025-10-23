@@ -48,6 +48,10 @@
                 placeholder="Contoh: 081234567890 atau email@domain.com" required>
         </div>
 
+<!-- Hidden Muzakki ID -->
+<input type="hidden" name="muzakki_id" value="{{ auth()->id() }}">
+
+
         <!-- Tombol Submit -->
         <div class="pt-2">
             <button type="submit"

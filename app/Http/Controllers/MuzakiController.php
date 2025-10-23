@@ -82,7 +82,7 @@ class MuzakiController extends Controller
 
         $jenisZakat = JenisZakat::all();
 
-        return view('muzaki.form-pembayaran', compact('jenisZakat'));
+        return view('muzaki.form-pembayaran', compact('jenisZakat',));
     }
 
     public function kalkulator()
