@@ -1,10 +1,12 @@
 <div>
+    {{-- Flash Message --}}
     @if (session()->has('success'))
         <div class="mb-4 px-4 py-3 bg-green-100 text-green-800 rounded font-semibold">
             {{ session('success') }}
         </div>
     @endif
 
+    {{-- Form Distribusi --}}
     <form wire:submit.prevent="submit" class="space-y-5">
         {{-- Mustahik --}}
         <div>
@@ -30,7 +32,7 @@
             @error('jenis_bantuan_id') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
         </div>
 
-        {{-- Jumlah --}}
+        {{-- Jumlah (kecuali uang-tunai & beasiswa) --}}
         @unless(in_array($jenis_bantuan_slug, ['uang-tunai', 'beasiswa']))
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -53,12 +55,16 @@
             @error('tanggal') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
         </div>
 
-        {{-- Input Detail --}}
-        @includeIf('livewire.detail-form.' . $jenis_bantuan_slug)
+        {{-- Form Modular Berdasarkan Jenis Bantuan --}}
+        @isset($jenis_bantuan_slug)
+            <div wire:key="form-{{ $jenis_bantuan_slug }}">
+                @includeIf('livewire.detail-form.' . $jenis_bantuan_slug)
+            </div>
+        @endisset
 
         {{-- Tombol Submit --}}
         <div class="pt-4">
-            <button type="submit" class="bg-emerald-600 text-white px-5 py-2 rounded hover:bg-emerald-700 transition">
+            <button type="submit" wire:loading.attr="disabled" class="bg-emerald-600 text-white px-5 py-2 rounded hover:bg-emerald-700 transition">
                 💾 Simpan Distribusi
             </button>
         </div>

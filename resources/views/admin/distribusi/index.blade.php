@@ -11,7 +11,7 @@
             🖨️ Cetak Laporan
         </a>
         <a href="{{ route('admin.dashboard') }}" class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
-            ← Kembali ke Dashboard
+            ← Kembali
         </a>
     </div>
 

@@ -61,21 +61,20 @@
     </div>
 
     {{-- Distribusi Zakat --}}
-    <div class="bg-white rounded-2xl shadow-xl p-8">
-        <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center gap-3">
-                <i class="fas fa-share text-blue-600 text-2xl"></i>
-                <h2 class="text-2xl font-bold text-blue-800">Distribusi Zakat ke Mustahik</h2>
-            </div>
-
-            <a href="{{ route('admin.distribusi.index') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                📋 Lihat Detail Distribusi
-            </a>
+<div class="bg-white rounded-2xl shadow-xl p-8">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-share text-blue-600 text-2xl"></i>
+            <h2 class="text-2xl font-bold text-blue-800">Distribusi Zakat ke Mustahik</h2>
         </div>
+        <a href="{{ route('admin.distribusi.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            + Tambah Distribusi
+        </a>
+    </div>
 
-        {{-- Komponen Form Distribusi --}}
-        @livewire('zakat-distribusi-form')
-
+    {{-- Tabel Index Distribusi --}}
+    @livewire('distribusi-zakat-table')
+</div>
 
     {{-- Cetak Bukti & Laporan --}}
     <div class="bg-white rounded-2xl shadow-xl p-8">

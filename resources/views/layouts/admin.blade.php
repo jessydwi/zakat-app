@@ -5,6 +5,7 @@
     <title>@yield('title') - Zakat Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <!-- Tambahkan Font Awesome untuk ikon yang lebih kaya -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -39,7 +40,7 @@
 
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-72 bg-white text-emerald-800 shadow-2xl border-r border-emerald-200 rounded-r-xl transform transition-transform duration-300 ease-in-out">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white text-emerald-800 shadow-2xl border-r border-emerald-200 rounded-r-xl transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 -translate-x-full md:block">
             <div class="p-6 text-2xl font-bold tracking-wide border-b border-emerald-200 flex items-center gap-3">
                 <i class="fas fa-mosque text-emerald-600 text-3xl animate-pulse"></i>
                 <span class="text-emerald-700">ZAKAT SYSTEM</span>
@@ -70,7 +71,7 @@
                     <span>Manajemen User</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
                 </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
+                <a href="{{ route('admin.pengaturan.index') }}" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
                     <i class="fas fa-cogs text-emerald-600 group-hover:scale-110 transition-transform duration-200"></i>
                     <span>Pengaturan</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
@@ -82,29 +83,38 @@
             </div>
         </aside>
 
+        <!-- Overlay for mobile -->
+        <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col md:ml-0">
             <!-- Topbar -->
             <header class="bg-white shadow-xl px-8 py-5 flex justify-between items-center border-b border-emerald-200 rounded-bl-xl">
-                <div class="flex-1">
-                    <nav class="flex mb-2" aria-label="Breadcrumb">
-                        <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                            <li class="inline-flex items-center">
-                                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-emerald-700 hover:text-emerald-900">
-                                    <i class="fas fa-home mr-2"></i>
-                                    Dashboard
-                                </a>
-                            </li>
-                            <li>
-                                <div class="flex items-center">
-                                    <i class="fas fa-chevron-right text-emerald-400 mx-1"></i>
-                                    <span class="text-sm font-medium text-emerald-500">@yield('title')</span>
-                                </div>
-                            </li>
-                        </ol>
-                    </nav>
-                    <h1 class="text-3xl font-bold text-emerald-900 tracking-tight">@yield('title')</h1>
-                    <p class="text-sm text-gray-600 mt-1">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
+                <div class="flex items-center">
+                    <!-- Hamburger Menu Button -->
+                    <button id="hamburger" class="md:hidden mr-4 p-2 text-emerald-600 hover:text-emerald-800 transition-colors duration-200" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div class="flex-1">
+                        <nav class="flex mb-2" aria-label="Breadcrumb">
+                            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                                <li class="inline-flex items-center">
+                                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center text-sm font-medium text-emerald-700 hover:text-emerald-900">
+                                        <i class="fas fa-home mr-2"></i>
+                                        Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-chevron-right text-emerald-400 mx-1"></i>
+                                        <span class="text-sm font-medium text-emerald-500">@yield('title')</span>
+                                    </div>
+                                </li>
+                            </ol>
+                        </nav>
+                        <h1 class="text-3xl font-bold text-emerald-900 tracking-tight">@yield('title')</h1>
+                        <p class="text-sm text-gray-600 mt-1">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
+                    </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Notification Bell -->
@@ -135,6 +145,16 @@
     </div>
 
     @stack('scripts')
+    @livewireScripts
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+    </script>
 
 </body>
 </html>

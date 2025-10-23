@@ -11,6 +11,10 @@ use App\Http\Controllers\MuzakkiController;
 use App\Http\Controllers\Admin\ManajemenMustahikController;
 use App\Http\Controllers\Admin\LaporanZakatController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\KetentuanZakatController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +64,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/laporan', [LaporanZakatController::class, 'index'])->name('laporan.index');
     Route::resource('users', UserController::class);
 
+    Route::get('pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::post('pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
+
+    Route::get('pengaturan/ketentuan-zakat', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
+    Route::post('pengaturan/ketentuan-zakat', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
+    Route::put('pengaturan/ketentuan-zakat/{ketentuan}', [KetentuanZakatController::class, 'update'])->name('ketentuan.update');
+    Route::delete('pengaturan/ketentuan-zakat/{ketentuan}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
+    Route::get('/admin/pengaturan/ketentuan/{ketentuan}/edit', [KetentuanZakatController::class, 'edit'])->name('admin.ketentuan.edit');
 
 
 });

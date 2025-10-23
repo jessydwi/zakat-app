@@ -1,7 +1,2 @@
 import './bootstrap';
-
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
+// Jangan import Alpine manual, biarkan Livewire yang inject
