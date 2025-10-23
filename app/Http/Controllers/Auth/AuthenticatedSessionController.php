@@ -51,6 +51,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home'); // kembali ke halaman publik
+        return redirect()->route('welcome'); // kembali ke halaman publik
     }
 }

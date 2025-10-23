@@ -9,7 +9,13 @@ class JenisZakat extends Model
 {
     protected $table = 'jenis_zakat';
 
-    protected $fillable = ['nama_jenis', 'deskripsi', 'kadar_zakat', 'nisab'];
+    protected $fillable = [
+        'nama_jenis',
+        'deskripsi',
+        'persentase',
+        'kadar_zakat',
+        'nisab'
+    ];
 
     public $timestamps = false;
 

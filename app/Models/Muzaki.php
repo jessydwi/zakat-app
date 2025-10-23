@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Muzakki extends Model
+class Muzaki extends Model
 {
-    protected $table = 'muzakki';
+    protected $table = 'muzaki';
 
     protected $fillable = [
         'nama',
@@ -19,7 +19,7 @@ class Muzakki extends Model
 
     public function transaksi(): HasMany
     {
-        return $this->hasMany(TransaksiZakat::class, 'muzakki_id');
+        return $this->hasMany(TransaksiZakat::class, 'muzaki_id');
     }
 
     public function kategori()

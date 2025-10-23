@@ -22,20 +22,18 @@ class TransaksiZakat extends Model
 
     public $timestamps = true;
 
-    // Relasi ke muzakki
     public function muzakki(): BelongsTo
     {
         return $this->belongsTo(Muzakki::class);
     }
 
-    // Relasi ke jenis zakat
     public function jenisZakat(): BelongsTo
     {
         return $this->belongsTo(JenisZakat::class);
     }
 
     // Relasi ke metode pembayaran
-    public function metode(): BelongsTo
+    public function metodePembayaran(): BelongsTo
     {
         return $this->belongsTo(MetodePembayaran::class, 'metode_id');
     }
