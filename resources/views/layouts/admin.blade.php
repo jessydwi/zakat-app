@@ -50,22 +50,22 @@
                     <span>Dashboard</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
                 </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
+                <a href="{{ route('admin.manajemen-zakat.index') }}" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
                     <i class="fas fa-hand-holding-heart text-emerald-600 group-hover:scale-110 transition-transform duration-200"></i>
                     <span>Manajemen Zakat</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
                 </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
+                <a href="{{ route('admin.manajemen-mustahik.index') }}" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
                     <i class="fas fa-users text-emerald-600 group-hover:scale-110 transition-transform duration-200"></i>
                     <span>Manajemen Mustahiq</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
                 </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
+                <a href="{{ route('admin.laporan.index') }}" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
                     <i class="fas fa-chart-line text-emerald-600 group-hover:scale-110 transition-transform duration-200"></i>
                     <span>Laporan & Rekapitulasi</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
                 </a>
-                <a href="#" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
+                <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-emerald-100 hover:shadow-lg transition-all duration-300 group relative">
                     <i class="fas fa-user-cog text-emerald-600 group-hover:scale-110 transition-transform duration-200"></i>
                     <span>Manajemen User</span>
                     <div class="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
@@ -133,6 +133,8 @@
             </main>
         </div>
     </div>
+
+    @stack('scripts')
 
 </body>
 </html>

@@ -21,4 +21,10 @@ class Muzaki extends Model
     {
         return $this->hasMany(TransaksiZakat::class, 'muzaki_id');
     }
+
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriMustahik::class, 'kategori_id');
+    }
+
 }

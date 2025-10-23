@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller; // ✅ Tambahkan ini
 use Illuminate\Http\Request;
 use App\Models\Muzakki;
 use App\Models\Mustahik;
