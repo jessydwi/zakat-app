@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Muzaki extends Model
 {
-    protected $table = 'muzaki';
+    protected $table = 'muzakki';
 
     protected $fillable = [
         'nama',

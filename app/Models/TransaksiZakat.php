@@ -24,7 +24,7 @@ class TransaksiZakat extends Model
 
     public function muzakki(): BelongsTo
     {
-        return $this->belongsTo(Muzakki::class);
+        return $this->belongsTo(Muzaki::class);
     }
 
     public function jenisZakat(): BelongsTo
