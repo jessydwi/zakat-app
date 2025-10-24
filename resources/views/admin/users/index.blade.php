@@ -27,8 +27,8 @@
             <td class="px-4 py-2 capitalize">{{ $u->role }}</td>
             <td class="px-4 py-2">
                 <span class="px-2 py-1 rounded text-xs font-semibold
-                    {{ $u->is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                    {{ $u->is_active ? 'Aktif' : 'Nonaktif' }}
+                    {{ $u->is_active ? 'bg-green-100 text-green-700' : 'bg-green-100 text-green-700' }}">
+                    {{ $u->is_active ? 'Aktif' : 'Aktif' }}
                 </span>
             </td>
             <td class="px-4 py-2 flex gap-2">
