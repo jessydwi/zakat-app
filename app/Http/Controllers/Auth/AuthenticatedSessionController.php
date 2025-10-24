@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             case 'mustahiq':
                 return redirect()->route('mustahiq.dashboard');
             default:
-                return redirect()->route('login');
+                return redirect()->route('publish');
         }
     }
 

@@ -204,28 +204,70 @@
                     <i class="bi bi-info-circle-fill me-2"></i>Informasi Lengkap Zakat: Pintu Berkah dan Keberkahan
                   </h3>
                   <p class="text-center elegant-text mb-4">
-                      Zakat adalah salah satu dari lima rukun Islam yang wajib dilaksanakan oleh setiap muslim yang mampu. Ia bukan hanya kewajiban, melainkan investasi spiritual yang membawa pahala abadi dan manfaat sosial yang luar biasa. Mari kita eksplorasi dunia zakat dengan lebih mendalam!
+                    Zakat adalah bagian tertentu dari harta yang wajib dikeluarkan oleh setiap muslim apabila telah mencapai syarat yang ditetapkan. Sebagai salah satu rukun Islam, Zakat ditunaikan untuk diberikan kepada golongan yang berhak menerimanya (asnaf).
                   </p>
 
                   <!-- Pengantar Zakat -->
-                  <div class="row mb-5">
-                      <div class="col-md-6">
-                          <h5 class="fw-bold text-primary">Apa Itu Zakat?</h5>
-                          <p class="elegant-text">
-                              Zakat secara harfiah berarti "bersih" atau "tumbuh". Ia adalah kewajiban membagikan sebagian harta kepada yang berhak, sebagai bentuk ibadah dan solidaritas sosial. Zakat membersihkan harta dari hak orang lain dan mendorong pertumbuhan ekonomi yang adil.
-                          </p>
-                      </div>
-                      <div class="col-md-6">
-                          <h5 class="fw-bold text-primary">Syarat Wajib Zakat</h5>
-                          <ul class="list-unstyled">
-                              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Muslim</li>
-                              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Baligh (dewasa)</li>
-                              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Berakal sehat</li>
-                              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Merdeka (bukan budak)</li>
-                              <li><i class="bi bi-check-circle-fill text-success me-2"></i> Memiliki harta mencapai nisab</li>
-                          </ul>
-                      </div>
-                  </div>
+<section class="py-5 bg-light rounded-4 shadow-sm">
+  <div class="container">
+    <div class="row align-items-center">
+      <!-- Kolom Kiri -->
+      <div class="col-md-6 mb-4 mb-md-0">
+        <h5 class="fw-bold text-primary mb-3">Apa Itu Zakat?</h5>
+        <p class="text-secondary" style="text-align: justify; line-height: 1.8;">
+          <strong>Zakat</strong> berasal dari kata <em>“zaka”</em> yang berarti suci, baik, berkah, tumbuh, dan berkembang. 
+          Dinamakan zakat karena mengandung harapan untuk memperoleh berkah, membersihkan jiwa, dan menumbuhkan kebaikan 
+          (<em>Fikih Sunnah</em>, Sayyid Sabiq: 5).
+        </p>
+        <p class="text-secondary" style="text-align: justify; line-height: 1.8;">
+          Makna <em>tumbuh</em> menunjukkan bahwa zakat menjadi sebab berkembangnya harta dan bertambahnya pahala. 
+          Sedangkan makna <em>suci</em> berarti zakat membersihkan jiwa dari dosa dan keburukan. 
+          Allah berfirman:
+        </p>
+        <blockquote class="border-start border-4 border-primary ps-3 text-secondary fst-italic">
+          “Ambillah zakat dari sebagian harta mereka, dengan zakat itu kamu membersihkan dan menyucikan mereka.” 
+          <br><strong>(QS. At-Taubah [9]: 103)</strong>
+        </blockquote>
+        <p class="text-secondary" style="text-align: justify; line-height: 1.8;">
+          Menurut istilah, <em>al-Mawardi</em> dalam kitab <em>al-Hâwî</em> mendefinisikan zakat sebagai pengambilan tertentu 
+          dari harta tertentu dengan sifat tertentu untuk diberikan kepada golongan tertentu. 
+          Orang yang menunaikan zakat disebut <strong>Muzaki</strong>, sedangkan penerimanya disebut <strong>Mustahik</strong>.
+        </p>
+        <p class="text-secondary" style="text-align: justify; line-height: 1.8;">
+          Berdasarkan <strong>Peraturan Menteri Agama No. 52 Tahun 2014</strong>, zakat adalah harta yang wajib dikeluarkan oleh 
+          seorang muslim atau badan usaha milik muslim untuk diberikan kepada yang berhak sesuai syariat Islam. 
+          Tidak semua harta dikenai zakat, hanya yang memenuhi syarat tertentu.
+        </p>
+      </div>
+
+      <!-- Kolom Kanan -->
+      <div class="col-md-6">
+        <h5 class="fw-bold text-primary mb-3">Syarat Wajib Zakat</h5>
+        <ul class="list-unstyled ms-2">
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Muslim</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Baligh (dewasa)</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Berakal sehat</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Merdeka (bukan budak)</li>
+          <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Memiliki harta mencapai nisab</li>
+  </ul>
+
+
+        <div class="text-center mb-4">
+            <img src="https://cdn-icons-png.flaticon.com/512/3943/3943946.png" alt="Masjid Icon" width="130" class="mb-3 shadow-sm">
+          </div>
+
+          <div class="text-center mb-4">
+  <p class="fw-bold">ﻧَﻮَﻳْﺖُ أَﻥْ أُﺧْﺮِﺝَ ﺯَﻛَﺎﺓَ ﺍﻟْﻔِﻄْﺮِ ﻋَﻦْ ﻧَﻔْسيْ ﻓَﺮْﺿًﺎ ِﻟﻠﻪِ ﺗَﻌَﺎﻟَﻰ </p>
+  <p class="fst-italic">Nawaitu an ukhrija zakâtal fithri 'an nafsî fardhan lillâhi ta'âlâ </p>
+  <p class="text-secondary">Artinya, “Aku niat mengeluarkan zakat fitrah untuk diriku sendiri, fardu karena Allah Ta'âlâ.”</p>
+</div>
+
+          
+      </div>
+    </div>
+  </div>
+</section>
+
 
                   <!-- Carousel untuk Jenis Zakat -->
                   <h5 class="fw-bold text-center mb-4">Jenis-Jenis Zakat</h5>
@@ -320,21 +362,30 @@
           </div>
       </div>
 
-       {{-- Akses Akun Muzakki --}}
-    <div class="access-section text-center">
-      <h5 class="fw-bold mb-4 text-dark"><i class="bi bi-shield-lock-fill me-2"></i>Akses Akun Muzakki</h5>
-      <p class="text-muted mb-4">Bergabunglah dengan komunitas kami untuk mengelola zakat Anda dengan mudah dan aman.</p>
-      <div class="d-flex justify-content-center gap-4 flex-wrap">
-        <a href="{{ route('register') }}" class="btn btn-success btn-custom">
-          <i class="bi bi-person-plus-fill me-2"></i>Register
-        </a>
-        <a href="{{ route('login') }}" class="btn btn-primary btn-custom">
-          <i class="bi bi-box-arrow-in-right me-2"></i>Login
-        </a>
-      </div>
-      <p class="text-muted mt-3 small">Belum punya akun? Klik <strong>Register</strong> untuk membuat akun baru.</p>
-    </div>
+      
+
+   {{-- Akses Akun Muzakki --}}
+<div class="access-section text-center">
+  <h5 class="fw-bold mb-4 text-dark">
+    <i class="bi bi-shield-lock-fill me-2"></i>Akses Akun Muzakki
+  </h5>
+  <p class="text-muted mb-4">
+    Bergabunglah dengan komunitas kami untuk mengelola zakat Anda dengan mudah dan aman.
+  </p>
+
+  <div class="d-flex justify-content-center gap-4 flex-wrap mb-2">
+    <a href="{{ route('register') }}" class="btn btn-success btn-custom">
+      <i class="bi bi-person-plus-fill me-2"></i>Register
+    </a>
+    <a href="{{ route('login') }}" class="btn btn-primary btn-custom">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Login
+    </a>
   </div>
+
+  <p class="text-muted mt-3 small">
+    Belum punya akun? Klik <a href="{{ route('register') }}"><strong>Register</strong></a> untuk membuat akun baru.
+  </p>
+</div>
 
               {{-- Footer --}}
   <footer class="bg-success text-white text-center py-3 mt-5">
