@@ -10,7 +10,10 @@ use App\Http\Controllers\Admin\DistribusiZakatController;
 use App\Http\Controllers\MuzakkiController;
 use App\Http\Controllers\Admin\ManajemenMustahikController;
 use App\Http\Controllers\Admin\LaporanZakatController;
+use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\KetentuanZakatController;
 use App\Http\Controllers\Admin\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +62,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/laporan', [LaporanZakatController::class, 'index'])->name('laporan.index');
     Route::resource('users', UserController::class);
+
+    Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+    Route::get('/ketentuan', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
+    Route::post('/ketentuan', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
+    Route::delete('/ketentuan/{id}', [KetentuanController::class, 'destroy'])->name('ketentuan.destroy');
 
 
 

@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- Jumlah Muzakki dan Mustahiq -->
     <div>
         <h2 class="text-xl font-bold text-green-800 mb-4">Data Muzakki & Mustahiq</h2>
