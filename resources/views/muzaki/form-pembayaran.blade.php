@@ -15,7 +15,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('transaksi.store') }}" method="POST" class="space-y-8">
+    <form action="{{ route('muzaki.transaksi.store') }}" method="POST" class="space-y-8">
         @csrf
 
         <!-- Pilihan Jenis Zakat -->

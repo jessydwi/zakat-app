@@ -14,7 +14,7 @@
     <!-- Statistik Zakat -->
     <div>
         <h2 class="text-xl font-bold text-green-800 mb-4">Statistik Total Zakat</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
                 <h3 class="text-lg font-semibold text-green-700">Zakat Fitrah</h3>
                 <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($zakatFitrah, 0, ',', '.') }}</p>
@@ -27,7 +27,12 @@
                 <h3 class="text-lg font-semibold text-green-700">Zakat Fidyah</h3>
                 <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($zakatFidyah, 0, ',', '.') }}</p>
             </div>
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                <h3 class="text-lg font-semibold text-blue-700">Infak</h3>
+                <p class="text-2xl font-bold text-gray-800">Rp {{ number_format($infak, 0, ',', '.') }}</p>
+            </div>
         </div>
+    </div>
     </div>
     
     <!-- Jumlah Muzakki dan Mustahiq -->

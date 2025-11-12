@@ -31,7 +31,7 @@
                     @break
 
                 @case('beasiswa')
-                    <p>Nama Siswa: {{ $detail['nama_siswa'] ?? '-' }}</p>
+                    <p>Nama Siswa: {{ $detail['nama_siswa'] ?? $distribusi->mustahik->nama }}</p>
                     <p>Jenjang: {{ $detail['jenjang'] ?? '-' }}</p>
                     <p>Nominal: Rp{{ number_format($detail['nominal'] ?? 0) }}</p>
                     @break
@@ -43,16 +43,17 @@
                     @break
 
                 @case('kesehatan')
-                    <p>Nama Pasien: {{ $detail['nama_pasien'] ?? '-' }}</p>
+                    <p>Nama Pasien: {{ $detail['nama_pasien'] ?? $distribusi->mustahik->nama }}</p>
                     <p>Jenis Pengobatan: {{ $detail['jenis_pengobatan'] ?? '-' }}</p>
                     <p>Biaya: Rp{{ number_format($detail['biaya'] ?? 0) }}</p>
                     @break
 
                 @case('uang-tunai')
-                    <p>Nama Penerima: {{ $detail['nama_penerima'] ?? '-' }}</p>
-                    <p>Nominal: Rp{{ number_format($detail['nominal'] ?? 0) }}</p>
+                    <p>Nama Penerima: {{ $detail['nama_penerima'] ?? $distribusi->mustahik->nama }}</p>
+                    <p>Nominal: Rp{{ number_format($detail['nominal'] ?? $distribusi->jumlah) }}</p>
                     <p>Tujuan: {{ $detail['tujuan'] ?? '-' }}</p>
                     @break
+
 
                 @default
                     <p>-</p>

@@ -14,17 +14,22 @@ class AdminController extends Controller
     public function index()
     {
         // Total zakat berdasarkan jenis (dengan join ke jenis_zakat)
-        $zakatFitrah = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->where('nama_jenis', 'fitrah');
+       $zakatFitrah = TransaksiZakat::whereHas('jenisZakat', function ($q) {
+            $q->whereRaw("LOWER(nama_jenis) = 'zakat fitrah'");
         })->sum('nominal');
 
         $zakatMal = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->where('nama_jenis', 'mal');
+            $q->whereRaw("LOWER(nama_jenis) = 'zakat mal'");
         })->sum('nominal');
 
         $zakatFidyah = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->where('nama_jenis', 'fidyah');
+            $q->whereRaw("LOWER(nama_jenis) = 'zakat fidyah'");
         })->sum('nominal');
+
+        $infak = TransaksiZakat::whereHas('jenisZakat', function ($q) {
+            $q->whereRaw("LOWER(nama_jenis) = 'infak'");
+        })->sum('nominal');
+
 
         // Jumlah muzakki dan mustahiq
         $jumlahMuzaki = Muzaki::count();
@@ -53,6 +58,7 @@ class AdminController extends Controller
             'jumlahMuzaki',
             'jumlahMustahiq',
             'grafikZakat',
+            'infak',
             'transaksiTerbaru'
         ));
     }

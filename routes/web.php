@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\LaporanZakatController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\KetentuanZakatController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\MuzakiController;
+use App\Http\Controllers\TransaksiController;
 
 
 /*
@@ -66,15 +68,21 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::get('/ketentuan', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
     Route::post('/ketentuan', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
-    Route::delete('/ketentuan/{id}', [KetentuanController::class, 'destroy'])->name('ketentuan.destroy');
+    Route::delete('/ketentuan/{id}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
 
 
 
 });
 
 
-Route::middleware(['auth', 'role:muzakki'])->prefix('muzakki')->group(function () {
-    Route::get('/dashboard', [MuzakkiController::class, 'dashboard'])->name('muzakki.dashboard');
+// 🙋 Muzakki Routes (role-based)
+Route::prefix('muzaki')->name('muzaki.')->group(function () {
+    Route::get('/dashboard', [MuzakiController::class, 'dashboard'])->name('dashboard');
+    Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('bayar');
+    Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');
+    Route::get('/riwayat', [MuzakiController::class, 'riwayat'])->name('riwayat');
+    Route::get('/informasi-zakat', [MuzakiController::class, 'informasi'])->name('informasi');
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
 });
 
 Route::get('/publish', function () {
