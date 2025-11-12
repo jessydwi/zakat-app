@@ -15,36 +15,45 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    /**
+     * Tampilkan halaman registrasi
+     */
     public function create(): View
     {
         return view('auth.register');
     }
 
+    /**
+     * Proses registrasi user baru
+     */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'no_hp' => ['required', 'string', 'max:20'],
         ]);
 
+        // Buat user baru
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'muzakki',
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'muzakki', // opsional jika kamu masih pakai kolom 'role'
         ]);
 
+        // Beri role via Spatie
         $user->assignRole('muzakki');
 
-        Muzakki::create([
-            'user_id' => $user->id,
-            'nama' => $request->name,
-            'email' => $user->email,
-            'no_hp' => $request->no_hp,
+        // Buat relasi ke tabel muzakki
+        $user->muzakki()->create([
+            'nama' => $validated['name'],
+            'email' => $validated['email'],
+            'no_hp' => $validated['no_hp'],
         ]);
 
+        // Trigger event dan login
         event(new Registered($user));
         Auth::login($user);
 

@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * Kolom yang bisa diisi massal (mass assignable)
@@ -19,7 +20,6 @@ class User extends Authenticatable
         'nama',
         'email',
         'password',
-        'role',
     ];
 
     /**
@@ -44,8 +44,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Relasi ke model Muzakki
+     */
     public function muzakki()
     {
-    return $this->hasOne(Muzakki::class);
+        return $this->hasOne(Muzakki::class);
     }
 }
