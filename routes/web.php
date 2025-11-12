@@ -7,15 +7,13 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ManajemenZakatController;
 use App\Http\Controllers\Admin\TransaksiZakatController;
 use App\Http\Controllers\Admin\DistribusiZakatController;
-use App\Http\Controllers\MuzakkiController;
 use App\Http\Controllers\Admin\ManajemenMustahikController;
 use App\Http\Controllers\Admin\LaporanZakatController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\KetentuanZakatController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\muzaki\MuzakiController;
+use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -69,14 +67,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/ketentuan', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
     Route::post('/ketentuan', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
     Route::delete('/ketentuan/{id}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
-
-
-
 });
 
-
 // 🙋 Muzakki Routes (role-based)
-Route::prefix('muzaki')->name('muzaki.')->group(function () {
+Route::prefix('muzaki')->name('muzaki.')->middleware(['auth', 'role:muzakki'])->group(function () {
     Route::get('/dashboard', [MuzakiController::class, 'dashboard'])->name('dashboard');
     Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('bayar');
     Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');
@@ -89,5 +83,5 @@ Route::get('/publish', function () {
     return view('publish');
 })->name('publish');
 
-// Autentikasi Breezea
+// Autentikasi Breeze
 require __DIR__.'/auth.php';

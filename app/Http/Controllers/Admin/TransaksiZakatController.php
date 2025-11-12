@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TransaksiZakat;
-use App\Models\Muzakki;
+use App\Models\Muzaki;
 use App\Models\JenisZakat;
 use App\Models\MetodePembayaran;
 use Carbon\Carbon;
@@ -15,7 +15,7 @@ class TransaksiZakatController extends Controller
     // 📥 Tampilkan semua transaksi zakat
     public function index()
     {
-        $transaksi = TransaksiZakat::with(['muzakki', 'jenisZakat', 'metode'])
+        $transaksi = TransaksiZakat::with(['muzakki', 'jenisZakat', 'metodePembayaran'])
             ->orderByDesc('tanggal')
             ->get();
 
@@ -25,7 +25,7 @@ class TransaksiZakatController extends Controller
     // ➕ Tampilkan form input zakat
     public function create()
     {
-        $muzakki = Muzakki::select('id', 'nama')->get();
+        $muzakki = Muzaki::select('id', 'nama')->get();
         $jenisZakat = JenisZakat::select('id', 'nama_jenis')->get();
         $metode = MetodePembayaran::select('id', 'nama_metode')->get();
 

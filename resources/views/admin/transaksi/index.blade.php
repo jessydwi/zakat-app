@@ -20,9 +20,9 @@
         <tbody>
             @foreach($transaksi as $t)
             <tr>
-                <td class="px-4 py-2">{{ $t->muzakki->nama }}</td>
+                <td class="px-4 py-2">{{ $t->muzakki->nama ?? '-' }}</td>
                 <td class="px-4 py-2">{{ $t->jenisZakat->nama_jenis }}</td>
-                <td class="px-4 py-2">{{ $t->metode->nama_metode }}</td>
+                <td class="px-4 py-2">{{ $t->metodePembayaran->nama_metode }}</td>
                 <td class="px-4 py-2">Rp{{ number_format($t->nominal, 0, ',', '.') }}</td>
                 <td class="px-4 py-2">{{ \Carbon\Carbon::parse($t->tanggal)->format('d M Y') }}</td>
                 <td class="px-4 py-2">{{ ucfirst($t->status) }}</td>

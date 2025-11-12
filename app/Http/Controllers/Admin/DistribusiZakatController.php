@@ -43,18 +43,48 @@ class DistribusiZakatController extends Controller
     }
 
     public function store(DistribusiZakatRequest $request)
-    {
-        DistribusiZakat::create([
-            'mustahik_id' => $request->mustahik_id,
-            'jenis_bantuan_id' => $request->jenis_bantuan_id,
-            'jumlah' => $request->jumlah,
-            'tanggal' => $request->tanggal,
-            'status' => 'disalurkan',
-            'detail_json' => json_encode($request->detail),
-        ]);
+{
+    $slug = optional(JenisBantuan::find($request->jenis_bantuan_id))->slug;
 
-        return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil disimpan.');
-    }
+    $detail = match ($slug) {
+        'uang-tunai' => [
+            'nama_penerima' => $request->detail['nama_penerima'] ?? Mustahik::find($request->mustahik_id)?->nama,
+            'nominal' => $request->detail['nominal'] ?? $request->jumlah,
+            'tujuan' => $request->detail['tujuan'] ?? null,
+        ],
+        'modal-usaha' => [
+            'jenis_usaha' => $request->detail['jenis_usaha'] ?? null,
+            'modal' => $request->detail['modal'] ?? $request->jumlah,
+            'pendampingan' => $request->detail['pendampingan'] ?? null,
+        ],
+        'sembako' => [
+            'jumlah_paket' => $request->detail['jumlah_paket'] ?? null,
+            'jenis_barang' => $request->detail['jenis_barang'] ?? null,
+        ],
+        'beasiswa' => [
+            'nama_siswa' => $request->detail['nama_siswa'] ?? Mustahik::find($request->mustahik_id)?->nama,
+            'jenjang' => $request->detail['jenjang'] ?? null,
+            'nominal' => $request->detail['nominal'] ?? $request->jumlah,
+        ],
+        'kesehatan' => [
+            'nama_pasien' => $request->detail['nama_pasien'] ?? Mustahik::find($request->mustahik_id)?->nama,
+            'jenis_pengobatan' => $request->detail['jenis_pengobatan'] ?? null,
+            'biaya' => $request->detail['biaya'] ?? $request->jumlah,
+        ],
+        default => $request->detail ?? [],
+    };
+
+    DistribusiZakat::create([
+        'mustahik_id' => $request->mustahik_id,
+        'jenis_bantuan_id' => $request->jenis_bantuan_id,
+        'jumlah' => $request->jumlah,
+        'tanggal' => $request->tanggal,
+        'status' => 'disalurkan',
+        'detail_json' => json_encode($detail),
+    ]);
+
+    return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil disimpan.');
+}
 
     public function show($id)
     {
@@ -71,50 +101,51 @@ class DistribusiZakatController extends Controller
 
         return view('admin.distribusi.edit', compact('distribusi', 'mustahiks', 'jenisBantuans', 'slug'));
     }
-public function update(DistribusiZakatRequest $request, $id)
-{
-    $distribusi = DistribusiZakat::findOrFail($id);
-    $slug = optional(JenisBantuan::find($request->jenis_bantuan_id))->slug;
 
-    $detail = match ($slug) {
-        'sembako' => [
-            'jumlah_paket' => $request->detail['jumlah_paket'] ?? null,
-            'jenis_barang' => $request->detail['jenis_barang'] ?? null,
-        ],
-        'modal-usaha' => [
-            'jenis_usaha' => $request->detail['jenis_usaha'] ?? null,
-            'modal' => $request->detail['modal'] ?? null,
-            'pendampingan' => $request->detail['pendampingan'] ?? null,
-        ],
-        'beasiswa' => [
-            'nama_siswa' => $request->detail['nama_siswa'] ?? null,
-            'jenjang' => $request->detail['jenjang'] ?? null,
-            'nominal' => $request->detail['nominal'] ?? null,
-        ],
-        'kesehatan' => [
-            'nama_pasien' => $request->detail['nama_pasien'] ?? null,
-            'jenis_pengobatan' => $request->detail['jenis_pengobatan'] ?? null,
-            'biaya' => $request->detail['biaya'] ?? null,
-        ],
-        'uang-tunai' => [
-            'nama_penerima' => $request->detail['nama_penerima'] ?? null,
-            'nominal' => $request->detail['nominal'] ?? null,
-            'tujuan' => $request->detail['tujuan'] ?? null,
-        ],
-        default => [],
-    };
+    public function update(DistribusiZakatRequest $request, $id)
+    {
+        $distribusi = DistribusiZakat::findOrFail($id);
+        $slug = optional(JenisBantuan::find($request->jenis_bantuan_id))->slug;
 
-    $distribusi->update([
-        'mustahik_id' => $request->mustahik_id,
-        'jenis_bantuan_id' => $request->jenis_bantuan_id,
-        'jumlah' => $request->jumlah,
-        'tanggal' => $request->tanggal,
-        'status' => $request->status ?? 'disalurkan',
-        'detail_json' => json_encode($detail),
-    ]);
+        $detail = match ($slug) {
+            'uang-tunai' => [
+                'nama_penerima' => $request->detail['nama_penerima'] ?? Mustahik::find($request->mustahik_id)?->nama,
+                'nominal' => $request->detail['nominal'] ?? $request->jumlah,
+                'tujuan' => $request->detail['tujuan'] ?? null,
+            ],
+            'modal-usaha' => [
+                'jenis_usaha' => $request->detail['jenis_usaha'] ?? null,
+                'modal' => $request->detail['modal'] ?? $request->jumlah,
+                'pendampingan' => $request->detail['pendampingan'] ?? null,
+            ],
+            'sembako' => [
+                'jumlah_paket' => $request->detail['jumlah_paket'] ?? null,
+                'jenis_barang' => $request->detail['jenis_barang'] ?? null,
+            ],
+            'beasiswa' => [
+                'nama_siswa' => $request->detail['nama_siswa'] ?? Mustahik::find($request->mustahik_id)?->nama,
+                'jenjang' => $request->detail['jenjang'] ?? null,
+                'nominal' => $request->detail['nominal'] ?? $request->jumlah,
+            ],
+            'kesehatan' => [
+                'nama_pasien' => $request->detail['nama_pasien'] ?? Mustahik::find($request->mustahik_id)?->nama,
+                'jenis_pengobatan' => $request->detail['jenis_pengobatan'] ?? null,
+                'biaya' => $request->detail['biaya'] ?? $request->jumlah,
+            ],
+            default => $request->detail ?? [],
+        };
 
-    return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil diperbarui.');
-}
+        $distribusi->update([
+            'mustahik_id' => $request->mustahik_id,
+            'jenis_bantuan_id' => $request->jenis_bantuan_id,
+            'jumlah' => $request->jumlah,
+            'tanggal' => $request->tanggal,
+            'status' => $request->status ?? 'disalurkan',
+            'detail_json' => json_encode($detail),
+        ]);
+
+        return redirect()->route('admin.distribusi.index')->with('success', 'Distribusi berhasil diperbarui.');
+    }
 
     public function destroy($id)
     {
