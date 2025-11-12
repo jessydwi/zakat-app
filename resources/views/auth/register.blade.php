@@ -2,46 +2,38 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
+        <!-- Nama -->
         <div>
             <x-input-label for="nama" :value="__('Nama')" />
-            <x-text-input id="nama" class="block mt-1 w-full" type="text" name="nama" :value="old('nama')" required autofocus autocomplete="nama" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <x-text-input id="nama" class="block mt-1 w-full" type="text" name="nama" :value="old('nama')" required autofocus autocomplete="name" />
+            <x-input-error :messages="$errors->get('nama')" class="mt-2" />
         </div>
 
         <!-- Email -->
-        <!-- Nomor HP -->
-        <div class="mt-4">
-            <x-input-label for="no_hp" :value="__('Nomor HP')" />
-            <x-text-input id="no_hp" class="block mt-1 w-full" type="text" name="no_hp" :value="old('no_hp')" required autocomplete="tel" />
-            <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- No HP -->
         <div class="mt-4">
             <x-input-label for="no_hp" :value="__('No HP')" />
-            <x-text-input id="no_hp" class="block mt-1 w-full" type="text" name="no_hp" :value="old('no_hp')" required />
+            <x-text-input id="no_hp" class="block mt-1 w-full" type="tel" name="no_hp" :value="old('no_hp')" required autocomplete="tel" />
             <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
         </div>
 
         <!-- Alamat -->
         <div class="mt-4">
             <x-input-label for="alamat" :value="__('Alamat')" />
-            <textarea id="alamat" name="alamat" class="block mt-1 w-full" required>{{ old('alamat') }}</textarea>
+            <textarea id="alamat" name="alamat" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>{{ old('alamat') }}</textarea>
             <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
         </div>
 
         <!-- Pekerjaan -->
         <div class="mt-4">
             <x-input-label for="pekerjaan" :value="__('Pekerjaan')" />
-            <x-text-input id="pekerjaan" class="block mt-1 w-full" type="text" name="pekerjaan" :value="old('pekerjaan')" required />
+            <x-text-input id="pekerjaan" class="block mt-1 w-full" type="text" name="pekerjaan" :value="old('pekerjaan')" required autocomplete="organization-title" />
             <x-input-error :messages="$errors->get('pekerjaan')" class="mt-2" />
         </div>
 
@@ -52,7 +44,7 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Confirm Password -->
+        <!-- Konfirmasi Password -->
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Konfirmasi Password')" />
             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />

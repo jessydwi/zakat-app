@@ -83,18 +83,6 @@ Route::get('/publish', function () {
 })->name('publish');
 
 
-
-
-// 🙋 Muzakki Routes (role-based)
-Route::middleware(['auth', 'role:muzakki'])->prefix('muzakki')->name('muzakki.')->group(function () {
-    Route::get('/dashboard', [MuzakiController::class, 'dashboard'])->name('dashboard');
-    Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('bayar');
-    Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');
-    Route::get('/riwayat', [MuzakiController::class, 'riwayat'])->name('riwayat');
-    Route::get('/informasi-zakat', [MuzakiController::class, 'informasi'])->name('informasi');
-    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
-});
-
 // 📦 Publik & Misc
 Route::get('/home', fn () => view('publish'))->name('publish');
 Route::get('/welcome', fn () => view('welcome'))->name('welcome');
