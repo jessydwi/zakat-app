@@ -12,9 +12,8 @@ use App\Http\Controllers\Admin\LaporanZakatController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\KetentuanZakatController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\MuzakiController;
-use App\Http\Controllers\TransaksiController;
-
+use App\Http\Controllers\Muzaki\MuzakiController;
+use App\Http\Controllers\Muzaki\TransaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,29 +21,34 @@ use App\Http\Controllers\TransaksiController;
 |--------------------------------------------------------------------------
 */
 
-// 🔒 Guest Routes
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
-    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+// Route login
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware('guest')
+    ->name('login');
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware('guest');
+
+// Redirect root URL langsung ke halaman login
+Route::get('/', function () {
+    return redirect()->route('login');
 });
 
-// 🔁 Redirect root to login
-Route::get('/', fn () => redirect()->route('login'));
+// Dashboard umum (untuk semua user login dan terverifikasi)
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-// 🏠 Default dashboard (fallback)
-Route::get('/dashboard', fn () => view('dashboard'))
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-// 👤 Profile Routes
+// Group route untuk user login
 Route::middleware('auth')->group(function () {
+    // Profil user
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// 🛡️ Admin Routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+// Group route khusus admin
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/manajemen-zakat', [ManajemenZakatController::class, 'index'])->name('manajemen-zakat.index');
     Route::get('/zakat/create', [TransaksiZakatController::class, 'create'])->name('zakat.create');
@@ -60,14 +64,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/ketentuan', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
     Route::post('/ketentuan', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
     Route::delete('/ketentuan/{id}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
-
-
-
 });
 
-
 // 🙋 Muzakki Routes (role-based)
-Route::prefix('muzaki')->name('muzaki.')->group(function () {
+Route::prefix('muzaki')->name('muzaki.')->middleware(['auth', 'role:muzakki'])->group(function () {
     Route::get('/dashboard', [MuzakiController::class, 'dashboard'])->name('dashboard');
     Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('bayar');
     Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');
@@ -76,16 +76,15 @@ Route::prefix('muzaki')->name('muzaki.')->group(function () {
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
 });
 
-
-
+// 📦 Publik & Misc
 Route::get('/publish', function () {
     return view('publish');
 })->name('publish');
 
 
-// 📦 Publik & Misc
+// Route::get('/publish', fn () => view('publish'))->name('publish');
 Route::get('/home', fn () => view('publish'))->name('publish');
 Route::get('/welcome', fn () => view('welcome'))->name('welcome');
 
-// 🔐 Auth scaffolding
+// Autentikasi Breeze
 require __DIR__.'/auth.php';

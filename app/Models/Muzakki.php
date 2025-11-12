@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Muzakki extends Model
 {
     protected $table = 'muzakki';
 
     protected $fillable = [
+        'user-id',
         'nama',
         'email',
         'no_hp',
@@ -22,12 +24,12 @@ class Muzakki extends Model
         return $this->hasMany(TransaksiZakat::class, 'muzakki_id');
     }
 
-    public function kategori()
+    public function kategori(): BelongsTo
     {
         return $this->belongsTo(KategoriMustahik::class, 'kategori_id');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
     return $this->belongsTo(User::class);
     }
