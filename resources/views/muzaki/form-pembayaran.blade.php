@@ -18,6 +18,28 @@
     <form action="{{ route('muzaki.transaksi.store') }}" method="POST" class="space-y-8">
         @csrf
 
+                <!-- Nama Lengkap -->
+<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+    <label for="nama" class="block font-semibold text-emerald-700 mb-3 text-lg">
+        <i class="fas fa-user text-emerald-500 mr-2"></i> Nama Lengkap
+    </label>
+    <input type="text" name="nama" id="nama"
+        class="input-style"
+        placeholder="Masukkan nama lengkap Anda" required>
+</div>
+
+<!-- Jenis Kelamin -->
+<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+    <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
+        <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
+    </label>
+    <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" required>
+        <option value="">-- Pilih Jenis Kelamin --</option>
+        <option value="Laki-laki">Laki-laki</option>
+        <option value="Perempuan">Perempuan</option>
+    </select>
+</div>
+
         <!-- Pilihan Jenis Zakat -->
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
             <label for="jenis_zakat_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
@@ -48,10 +70,33 @@
                 placeholder="Contoh: 081234567890 atau email@domain.com" required>
         </div>
 
-<!-- Hidden Muzakki ID -->
-<input type="hidden" name="muzakki_id" value="{{ auth()->id() }}">
+        <!-- Tanggal Transaksi -->
+<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+    <label for="tanggal" class="block font-semibold text-emerald-700 mb-3 text-lg">
+        <i class="fas fa-calendar-alt text-emerald-500 mr-2"></i> Tanggal Transaksi
+    </label>
+    <input type="date" name="tanggal" id="tanggal" class="input-style" required>
+</div>
 
 
+<!-- Metode Pembayaran -->
+<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+    <label for="metode_pembayaran" class="block font-semibold text-emerald-700 mb-3 text-lg">
+        <i class="fas fa-credit-card text-emerald-500 mr-2"></i> Metode Pembayaran
+    </label>
+    <div id="instruksiMetode" class="space-y-4 hidden animate-fade-in-up"></div>
+    <select name="metode_id" class="input-style" onchange="tampilkanInstruksiMetode()" required>
+            <option value="">-- Pilih Metode Pembayaran --</option>
+                @foreach($metodePembayaran as $metode)
+            <option value="{{ $metode->id }}">{{ $metode->nama_metode }}</option>
+        @endforeach
+    </select>
+</div>
+
+@if(auth()->user()->muzakki)
+    <input type="hidden" name="muzakki_id" value="{{ auth()->user()->muzakki->id }}">
+@endif
+    
         <!-- Tombol Submit -->
         <div class="pt-2">
             <button type="submit"
@@ -80,6 +125,16 @@
         @apply bg-green-600 text-white shadow-lg scale-105;
     }
 </style>
+
+@if($errors->any())
+    <div class="bg-red-100 p-4 rounded-xl shadow-md mb-6">
+        <ul class="list-disc ml-6 text-red-700">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <!-- Script Dinamis -->
 <script>
@@ -175,5 +230,67 @@ function tampilkanFormKhusus() {
     container.innerHTML = html;
     container.classList.remove('hidden');
 }
+
+function tampilkanInstruksiMetode() {
+    const select = document.querySelector('select[name="metode_id"]');
+    const selected = select.options[select.selectedIndex].text.toLowerCase();
+    const container = document.getElementById('instruksiMetode');
+
+    container.innerHTML = '';
+    container.classList.add('hidden');
+    if (!selected) return;
+
+    let html = '';
+
+    if (selected.includes('transfer')) {
+        html = `
+        <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+                <i class="fas fa-university text-emerald-500"></i> Instruksi Transfer Bank
+            </h3>
+            <p class="text-gray-700 mt-2">Silakan transfer ke rekening berikut:</p>
+            <ul class="list-disc ml-6 text-gray-700 mt-2">
+                <li>BCA 123456789 a.n. LAZ Zakat</li>
+                <li>Mandiri 987654321 a.n. LAZ Zakat</li>
+            </ul>
+        </div>
+        `;
+    } else if (selected.includes('e-wallet')) {
+        html = `
+        <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+                <i class="fas fa-mobile-alt text-emerald-500"></i> Instruksi E-Wallet
+            </h3>
+            <p class="text-gray-700 mt-2">Kirim ke nomor berikut:</p>
+            <ul class="list-disc ml-6 text-gray-700 mt-2">
+                <li>OVO / GoPay / DANA: 081234567890</li>
+            </ul>
+        </div>
+        `;
+    } else if (selected.includes('qris')) {
+        html = `
+        <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm text-center">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center justify-center gap-2">
+                <i class="fas fa-qrcode text-emerald-500"></i> Scan QRIS
+            </h3>
+            <p class="text-gray-700 mt-2">Scan QR berikut untuk menyelesaikan pembayaran:</p>
+            <img src="/storage/qris.png" alt="QRIS" class="w-48 mx-auto mt-4 rounded-lg shadow-md">
+        </div>
+        `;
+    } else if (selected.includes('tunai')) {
+        html = `
+        <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+                <i class="fas fa-money-bill text-emerald-500"></i> Pembayaran Tunai
+            </h3>
+            <p class="text-gray-700 mt-2">Silakan datang langsung ke kantor LAZ terdekat untuk melakukan pembayaran tunai.</p>
+        </div>
+        `;
+    }
+
+    container.innerHTML = html;
+    container.classList.remove('hidden');
+}
+
 </script>
 @endsection

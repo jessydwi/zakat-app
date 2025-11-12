@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Muzaki extends Model
+class Muzakki extends Model
 {
     protected $table = 'muzakki';
 
@@ -17,10 +17,19 @@ class Muzaki extends Model
         'pekerjaan',
     ];
 
-    public $timestamps = true;
-
     public function transaksi(): HasMany
     {
-        return $this->hasMany(TransaksiZakat::class, 'muzaki_id');
+        return $this->hasMany(TransaksiZakat::class, 'muzakki_id');
     }
+
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriMustahik::class, 'kategori_id');
+    }
+
+    public function user()
+    {
+    return $this->belongsTo(User::class);
+    }
+
 }

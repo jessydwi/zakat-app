@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
             case 'admin':
                 return redirect()->route('admin.dashboard');
             case 'muzaki':
-                return redirect()->route('muzaki.dashboard');
+                return redirect()->route('muzakki.dashboard');
             case 'mustahiq':
                 return redirect()->route('mustahiq.dashboard');
             default:
