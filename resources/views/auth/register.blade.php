@@ -10,6 +10,14 @@
         </div>
 
         <!-- Email -->
+        <!-- Nomor HP -->
+        <div class="mt-4">
+            <x-input-label for="no_hp" :value="__('Nomor HP')" />
+            <x-text-input id="no_hp" class="block mt-1 w-full" type="text" name="no_hp" :value="old('no_hp')" required autocomplete="tel" />
+            <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
+        </div>
+
+        <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
@@ -51,6 +59,7 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- Submit -->
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                 {{ __('Sudah punya akun?') }}

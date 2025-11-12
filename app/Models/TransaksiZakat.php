@@ -18,6 +18,10 @@ class TransaksiZakat extends Model
         'nominal',
         'tanggal',
         'status',
+        'nama',
+        'jenis-kelamin',
+        'kontak',
+        'detail',
     ];
 
     public $timestamps = true;
