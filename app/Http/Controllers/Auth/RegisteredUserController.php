@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -16,17 +15,11 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Tampilkan halaman registrasi
-     */
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Proses registrasi user baru
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -38,7 +31,6 @@ class RegisteredUserController extends Controller
             'pekerjaan' => ['required', 'string', 'max:100'],
         ]);
 
-        // Buat user baru
         $user = User::create([
             'nama' => $validated['nama'],
             'email' => $validated['email'],
@@ -48,6 +40,7 @@ class RegisteredUserController extends Controller
             'pekerjaan' => $validated['pekerjaan'],
             'role' => 'muzaki',
         ]);
+
 
         // Simpan data Muzakki
         Muzakki::create([

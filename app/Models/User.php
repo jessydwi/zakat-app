@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable;
 
     /**
      * Kolom yang bisa diisi massal (mass assignable)
@@ -20,6 +20,7 @@ class User extends Authenticatable
         'nama',
         'email',
         'password',
+        'role',
     ];
 
     /**
