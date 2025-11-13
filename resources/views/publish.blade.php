@@ -155,45 +155,52 @@
         <p class="text-muted fs-5">Rekapan & Informasi Zakat Fitrah, Fidyah, dan Infaq/Shodaqoh</p>
     </div>
 
-      {{-- Rekapan --}}
+     {{-- Rekapan --}}
 <div class="row g-4">
     {{-- Zakat Fitrah --}}
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 text-center bg-gradient-green text-white">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-12">
+        <div class="card shadow-lg border-0 text-center text-white" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+            <div class="card-body py-4">
                 <i class="bi bi-basket2 display-4 mb-3"></i>
-                <h5 class="fw-bold">Rekapan Zakat Fitrah</h5>
-                <p>Total Muzakki: <strong>{{ $rekapan['fitrah']['muzakki'] ?? 0 }} Orang</strong></p>
-                <p>Total Beras: <strong>{{ $rekapan['fitrah']['beras'] ?? 0 }} Kg</strong></p>
-                <p>Total Uang: <strong>Rp {{ number_format($rekapan['fitrah']['uang'] ?? 0, 0, ',', '.') }}</strong></p>
+                <h5 class="fw-bold mb-3">Rekapan Zakat Fitrah</h5>
+                <p class="mb-1">Total Muzakki: <strong>{{ $rekapan['fitrah']['muzakki'] ?? 0 }} Orang</strong></p>
+                <p class="mb-1">Total Beras: <strong>{{ $rekapan['fitrah']['beras'] ?? 0 }} Kg</strong></p>
+                <p class="mb-0">Total Uang: 
+                    <strong>Rp {{ number_format($rekapan['fitrah']['uang'] ?? 0, 0, ',', '.') }}</strong>
+                </p>
             </div>
         </div>
     </div>
 
     {{-- Zakat Fidyah --}}
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 text-center bg-gradient-green text-white">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-12">
+        <div class="card shadow-lg border-0 text-center text-white" style="background: linear-gradient(135deg, #3498db, #2c82c9);">
+            <div class="card-body py-4">
                 <i class="bi bi-cash-coin display-4 mb-3"></i>
-                <h5 class="fw-bold">Rekapan Zakat Fidyah</h5>
-                <p>Total Muzakki: <strong>{{ $rekapan['fidyah']['muzakki'] ?? 0 }} Orang</strong></p>
-                <p>Total Uang: <strong>Rp {{ number_format($rekapan['fidyah']['uang'] ?? 0, 0, ',', '.') }}</strong></p>
+                <h5 class="fw-bold mb-3">Rekapan Zakat Fidyah</h5>
+                <p class="mb-1">Total Muzakki: <strong>{{ $rekapan['fidyah']['muzakki'] ?? 0 }} Orang</strong></p>
+                <p class="mb-0">Total Uang: 
+                    <strong>Rp {{ number_format($rekapan['fidyah']['uang'] ?? 0, 0, ',', '.') }}</strong>
+                </p>
             </div>
         </div>
     </div>
 
     {{-- Infaq/Shodaqoh --}}
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 text-center bg-gradient-green text-white">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-12">
+        <div class="card shadow-lg border-0 text-center text-white" style="background: linear-gradient(135deg, #e67e22, #d35400);">
+            <div class="card-body py-4">
                 <i class="bi bi-heart-fill display-4 mb-3"></i>
-                <h5 class="fw-bold">Rekapan Infaq/Shodaqoh</h5>
-                <p>Total Donatur: <strong>{{ $rekapan['infaq']['donatur'] ?? 0 }} Orang</strong></p>
-                <p>Total Uang: <strong>Rp {{ number_format($rekapan['infaq']['uang'] ?? 0, 0, ',', '.') }}</strong></p>
+                <h5 class="fw-bold mb-3">Rekapan Infaq/Shodaqoh</h5>
+                <p class="mb-1">Total Donatur: <strong>{{ $rekapan['infaq']['donatur'] ?? 0 }} Orang</strong></p>
+                <p class="mb-0">Total Uang: 
+                    <strong>Rp {{ number_format($rekapan['infaq']['uang'] ?? 0, 0, ',', '.') }}</strong>
+                </p>
             </div>
         </div>
     </div>
 </div>
+
 
 
       {{-- Informasi --}}
