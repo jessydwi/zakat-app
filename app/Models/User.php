@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -20,7 +19,7 @@ class User extends Authenticatable
         'nama',
         'email',
         'password',
-        'role',
+        'role', 
     ];
 
     /**
@@ -51,6 +50,7 @@ class User extends Authenticatable
      */
     public function muzakki()
     {
-        return $this->hasOne(Muzakki::class);
+        return $this->hasOne(Muzakki::class, 'user_id', 'id');
     }
+
 }

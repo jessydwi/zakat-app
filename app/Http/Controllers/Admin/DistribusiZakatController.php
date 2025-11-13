@@ -77,7 +77,7 @@ class DistribusiZakatController extends Controller
     DistribusiZakat::create([
         'mustahik_id' => $request->mustahik_id,
         'jenis_bantuan_id' => $request->jenis_bantuan_id,
-        'jumlah' => $request->jumlah,
+        'jumlah' => $request->detail['nominal'] ?? $request->jumlah,
         'tanggal' => $request->tanggal,
         'status' => 'disalurkan',
         'detail_json' => json_encode($detail),
@@ -138,7 +138,7 @@ class DistribusiZakatController extends Controller
         $distribusi->update([
             'mustahik_id' => $request->mustahik_id,
             'jenis_bantuan_id' => $request->jenis_bantuan_id,
-            'jumlah' => $request->jumlah,
+            'jumlah' => $request->detail['nominal'] ?? $request->jumlah,
             'tanggal' => $request->tanggal,
             'status' => $request->status ?? 'disalurkan',
             'detail_json' => json_encode($detail),

@@ -11,7 +11,7 @@ class Muzakki extends Model
     protected $table = 'muzakki';
 
     protected $fillable = [
-        'user-id',
+        'user_id',
         'nama',
         'email',
         'no_hp',

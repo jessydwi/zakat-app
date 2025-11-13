@@ -67,7 +67,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // 🙋 Muzakki Routes (role-based)
-Route::prefix('muzaki')->name('muzaki.')->middleware(['auth', 'role:muzakki'])->group(function () {
+Route::prefix('muzaki')->name('muzaki.')->group(function () {
     Route::get('/dashboard', [MuzakiController::class, 'dashboard'])->name('dashboard');
     Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('bayar');
     Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');

@@ -43,7 +43,7 @@
         <!-- Pilihan Jenis Zakat -->
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
             <label for="jenis_zakat_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i class="fas fa-donate text-emerald-500 mr-2"></i> Jenis Dana
+                <i npmclass="fas fa-donate text-emerald-500 mr-2"></i> Jenis Dana
             </label>
             <select name="jenis_zakat_id" id="jenis_zakat_id"
                 class="input-style text-gray-700 text-base"

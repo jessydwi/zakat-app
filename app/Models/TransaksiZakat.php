@@ -19,7 +19,7 @@ class TransaksiZakat extends Model
         'tanggal',
         'status',
         'nama',
-        'jenis-kelamin',
+        'jenis_kelamin',
         'kontak',
         'detail',
     ];
@@ -28,7 +28,7 @@ class TransaksiZakat extends Model
 
     public function muzakki(): BelongsTo
     {
-        return $this->belongsTo(Muzaki::class);
+        return $this->belongsTo(Muzakki::class);
     }
 
     public function jenisZakat(): BelongsTo
