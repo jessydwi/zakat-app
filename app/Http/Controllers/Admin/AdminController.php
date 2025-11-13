@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller; // ✅ Tambahkan ini
 use Illuminate\Http\Request;
-use App\Models\Muzaki;
+use App\Models\Muzakki;
 use App\Models\Mustahik;
 use App\Models\TransaksiZakat;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +32,7 @@ class AdminController extends Controller
 
 
         // Jumlah muzakki dan mustahiq
-        $jumlahMuzaki = Muzaki::count();
+        $jumlahMuzaki = Muzakki::count();
         $jumlahMustahiq = Mustahik::count();
 
         // Grafik pemasukan zakat per bulan

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TransaksiZakat;
-use App\Models\Muzaki;
+use App\Models\Muzakki;
 use App\Models\JenisZakat;
 use App\Models\MetodePembayaran;
 use Carbon\Carbon;
@@ -25,7 +25,7 @@ class TransaksiZakatController extends Controller
     // ➕ Tampilkan form input zakat
     public function create()
     {
-        $muzakki = Muzaki::select('id', 'nama')->get();
+        $muzakki = Muzakki::select('id', 'nama')->get();
         $jenisZakat = JenisZakat::select('id', 'nama_jenis')->get();
         $metode = MetodePembayaran::select('id', 'nama_metode')->get();
 
@@ -36,23 +36,30 @@ class TransaksiZakatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'muzakki_id' => 'required|exists:muzakki,id',
-            'jenis_zakat_id' => 'required|exists:jenis_zakat,id',
-            'metode_id' => 'required|exists:metode_pembayaran,id',
-            'nominal' => 'required|numeric|min:1000',
-            'tanggal' => 'required|date',
+            'muzakki_id'      => 'required|exists:muzakki,id',
+            'nama'            => 'required|string|max:255',
+            'jenis_kelamin'   => 'required|in:Laki-laki,Perempuan',
+            'kontak'          => 'required|string|max:50',
+            'jenis_zakat_id'  => 'required|exists:jenis_zakat,id',
+            'metode_id'       => 'required|exists:metode_pembayaran,id',
+            'nominal'         => 'required|numeric|min:1000',
+            'tanggal'         => 'required|date',
         ]);
 
         TransaksiZakat::create([
-            'muzakki_id' => $request->muzakki_id,
+            'muzakki_id'     => $request->muzakki_id,
+            'nama'           => $request->nama,
+            'jenis_kelamin'  => $request->jenis_kelamin,
+            'kontak'         => $request->kontak,
             'jenis_zakat_id' => $request->jenis_zakat_id,
-            'metode_id' => $request->metode_id,
-            'nominal' => $request->nominal,
-            'tanggal' => Carbon::parse($request->tanggal),
-            'status' => 'menunggu',
+            'metode_id'      => $request->metode_id,
+            'nominal'        => $request->nominal,
+            'tanggal'        => Carbon::parse($request->tanggal),
+            'status'         => 'menunggu',
         ]);
 
-        return redirect()->route('admin.transaksi.index')->with('success', 'Transaksi zakat berhasil ditambahkan.');
+        return redirect()->route('admin.transaksi.index')
+            ->with('success', 'Transaksi zakat berhasil ditambahkan.');
     }
 
     // ✅ Konfirmasi pembayaran

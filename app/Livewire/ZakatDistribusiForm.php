@@ -41,7 +41,7 @@ class ZakatDistribusiForm extends Component
         $baseRules = [
             'mustahik_id' => 'required|exists:mustahik,id',
             'jenis_bantuan_id' => 'required|exists:jenis_bantuan,id',
-            'jumlah' => in_array($this->jenis_bantuan_slug, ['uang-tunai', 'beasiswa']) 
+            'jumlah' => in_array($this->jenis_bantuan_slug, ['uang-tunai', 'beasiswa', 'kesehatan', 'modal-usaha']) 
                 ? 'nullable' 
                 : 'required|numeric|min:1',
             'tanggal' => 'required|date',
@@ -58,7 +58,6 @@ class ZakatDistribusiForm extends Component
                 'detail.pendampingan' => 'nullable|string',
             ],
             'kesehatan' => [
-                'detail.nama_pasien' => 'required|string',
                 'detail.jenis_pengobatan' => 'required|string',
                 'detail.biaya' => 'required|numeric|min:1',
             ],
@@ -67,7 +66,6 @@ class ZakatDistribusiForm extends Component
                 'detail.nominal' => 'required|numeric|min:1',
             ],
             'beasiswa' => [
-                'detail.nama_siswa' => 'required|string',
                 'detail.jenjang' => 'required|string',
                 'detail.biaya' => 'required|numeric|min:1',
             ],
@@ -77,17 +75,68 @@ class ZakatDistribusiForm extends Component
         return array_merge($baseRules, $modularRules);
     }
 
+    /** 🔧 Bangun detail_json dengan fallback nama mustahik */
+    protected function buildDetailJson(): array
+    {
+        $mustahik = Mustahik::find($this->mustahik_id);
+        $slug = $this->jenis_bantuan_slug;
+
+        return match ($slug) {
+            'uang-tunai' => [
+                'nama_penerima' => $this->detail['nama_penerima'] ?? $mustahik?->nama,
+                'nominal' => $this->detail['nominal'] ?? $this->jumlah,
+                'tujuan' => $this->detail['tujuan'] ?? null,
+            ],
+            'beasiswa' => [
+                'nama_siswa' => $this->detail['nama_siswa'] ?? $mustahik?->nama,
+                'jenjang' => $this->detail['jenjang'] ?? null,
+                'biaya' => $this->detail['biaya'] ?? $this->jumlah,
+            ],
+            'kesehatan' => [
+                'nama_pasien' => $this->detail['nama_pasien'] ?? $mustahik?->nama,
+                'jenis_pengobatan' => $this->detail['jenis_pengobatan'] ?? null,
+                'biaya' => $this->detail['biaya'] ?? $this->jumlah,
+            ],
+            'modal-usaha' => [
+                'jenis_usaha' => $this->detail['jenis_usaha'] ?? null,
+                'modal' => $this->detail['modal'] ?? $this->jumlah,
+                'pendampingan' => $this->detail['pendampingan'] ?? null,
+            ],
+            'sembako' => [
+                'jumlah_paket' => $this->detail['jumlah_paket'] ?? null,
+                'jenis_barang' => $this->detail['jenis_barang'] ?? null,
+            ],
+            default => $this->detail ?? [],
+        };
+    }
+
+    /** 🔧 Tentukan jumlah berdasarkan jenis bantuan */
+    protected function resolveJumlah(): int
+    {
+        return match ($this->jenis_bantuan_slug) {
+            'uang-tunai' => (int) ($this->detail['nominal'] ?? $this->jumlah),
+            'beasiswa' => (int) ($this->detail['biaya'] ?? $this->jumlah),
+            'kesehatan' => (int) ($this->detail['biaya'] ?? $this->jumlah),
+            'modal-usaha' => (int) ($this->detail['modal'] ?? $this->jumlah),
+            default => (int) ($this->jumlah ?? 0),
+        };
+    }
+
     public function submit()
     {
         $this->validate();
+        $this->syncJenisBantuanSlug($this->jenis_bantuan_id);
+
+        $detail = $this->buildDetailJson();
+        $jumlah = $this->resolveJumlah();
 
         DistribusiZakat::create([
             'mustahik_id' => $this->mustahik_id,
             'jenis_bantuan_id' => $this->jenis_bantuan_id,
-            'jumlah' => $this->jumlah,
+            'jumlah' => $jumlah,
             'tanggal' => $this->tanggal,
             'status' => $this->status,
-            'detail_json' => json_encode($this->detail),
+            'detail_json' => json_encode($detail),
         ]);
 
         $this->resetForm();
