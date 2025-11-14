@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\KetentuanZakatController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
+use App\Http\Controllers\PublishController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +83,8 @@ Route::prefix('muzaki')->name('muzaki.')->group(function () {
 Route::get('/publish', function () {
     return view('publish');
 })->name('publish');
+
+Route::get('/publish', [PublishController::class, 'index'])->name('publish');
 
 
 // Route::get('/publish', fn () => view('publish'))->name('publish');

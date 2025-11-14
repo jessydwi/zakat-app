@@ -164,8 +164,10 @@
                 <i class="bi bi-basket2 display-4 mb-3"></i>
                 <h5 class="fw-bold mb-3">Rekapan Zakat Fitrah</h5>
                 <p class="mb-1">Total Muzakki: <strong>{{ $rekapan['fitrah']['muzakki'] ?? 0 }} Orang</strong></p>
-                <p class="mb-1">Total Beras: <strong>{{ $rekapan['fitrah']['beras'] ?? 0 }} Kg</strong></p>
-                <p class="mb-0">Total Uang: 
+                @if(isset($rekapan['fitrah']['beras']))
+                    <p class="mb-1">Total Beras: <strong>{{ $rekapan['fitrah']['beras'] }} Kg</strong></p>
+                @endif
+                <p class="mb-0">Total Uang:
                     <strong>Rp {{ number_format($rekapan['fitrah']['uang'] ?? 0, 0, ',', '.') }}</strong>
                 </p>
             </div>
@@ -179,7 +181,7 @@
                 <i class="bi bi-cash-coin display-4 mb-3"></i>
                 <h5 class="fw-bold mb-3">Rekapan Zakat Fidyah</h5>
                 <p class="mb-1">Total Muzakki: <strong>{{ $rekapan['fidyah']['muzakki'] ?? 0 }} Orang</strong></p>
-                <p class="mb-0">Total Uang: 
+                <p class="mb-0">Total Uang:
                     <strong>Rp {{ number_format($rekapan['fidyah']['uang'] ?? 0, 0, ',', '.') }}</strong>
                 </p>
             </div>
@@ -193,14 +195,13 @@
                 <i class="bi bi-heart-fill display-4 mb-3"></i>
                 <h5 class="fw-bold mb-3">Rekapan Infaq/Shodaqoh</h5>
                 <p class="mb-1">Total Donatur: <strong>{{ $rekapan['infaq']['donatur'] ?? 0 }} Orang</strong></p>
-                <p class="mb-0">Total Uang: 
+                <p class="mb-0">Total Uang:
                     <strong>Rp {{ number_format($rekapan['infaq']['uang'] ?? 0, 0, ',', '.') }}</strong>
                 </p>
             </div>
         </div>
     </div>
 </div>
-
 
 
       {{-- Informasi --}}
