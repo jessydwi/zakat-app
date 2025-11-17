@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ManajemenMustahikController;
 use App\Http\Controllers\Admin\LaporanZakatController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\KetentuanZakatController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
@@ -62,11 +63,30 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/laporan', [LaporanZakatController::class, 'index'])->name('laporan.index');
     Route::resource('users', UserController::class);
+    Route::get('/laporan/{id}', [LaporanZakatController::class, 'show'])->name('laporan-zakat.show');
+    Route::get('/laporan/{id}/edit', [LaporanZakatController::class, 'edit'])->name('laporan-zakat.edit');
+    Route::put('/laporan/{id}', [LaporanZakatController::class, 'update'])->name('laporan-zakat.update');
+    Route::delete('/laporan/{id}', [LaporanZakatController::class, 'destroy'])->name('laporan-zakat.destroy');
+    Route::get('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'showDistribusi'])->name('laporan-zakat.show-distribusi');
+    Route::get('laporan-zakat/distribusi/{id}/edit', [LaporanZakatController::class, 'editDistribusi'])->name('laporan-zakat.edit-distribusi');
+    Route::put('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'updateDistribusi'])->name('laporan-zakat.update-distribusi');
+    Route::delete('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'destroyDistribusi'])->name('laporan-zakat.destroy-distribusi');
+
 
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::get('/ketentuan', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
     Route::post('/ketentuan', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
-    Route::delete('/ketentuan/{id}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
+    Route::delete('/ketentuan/{ketentuan}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
+    Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
+
+    Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi.index');
+    Route::post('/notifikasi/baca/{id}', [NotificationController::class, 'markAsRead'])->name('notifikasi.baca');
+    Route::get('/notifikasi/{id}', [NotificationController::class, 'show'])->name('notifikasi.show');
+
+    Route::get('/zakat/{id}', [LaporanZakatController::class, 'show'])->name('zakat.show');
+
+
+
 });
 
 // 🙋 Muzakki Routes (role-based)

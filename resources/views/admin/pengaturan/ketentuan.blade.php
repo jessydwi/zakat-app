@@ -34,12 +34,18 @@
             <label class="block text-sm font-medium text-gray-700">Keterangan</label>
             <textarea name="keterangan" rows="3" placeholder="Penjelasan opsional..." class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
-
-        <div class="md:col-span-2 text-right">
-            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+        <div class="md:col-span-2 flex justify-end gap-4">
+            <button type="submit" 
+                class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition">
                 💾 Simpan Ketentuan
             </button>
+
+            <a href="{{ route('admin.pengaturan.index') }}" 
+            class="bg-gray-500 text-white px-6 py-2 rounded-lg shadow hover:bg-gray-600 transition">
+                Kembali
+            </a>
         </div>
+
     </form>
 
     {{-- Tabel Zakat Fitrah --}}
@@ -109,6 +115,7 @@
                         @case('persentase') Persentase Zakat @break
                         @case('nisab_tahun') Nisab Tahunan @break
                         @case('nisab_bulan') Nisab Bulanan @break
+                        @case('nisab_harian') Nisab Harian @break
                         @default {{ ucfirst($item->parameter) }}
                     @endswitch
                 </td>
@@ -187,44 +194,63 @@ function updateFormFields() {
         `;
     } else if (jenis === 'penghasilan') {
     container.innerHTML = `
+        <!-- Persentase Zakat -->
         <div class="md:col-span-2">
             <h3 class="text-md font-semibold text-indigo-600 mb-2">Persentase Zakat</h3>
         </div>
         <input type="hidden" name="parameter" value="persentase">
         <div>
-            <label class="block text-sm font-medium text-gray-700">Satuan</label>
-            <input type="text" name="satuan" value="%" class="w-full border rounded-lg px-4 py-2">
+            <label class="block text-sm font-medium text-gray-700">Satuan Persentase</label>
+            <input type="text" name="satuan" value="%" class="input-style">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Nilai Persentase</label>
-            <input type="number" name="nilai" step="0.01" value="2.5" class="w-full border rounded-lg px-4 py-2">
+            <input type="number" name="nilai" step="0.01" value="2.5" class="input-style">
         </div>
-        <div class="md:col-span-2">
-            <h3 class="text-md font-semibold text-indigo-600 mt-6 mb-2">Nisab Tahunan</h3>
+
+        <!-- Nisab Tahunan -->
+        <div class="md:col-span-2 mt-6">
+            <h3 class="text-md font-semibold text-indigo-600 mb-2">Nisab Tahunan</h3>
         </div>
         <input type="hidden" name="parameter_tahun" value="nisab_tahun">
         <div>
-            <label class="block text-sm font-medium text-gray-700">Satuan</label>
-            <input type="text" name="satuan_tahun" value="rupiah" class="w-full border rounded-lg px-4 py-2">
+            <label class="block text-sm font-medium text-gray-700">Satuan Tahunan</label>
+            <input type="text" name="satuan_tahun" value="rupiah" class="input-style">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Nilai Tahunan</label>
-            <input type="number" name="nilai_tahun" step="100" value="85685972" class="w-full border rounded-lg px-4 py-2">
+            <input type="number" name="nilai_tahun" step="100" value="85685972" class="input-style">
         </div>
-        <div class="md:col-span-2">
-            <h3 class="text-md font-semibold text-indigo-600 mt-6 mb-2">Nisab Bulanan</h3>
+
+        <!-- Nisab Bulanan -->
+        <div class="md:col-span-2 mt-6">
+            <h3 class="text-md font-semibold text-indigo-600 mb-2">Nisab Bulanan</h3>
         </div>
         <input type="hidden" name="parameter_bulan" value="nisab_bulan">
         <div>
-            <label class="block text-sm font-medium text-gray-700">Satuan</label>
-            <input type="text" name="satuan_bulan" value="rupiah" class="w-full border rounded-lg px-4 py-2">
+            <label class="block text-sm font-medium text-gray-700">Satuan Bulanan</label>
+            <input type="text" name="satuan_bulan" value="rupiah" class="input-style">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Nilai Bulanan</label>
-            <input type="number" name="nilai_bulan" step="100" value="7140498" class="w-full border rounded-lg px-4 py-2">
+            <input type="number" name="nilai_bulan" step="100" value="7140498" class="input-style">
+        </div>
+
+        <!-- Nisab Harian -->
+        <div class="md:col-span-2 mt-6">
+            <h3 class="text-md font-semibold text-indigo-600 mb-2">Nisab Harian</h3>
+        </div>
+        <input type="hidden" name="parameter_harian" value="nisab_harian">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Satuan Harian</label>
+            <input type="text" name="satuan_harian" value="rupiah" class="input-style">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Nilai Harian</label>
+            <input type="number" name="nilai_harian" step="any" value="7140498" class="input-style">
         </div>
     `;
-    } else if (jenis === 'mal') {
+} else if (jenis === 'mal') {
         container.innerHTML = `
             <div>
                 <label class="block text-sm font-medium text-gray-700">Parameter</label>

@@ -24,6 +24,10 @@ class TransaksiZakat extends Model
         'detail',
     ];
 
+    protected $casts = [
+    'detail' => 'array', // ✅ otomatis konversi array ke JSON
+];
+
     public $timestamps = true;
 
     public function muzakki(): BelongsTo
@@ -41,4 +45,9 @@ class TransaksiZakat extends Model
     {
         return $this->belongsTo(MetodePembayaran::class, 'metode_id');
     }
+    public function buktiPembayaran()
+    {
+        return $this->hasOne(BuktiPembayaran::class, 'transaksi_id');
+    }
+
 }

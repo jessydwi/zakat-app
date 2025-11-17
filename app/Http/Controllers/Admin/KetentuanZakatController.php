@@ -8,10 +8,16 @@ use App\Models\KetentuanZakat;
 
 class KetentuanZakatController extends Controller
 {
-    public function index() {
-        $data = KetentuanZakat::orderBy('jenis_zakat')->get()->groupBy('jenis_zakat');
-        return view('admin.pengaturan.ketentuan', compact('data'));
-    }
+   public function index() {
+    $data = KetentuanZakat::query()
+        ->orderBy('jenis_zakat')
+        ->get()
+        ->fresh()
+        ->groupBy('jenis_zakat');
+
+    return view('admin.pengaturan.ketentuan', compact('data'));
+}
+
 
    public function store(Request $request) {
     $request->validate([
@@ -23,7 +29,6 @@ class KetentuanZakatController extends Controller
         $request->validate([
             'satuan' => 'required|string|max:20',
             'nilai' => 'required|numeric|min:0',
-            'nilai_uang' => 'nullable|numeric|min:0',
             'satuan_tahun' => 'required|string|max:20',
             'nilai_tahun' => 'required|numeric|min:0',
             'satuan_bulan' => 'required|string|max:20',
@@ -36,7 +41,6 @@ class KetentuanZakatController extends Controller
             'parameter' => 'persentase',
             'satuan' => $request->satuan,
             'nilai' => $request->nilai,
-            'nilai_uang' => $request->nilai_uang,
             'keterangan' => $request->keterangan,
         ]);
 
@@ -45,7 +49,6 @@ class KetentuanZakatController extends Controller
             'parameter' => 'nisab_tahun',
             'satuan' => $request->satuan_tahun,
             'nilai' => $request->nilai_tahun,
-            'nilai_uang' => null,
             'keterangan' => $request->keterangan,
         ]);
 
@@ -54,7 +57,6 @@ class KetentuanZakatController extends Controller
             'parameter' => 'nisab_bulan',
             'satuan' => $request->satuan_bulan,
             'nilai' => $request->nilai_bulan,
-            'nilai_uang' => null,
             'keterangan' => $request->keterangan,
         ]);
     } elseif ($request->jenis_zakat === 'fitrah' || $request->jenis_zakat === 'mal') {
@@ -63,7 +65,6 @@ class KetentuanZakatController extends Controller
             'parameter' => 'required|string|max:50',
             'satuan' => 'required|string|max:20',
             'nilai' => 'required|numeric|min:0',
-            'nilai_uang' => 'nullable|numeric|min:0',
             'keterangan' => 'nullable|string|max:255',
         ]);
 
@@ -72,7 +73,6 @@ class KetentuanZakatController extends Controller
             'parameter' => $request->parameter,
             'satuan' => $request->satuan,
             'nilai' => $request->nilai,
-            'nilai_uang' => $request->nilai_uang,
             'keterangan' => $request->keterangan,
         ]);
     }
@@ -85,7 +85,6 @@ class KetentuanZakatController extends Controller
             'parameter' => 'required|string|max:50',
             'satuan' => 'required|string|max:20',
             'nilai' => 'required|numeric|min:0',
-            'nilai_uang' => 'nullable|numeric|min:0',
             'keterangan' => 'nullable|string|max:255',
         ]);
 
@@ -98,8 +97,11 @@ class KetentuanZakatController extends Controller
     }
 
 
-    public function destroy(KetentuanZakat $ketentuan) {
-        $ketentuan->delete();
-        return back()->with('success', 'Ketentuan berhasil dihapus.');
-    }
+    public function destroy(KetentuanZakat $ketentuan)
+{
+    $ketentuan->forceDelete(); // hapus permanen dari database
+    return redirect()->route('admin.ketentuan.index')
+        ->with('success', 'Ketentuan berhasil dihapus secara permanen.');
+}
+
 }

@@ -120,13 +120,14 @@ class UserController extends Controller
     $totalDistribusi = 0;
 
     if ($user->role === 'muzaki' && $muzaki) {
-        // Pastikan relasi transaksi berjalan
+        // Hitung total zakat masuk berdasarkan muzakki_id dan status terbayar
         $totalZakatMasuk = TransaksiZakat::where('muzakki_id', $muzaki->id)
             ->where('status', 'terbayar')
             ->sum('nominal');
 
-        // Distribusi: hanya jika mustahik_id menunjuk ke muzakki
-        $totalDistribusi = DistribusiZakat::where('mustahik_id', $muzaki->id)->sum('jumlah');
+        // Hitung total distribusi jika mustahik_id menunjuk ke muzakki
+        $totalDistribusi = DistribusiZakat::where('mustahik_id', $muzaki->id)
+            ->sum('jumlah');
     }
 
     return view('admin.users.show', compact(

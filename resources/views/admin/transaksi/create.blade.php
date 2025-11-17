@@ -15,7 +15,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('admin.transaksi.store') }}" method="POST" class="space-y-8">
+    <form action="{{ route('admin.transaksi.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <!-- Nama Muzakki -->
@@ -23,7 +23,7 @@
             <label for="muzakki_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
                 <i class="fas fa-user text-emerald-500 mr-2"></i> Nama Muzakki
             </label>
-            <select name="muzakki_id" id="muzakki_id" class="input-style" required>
+            <select name="muzakki_id" id="muzakki_id" class="input-style" onchange="isiDataMuzakki()" required>
                 <option value="">-- Pilih Muzakki --</option>
                 @foreach($muzakki as $m)
                     <option value="{{ $m->id }}">{{ $m->nama }}</option>
@@ -38,7 +38,7 @@
             </label>
             <input type="text" name="nama" id="nama"
                 class="input-style"
-                placeholder="Masukkan nama lengkap" required>
+                placeholder="Nama lengkap akan terisi otomatis" readonly required>
         </div>
 
         <!-- Jenis Kelamin -->
@@ -46,11 +46,31 @@
             <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
                 <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
             </label>
-            <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" required>
-                <option value="">-- Pilih Jenis Kelamin --</option>
+            <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" readonly required>
+                <option value="">-- Jenis kelamin akan terisi otomatis --</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
             </select>
+        </div>
+
+        <!-- Alamat -->
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+            <label for="alamat" class="block font-semibold text-emerald-700 mb-3 text-lg">
+                <i class="fas fa-map-marker-alt text-emerald-500 mr-2"></i> Alamat
+            </label>
+            <input type="text" name="alamat" id="alamat"
+                class="input-style"
+                placeholder="Alamat akan terisi otomatis" readonly required>
+        </div>
+
+        <!-- Pekerjaan -->
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+            <label for="pekerjaan" class="block font-semibold text-emerald-700 mb-3 text-lg">
+                <i class="fas fa-briefcase text-emerald-500 mr-2"></i> Pekerjaan
+            </label>
+            <input type="text" name="pekerjaan" id="pekerjaan"
+                class="input-style"
+                placeholder="Pekerjaan akan terisi otomatis" readonly required>
         </div>
 
         <!-- Kontak -->
@@ -60,7 +80,7 @@
             </label>
             <input type="text" name="kontak" id="kontak"
                 class="input-style"
-                placeholder="Contoh: 081234567890 atau email@domain.com" required>
+                placeholder="Kontak akan terisi otomatis" readonly required>
         </div>
 
         <!-- Pilihan Jenis Zakat -->
@@ -105,6 +125,18 @@
             <input type="date" name="tanggal" id="tanggal" class="input-style" required>
         </div>
 
+        <!-- Bukti Pembayaran -->
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+            <label for="bukti_pembayaran" class="block font-semibold text-emerald-700 mb-3 text-lg">
+                <i class="fas fa-file-upload text-emerald-500 mr-2"></i> Bukti Pembayaran
+            </label>
+            <input type="file" name="bukti_pembayaran" id="bukti_pembayaran"
+                class="input-style"
+                accept="image/*,application/pdf">
+            @error('bukti_pembayaran')
+                <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+            @enderror
+        </div>
         <!-- Tombol Submit -->
         <div class="pt-2">
             <button type="submit"
@@ -116,6 +148,28 @@
 </div>
 
 <script>
+const muzakkiData = @json($muzakki);
+
+function isiDataMuzakki() {
+    const select = document.getElementById('muzakki_id');
+    const id = select.value;
+    const muzakki = muzakkiData.find(m => m.id == id);
+
+    if (muzakki) {
+        document.getElementById('nama').value = muzakki.nama || '';
+        document.getElementById('jenis_kelamin').value = muzakki.jenis_kelamin || '';
+        document.getElementById('alamat').value = muzakki.alamat || '';
+        document.getElementById('pekerjaan').value = muzakki.pekerjaan || '';
+        document.getElementById('kontak').value = muzakki.no_hp || '';
+    } else {
+        document.getElementById('nama').value = '';
+        document.getElementById('jenis_kelamin').value = '';
+        document.getElementById('alamat').value = '';
+        document.getElementById('pekerjaan').value = '';
+        document.getElementById('kontak').value = '';
+    }
+}
+
 function tampilkanFormKhusus() {
     const select = document.getElementById('jenis_zakat_id');
     const selectedOption = select.options[select.selectedIndex];
@@ -194,7 +248,7 @@ function tampilkanFormKhusus() {
         </div>
         <div>
             <label class="label"><i class="fas fa-donate text-emerald-500 mr-1"></i> Nominal Sedekah</label>
-            <input type="number" name="nominal_sedekah" class="input-style" placeholder="Masukkan nominal sedekah" required>
+            <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal sedekah" required>
         </div>
     </div>
     `;
@@ -267,7 +321,7 @@ function tampilkanInstruksiMetode() {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
             <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
-                <i class="fas fa-money-bill text-emerald-500"></i> Pembayaran Tunai
+                            <i class="fas fa-money-bill text-emerald-500"></i> Pembayaran Tunai
             </h3>
             <p class="text-gray-700 mt-2">Silakan datang langsung ke kantor LAZ terdekat untuk melakukan pembayaran tunai.</p>
         </div>
