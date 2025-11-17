@@ -59,7 +59,7 @@ class AdminController extends Controller
             'jumlahMustahiq',
             'grafikZakat',
             'infak',
-            'transaksiTerbaru'
+            'transaksiTerbaru',
         ));
     }
 }

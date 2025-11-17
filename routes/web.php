@@ -15,6 +15,9 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
+use App\Http\Controllers\PublishController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -57,10 +60,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('transaksi/{id}/konfirmasi', [TransaksiZakatController::class, 'konfirmasi'])->name('transaksi.konfirmasi');
     Route::resource('distribusi', DistribusiZakatController::class);
     Route::get('/distribusi/cetak', [DistribusiZakatController::class, 'cetak'])->name('distribusi.cetak');
-
     Route::get('/manajemen-mustahik', [ManajemenMustahikController::class, 'index'])->name('manajemen-mustahik.index');
     Route::resource('mustahik', ManajemenMustahikController::class);
-
     Route::get('/laporan', [LaporanZakatController::class, 'index'])->name('laporan.index');
     Route::resource('users', UserController::class);
     Route::get('/laporan/{id}', [LaporanZakatController::class, 'show'])->name('laporan-zakat.show');
@@ -71,6 +72,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('laporan-zakat/distribusi/{id}/edit', [LaporanZakatController::class, 'editDistribusi'])->name('laporan-zakat.edit-distribusi');
     Route::put('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'updateDistribusi'])->name('laporan-zakat.update-distribusi');
     Route::delete('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'destroyDistribusi'])->name('laporan-zakat.destroy-distribusi');
+
 
 
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
@@ -99,9 +101,17 @@ Route::prefix('muzaki')->name('muzaki.')->group(function () {
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
 });
 
+// 📦 Publik & Misc
 Route::get('/publish', function () {
     return view('publish');
 })->name('publish');
+
+Route::get('/publish', [PublishController::class, 'index'])->name('publish');
+
+
+// Route::get('/publish', fn () => view('publish'))->name('publish');
+Route::get('/home', fn () => view('publish'))->name('publish');
+Route::get('/welcome', fn () => view('welcome'))->name('welcome');
 
 // Autentikasi Breeze
 require __DIR__.'/auth.php';
