@@ -33,7 +33,7 @@ class TransaksiZakat extends Model
 
     public function jenisZakat(): BelongsTo
     {
-        return $this->belongsTo(JenisZakat::class);
+        return $this->belongsTo(JenisZakat::class, 'jenis_zakat_id');
     }
 
     // Relasi ke metode pembayaran

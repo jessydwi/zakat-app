@@ -66,7 +66,7 @@ class TransaksiZakatController extends Controller
     public function konfirmasi($id)
     {
         $transaksi = TransaksiZakat::findOrFail($id);
-        $transaksi->update(['status' => 'terbayar']);
+        $transaksi->update(['status' => 'terkonfirmasi']);
 
         return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi.');
     }
