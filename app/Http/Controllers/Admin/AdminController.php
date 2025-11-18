@@ -15,20 +15,20 @@ class AdminController extends Controller
     {
         // Total zakat berdasarkan jenis (dengan join ke jenis_zakat)
        $zakatFitrah = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->whereRaw("LOWER(nama_jenis) = 'zakat fitrah'");
-        })->sum('nominal');
+        $q->whereRaw("nama_jenis ILIKE '%fitrah%'");
+        })->where('status', 'terbayar')->sum('nominal');
 
         $zakatMal = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->whereRaw("LOWER(nama_jenis) = 'zakat mal'");
-        })->sum('nominal');
+            $q->whereRaw("nama_jenis ILIKE '%mal%'");
+        })->where('status', 'terbayar')->sum('nominal');
 
         $zakatFidyah = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->whereRaw("LOWER(nama_jenis) = 'zakat fidyah'");
-        })->sum('nominal');
+            $q->whereRaw("nama_jenis ILIKE '%fidyah%'");
+        })->where('status', 'terbayar')->sum('nominal');
 
         $infak = TransaksiZakat::whereHas('jenisZakat', function ($q) {
-            $q->whereRaw("LOWER(nama_jenis) = 'infak'");
-        })->sum('nominal');
+            $q->whereRaw("nama_jenis ILIKE '%infak%'");
+        })->where('status', 'terbayar')->sum('nominal');
 
 
         // Jumlah muzakki dan mustahiq
@@ -59,7 +59,7 @@ class AdminController extends Controller
             'jumlahMustahiq',
             'grafikZakat',
             'infak',
-            'transaksiTerbaru'
+            'transaksiTerbaru',
         ));
     }
 }

@@ -11,9 +11,13 @@ use App\Http\Controllers\Admin\ManajemenMustahikController;
 use App\Http\Controllers\Admin\LaporanZakatController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\KetentuanZakatController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
+use App\Http\Controllers\PublishController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -56,17 +60,35 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('transaksi/{id}/konfirmasi', [TransaksiZakatController::class, 'konfirmasi'])->name('admin.transaksi.konfirmasi');
     Route::resource('distribusi', DistribusiZakatController::class);
     Route::get('/distribusi/cetak', [DistribusiZakatController::class, 'cetak'])->name('distribusi.cetak');
-
     Route::get('/manajemen-mustahik', [ManajemenMustahikController::class, 'index'])->name('manajemen-mustahik.index');
     Route::resource('mustahik', ManajemenMustahikController::class);
-
     Route::get('/laporan', [LaporanZakatController::class, 'index'])->name('laporan.index');
     Route::resource('users', UserController::class);
+    Route::get('/laporan/{id}', [LaporanZakatController::class, 'show'])->name('laporan-zakat.show');
+    Route::get('/laporan/{id}/edit', [LaporanZakatController::class, 'edit'])->name('laporan-zakat.edit');
+    Route::put('/laporan/{id}', [LaporanZakatController::class, 'update'])->name('laporan-zakat.update');
+    Route::delete('/laporan/{id}', [LaporanZakatController::class, 'destroy'])->name('laporan-zakat.destroy');
+    Route::get('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'showDistribusi'])->name('laporan-zakat.show-distribusi');
+    Route::get('laporan-zakat/distribusi/{id}/edit', [LaporanZakatController::class, 'editDistribusi'])->name('laporan-zakat.edit-distribusi');
+    Route::put('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'updateDistribusi'])->name('laporan-zakat.update-distribusi');
+    Route::delete('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'destroyDistribusi'])->name('laporan-zakat.destroy-distribusi');
+
+
 
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
     Route::get('/ketentuan', [KetentuanZakatController::class, 'index'])->name('ketentuan.index');
     Route::post('/ketentuan', [KetentuanZakatController::class, 'store'])->name('ketentuan.store');
-    Route::delete('/ketentuan/{id}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
+    Route::delete('/ketentuan/{ketentuan}', [KetentuanZakatController::class, 'destroy'])->name('ketentuan.destroy');
+    Route::post('/pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
+
+    Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifikasi.index');
+    Route::post('/notifikasi/baca/{id}', [NotificationController::class, 'markAsRead'])->name('notifikasi.baca');
+    Route::get('/notifikasi/{id}', [NotificationController::class, 'show'])->name('notifikasi.show');
+
+    Route::get('/zakat/{id}', [LaporanZakatController::class, 'show'])->name('zakat.show');
+
+
+
 });
 
 // 🙋 Muzakki Routes (role-based)
@@ -80,11 +102,20 @@ Route::prefix('muzaki')->name('muzaki.')->group(function () {
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/profil', [MuzakiController::class, 'profil'])->name('profil');
     Route::post('/profil', [MuzakiController::class, 'updateProfil'])->name('profil.update');
+    Route::get('/bukti/{id}', [MuzakiController::class, 'showBukti'])->name('muzaki.bukti');
 });
 
+// 📦 Publik & Misc
 Route::get('/publish', function () {
     return view('publish');
 })->name('publish');
+
+Route::get('/publish', [PublishController::class, 'index'])->name('publish');
+
+
+// Route::get('/publish', fn () => view('publish'))->name('publish');
+Route::get('/home', fn () => view('publish'))->name('publish');
+Route::get('/welcome', fn () => view('welcome'))->name('welcome');
 
 // Autentikasi Breeze
 require __DIR__.'/auth.php';

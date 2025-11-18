@@ -5,7 +5,7 @@
     <title>@yield('title') - Zakat Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @livewireStyles
+    
     <!-- Tambahkan Font Awesome untuk ikon yang lebih kaya -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -119,10 +119,12 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Notification Bell -->
-                    <button class="relative p-2 text-emerald-600 hover:text-emerald-800 transition-colors duration-200" aria-label="Notifications">
+                    <a href="{{ route('admin.notifikasi.index') }}" class="relative p-2 text-emerald-600 hover:text-emerald-800 transition-colors duration-200" aria-label="Notifikasi">
                         <i class="fas fa-bell text-xl"></i>
-                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">3</span>
-                    </button>
+                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
+                            {{ \App\Models\Notifikasi::where('user_id', Auth::id())->where('status_baca', false)->count() }}
+                        </span>
+                    </a>
                     <div class="flex items-center space-x-2">
                         <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                             {{ strtoupper(substr(Auth::user()->email ?? 'admin@zakat.com', 0, 1)) }}

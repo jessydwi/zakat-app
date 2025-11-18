@@ -15,48 +15,46 @@ use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Tampilkan halaman registrasi
-     */
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Proses registrasi user baru
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'no_hp' => ['required', 'string', 'max:20'],
+            'alamat' => ['required', 'string'],
+            'pekerjaan' => ['required', 'string', 'max:100'],
         ]);
 
-        // Buat user baru
         $user = User::create([
-            'name' => $validated['name'],
+            'nama' => $validated['nama'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => 'muzakki', // opsional jika kamu masih pakai kolom 'role'
+            'no_hp' => $validated['no_hp'],
+            'alamat' => $validated['alamat'],
+            'pekerjaan' => $validated['pekerjaan'],
+            'role' => 'muzaki',
         ]);
 
-        // Beri role via Spatie
-        $user->assignRole('muzakki');
 
-        // Buat relasi ke tabel muzakki
-        $user->muzakki()->create([
-            'nama' => $validated['name'],
+        // Simpan data Muzakki
+        Muzakki::create([
+            'user_id' => $user->id,
+            'nama' => $validated['nama'],
             'email' => $validated['email'],
             'no_hp' => $validated['no_hp'],
+            'alamat' => $validated['alamat'],
+            'pekerjaan' => $validated['pekerjaan'],
         ]);
 
-        // Trigger event dan login
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect()->route('muzakki.dashboard');
+        return redirect()->route('muzaki.dashboard');
     }
 }

@@ -10,6 +10,7 @@ use App\Models\TransaksiZakat;
 use App\Models\JenisZakat;
 use App\Models\MetodePembayaran;
 use App\Models\Muzakki;
+use App\Models\BuktiPembayaran;
 
 class MuzakiController extends Controller
 {
@@ -30,47 +31,31 @@ public function dashboard()
 
     $muzakkiId = $muzakki->id;
 
-    // Total zakat berdasarkan jenis (hanya yang sudah terkonfirmasi)
+    // Gunakan ID jenis zakat agar 100% akurat
     $zakatFitrah = TransaksiZakat::where('muzakki_id', $muzakkiId)
-        ->whereHas('jenisZakat', fn($q) => $q->where('nama_jenis', 'fitrah'))
-        ->where('status', 'terbayar')
+        ->where('jenis_zakat_id', 1)
+        ->whereRaw("LOWER(status) = 'terbayar'")
         ->sum('nominal');
 
     $zakatMal = TransaksiZakat::where('muzakki_id', $muzakkiId)
-        ->whereHas('jenisZakat', fn($q) => $q->where('nama_jenis', 'mal'))
-        ->where('status', 'terbayar')
+        ->where('jenis_zakat_id', 2)
+        ->whereRaw("LOWER(status) = 'terbayar'")
         ->sum('nominal');
 
     $zakatFidyah = TransaksiZakat::where('muzakki_id', $muzakkiId)
-        ->whereHas('jenisZakat', fn($q) => $q->where('nama_jenis', 'fidyah'))
-        ->where('status', 'terbayar')
+        ->where('jenis_zakat_id', 3)
+        ->whereRaw("LOWER(status) = 'terbayar'")
         ->sum('nominal');
 
     $zakatInfak = TransaksiZakat::where('muzakki_id', $muzakkiId)
-        ->whereHas('jenisZakat', fn($q) => $q->where('nama_jenis', 'infak'))
-        ->where('status', 'terbayar')
+        ->where('jenis_zakat_id', 4)
+        ->whereRaw("LOWER(status) = 'terbayar'")
         ->sum('nominal');
 
-
-    // Total zakat semua jenis
+    // Total zakat
     $totalZakat = $zakatFitrah + $zakatMal + $zakatFidyah + $zakatInfak;
 
-    // Jumlah penerima manfaat (opsional)
-    $totalPenerima = DB::table('mustahik')->count();
-
-    // Grafik zakat pribadi per bulan (hanya yang terkonfirmasi)
-$grafikZakat = TransaksiZakat::select(
-    DB::raw("EXTRACT(MONTH FROM tanggal) AS bulan"),
-    DB::raw("SUM(nominal) AS total")
-)
-->where('muzakki_id', $muzakkiId)
-->where('status', 'terkonfirmasi')
-->whereYear('tanggal', now()->year)
-->groupBy(DB::raw("EXTRACT(MONTH FROM tanggal)"))
-->orderBy(DB::raw("EXTRACT(MONTH FROM tanggal)"))
-->get();
-
-    // Riwayat transaksi zakat pribadi (semua status)
+    // Riwayat transaksi
     $riwayatZakat = TransaksiZakat::with('jenisZakat')
         ->where('muzakki_id', $muzakkiId)
         ->latest('tanggal')
@@ -83,7 +68,6 @@ $grafikZakat = TransaksiZakat::select(
         'zakatFidyah',
         'zakatInfak',
         'totalZakat',
-        'totalPenerima',
         'riwayatZakat'
     ));
 }
@@ -160,26 +144,25 @@ $grafikZakat = TransaksiZakat::select(
     }
 
     // ✅ Riwayat Transaksi Zakat
-    public function riwayat()
-    {
-        $user = auth()->user();
+public function riwayat()
+{
+    $user = Auth::user();
 
-        // Pastikan user punya relasi ke tabel muzakki
-        $muzakki = Muzakki::where('user_id', $user->id)->first();
+    // Ambil data muzakki berdasarkan user_id
+    $muzakki = Muzakki::where('user_id', $user->id)->first();
 
-        if (!$muzakki) {
-            return back()->with('error', 'Data muzakki tidak ditemukan.');
-        }
-
-        // Ambil semua transaksi milik muzakki ini
-        $riwayat = TransaksiZakat::with('jenisZakat')
-                    ->where('muzakki_id', $muzakki->id)
-                    ->orderBy('tanggal', 'DESC')
-                    ->get();
-
-        return view('muzaki.riwayat', compact('riwayat'));
+    if (!$muzakki) {
+        return back()->with('error', 'Data muzakki tidak ditemukan.');
     }
 
+    // Ambil transaksi berdasarkan kolom yang benar → muzakki_id
+    $riwayat = TransaksiZakat::with(['jenisZakat', 'buktiPembayaran'])
+        ->where('muzakki_id', $muzakki->id)
+        ->orderBy('tanggal', 'DESC')
+        ->get();
+
+    return view('muzaki.riwayat', compact('riwayat'));
+}
     // ✅ Informasi & Edukasi
     public function informasi()
     {
@@ -243,6 +226,7 @@ public function updateProfil(Request $request)
 
     // UPDATE tabel muzakki
     $user->muzakki->update([
+        'nama'      => $request->nama,
         'email'     => $request->email_muzakki,
         'no_hp'     => $request->no_hp,
         'pekerjaan' => $request->pekerjaan,
@@ -250,5 +234,22 @@ public function updateProfil(Request $request)
     ]);
 
     return back()->with('success', 'Profil berhasil diperbarui!');
+}
+public function showBukti($id)
+{
+    $user = Auth::user();
+
+    if ($user->role !== 'muzaki') {
+        abort(403);
+    }
+
+    $bukti = BuktiPembayaran::with('transaksi')
+        ->where('transaksi_id', $id)
+        ->whereHas('transaksi', function ($query) use ($user) {
+            $query->where('muzakki_id', $user->muzakki->id);
+        })
+        ->firstOrFail();
+
+    return view('muzaki.bukti', compact('bukti'));
 }
 }

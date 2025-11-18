@@ -6,6 +6,13 @@
 <div class="bg-white p-6 rounded-xl shadow-md">
     <h2 class="text-xl font-bold text-emerald-800 mb-4">Daftar Transaksi Zakat</h2>
 
+    <div class="mb-4">
+        <a href="{{ route('admin.manajemen-zakat.index') }}"
+           class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded transition">
+            ← Kembali
+        </a>
+    </div>
+
     <table class="w-full table-auto border">
         <thead>
             <tr class="bg-emerald-100">

@@ -55,16 +55,20 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-6 py-3">
-                            @if(!empty($item->bukti_pembayaran))
-                                <a href="{{ asset('storage/'.$item->bukti_pembayaran) }}" target="_blank"
-                                   class="text-emerald-700 hover:text-emerald-900 font-medium underline-offset-2 hover:underline">
-                                    Lihat Bukti
-                                </a>
-                            @else
-                                <span class="text-gray-400">Belum tersedia</span>
-                            @endif
-                        </td>
+<td class="px-6 py-3">
+    @if($item->buktiPembayaran && $item->buktiPembayaran->file_path)
+        @php
+            $ext = pathinfo($item->buktiPembayaran->file_path, PATHINFO_EXTENSION);
+        @endphp
+
+        <a href="{{ $item->buktiPembayaran->file_url }}" target="_blank"
+           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
+            <i class="fas fa-eye"></i> Lihat Bukti
+        </a>
+    @else
+        <span class="text-gray-400">Belum tersedia</span>
+    @endif
+</td>
                     </tr>
                 @empty
                     <tr>
