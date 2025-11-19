@@ -11,7 +11,8 @@
                     <th class="px-4 py-3">Jenis Zakat</th>
                     <th class="px-4 py-3">Nominal</th>
                     <th class="px-4 py-3">Tanggal</th>
-                    <th class="px-4 py-3 rounded-tr-lg">Status</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 rounded-tr-lg">Amil</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,10 +29,11 @@
                             {{ ucfirst($item->status) }}
                         </span>
                     </td>
+                    <td class="px-4 py-3 text-gray-700">{{ $item->amil->user->nama ?? '-' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-4 py-8 text-center text-gray-500">
+                    <td colspan="6" class="px-4 py-8 text-center text-gray-500">
                         <i class="fas fa-inbox text-4xl text-gray-400 mb-2"></i>
                         <p>Belum ada transaksi zakat.</p>
                     </td>

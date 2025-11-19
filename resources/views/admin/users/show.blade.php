@@ -32,102 +32,129 @@
         </div>
 
         <!-- User Detail Cards -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Basic Information -->
-            <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
-                    <h2 class="text-xl font-bold text-white flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        Informasi Dasar
-                    </h2>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Basic Information -->
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
+            <h2 class="text-xl font-bold text-white flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Informasi Dasar
+            </h2>
+        </div>
+        <div class="p-6 space-y-4">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 h-16 w-16">
+                    <div class="h-16 w-16 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 flex items-center justify-center">
+                        <span class="text-xl font-medium text-white">{{ strtoupper(substr($user->nama, 0, 1)) }}</span>
+                    </div>
                 </div>
-                <div class="p-6 space-y-4">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0 h-16 w-16">
-                            <div class="h-16 w-16 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 flex items-center justify-center">
-                                <span class="text-xl font-medium text-white">{{ strtoupper(substr($user->nama, 0, 1)) }}</span>
-                            </div>
-                        </div>
-                        <div class="ml-4">
-                            <h3 class="text-lg font-semibold text-gray-900">{{ $user->nama }}</h3>
-                            <p class="text-sm text-gray-500">{{ $user->email }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                            <span class="text-sm font-medium text-gray-600">Email</span>
-                            <span class="text-sm text-gray-900">{{ $user->email }}</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                            <span class="text-sm font-medium text-gray-600">Peran</span>
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full capitalize
-                                {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
-                                {{ $user->role }}
-                            </span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                            <span class="text-sm font-medium text-gray-600">Status</span>
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                                {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
-                            </span>
-                        </div>
-                        <div class="flex justify-between items-center py-2">
-                            <span class="text-sm font-medium text-gray-600">Dibuat Pada</span>
-                            <span class="text-sm text-gray-900">{{ $user->created_at->format('d M Y, H:i') }}</span>
-                        </div>
-                    </div>
+                <div class="ml-4">
+                    <h3 class="text-lg font-semibold text-gray-900">{{ $user->nama }}</h3>
+                    <p class="text-sm text-gray-500">{{ $user->email }}</p>
                 </div>
             </div>
 
-            <!-- Additional Information (for Muzaki) -->
-            @if($user->role === 'muzaki' && $muzaki)
-            <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
-                <div class="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-4">
-                    <h2 class="text-xl font-bold text-white flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        Data Muzaki
-                    </h2>
+            <div class="grid grid-cols-1 gap-4">
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-sm font-medium text-gray-600">Email</span>
+                    <span class="text-sm text-gray-900">{{ $user->email }}</span>
                 </div>
-                <div class="p-6 space-y-4">
-                    <div class="grid grid-cols-1 gap-4">
-                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                            <span class="text-sm font-medium text-gray-600">Nomor HP</span>
-                            <span class="text-sm text-gray-900">{{ $muzaki->no_hp ?? '-' }}</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                            <span class="text-sm font-medium text-gray-600">Alamat</span>
-                            <span class="text-sm text-gray-900">{{ $muzaki->alamat ?? '-' }}</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2">
-                            <span class="text-sm font-medium text-gray-600">Pekerjaan</span>
-                            <span class="text-sm text-gray-900">{{ $muzaki->pekerjaan ?? '-' }}</span>
-                        </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-sm font-medium text-gray-600">Peran</span>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full capitalize
+                        {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' }}">
+                        {{ $user->role }}
+                    </span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                    <span class="text-sm font-medium text-gray-600">Status</span>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
+                        {{ $user->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                        {{ $user->is_active ? 'Aktif' : 'Nonaktif' }}
+                    </span>
+                </div>
+                <div class="flex justify-between items-center py-2">
+                    <span class="text-sm font-medium text-gray-600">Dibuat Pada</span>
+                    <span class="text-sm text-gray-900">{{ $user->created_at->format('d M Y, H:i') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information -->
+    @if($user->role === 'muzaki' && $muzaki)
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Data Muzaki
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span class="text-sm font-medium text-gray-600">Nomor HP</span>
+                        <span class="text-sm text-gray-900">{{ $muzaki->no_hp ?? '-' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span class="text-sm font-medium text-gray-600">Alamat</span>
+                        <span class="text-sm text-gray-900">{{ $muzaki->alamat ?? '-' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm font-medium text-gray-600">Pekerjaan</span>
+                        <span class="text-sm text-gray-900">{{ $muzaki->pekerjaan ?? '-' }}</span>
                     </div>
                 </div>
             </div>
-            @else
-            <!-- Placeholder for non-muzaki users -->
-            <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
-                <div class="bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-4">
-                    <h2 class="text-xl font-bold text-white flex items-center">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Informasi Tambahan
-                    </h2>
-                </div>
-                <div class="p-6">
-                    <p class="text-gray-500 text-center">Tidak ada informasi tambahan untuk peran ini.</p>
+        </div>
+    @elseif($user->role === 'admin' && $amil)
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Data Amil
+                </h2>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span class="text-sm font-medium text-gray-600">Jabatan</span>
+                        <span class="text-sm text-gray-900">{{ $amil->jabatan ?? '-' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm font-medium text-gray-600">Wilayah Tugas</span>
+                        <span class="text-sm text-gray-900">{{ $amil->wilayah_tugas ?? '-' }}</span>
+                    </div>
                 </div>
             </div>
-            @endif
         </div>
+    @else
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+            <div class="bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Informasi Tambahan
+                </h2>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-500 text-center">Tidak ada informasi tambahan untuk peran ini.</p>
+            </div>
+        </div>
+    @endif
+</div>
+
 
         <!-- Activity Summary (Optional) -->
         <div class="mt-8 bg-white shadow-xl rounded-2xl overflow-hidden">
@@ -161,7 +188,7 @@
                     </div>
                     <div class="text-sm text-gray-600">Hari Sejak Bergabung</div>
                 </div>
-    </div>
+                </div>
         </div>
     </div>
 </div>

@@ -95,46 +95,62 @@
     {{-- Tabel Zakat Penghasilan --}}
 @if(isset($data['penghasilan']))
     <div class="mt-10">
-        <h2 class="text-lg font-semibold text-indigo-700 mb-2">💼 Zakat Penghasilan</h2>
+        <h2 class="text-lg font-semibold text-indigo-700 mb-2">Zakat Penghasilan</h2>
         <div class="overflow-x-auto">
-    <table class="w-full table-auto border text-sm">
-        <thead class="bg-gray-100 text-indigo-800 font-semibold">
-            <tr>
-                <th class="px-3 py-2 text-left">Jenis Parameter</th>
-                <th class="px-3 py-2 text-left">Nilai</th>
-                <th class="px-3 py-2 text-left">Satuan</th>
-                <th class="px-3 py-2 text-left">Keterangan</th>
-                <th class="px-3 py-2 text-left">Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($data['penghasilan'] as $item)
-            <tr class="border-t hover:bg-indigo-50">
-                <td class="px-3 py-2 font-medium text-gray-700">
-                    @switch($item->parameter)
-                        @case('persentase') Persentase Zakat @break
-                        @case('nisab_tahun') Nisab Tahunan @break
-                        @case('nisab_bulan') Nisab Bulanan @break
-                        @case('nisab_harian') Nisab Harian @break
-                        @default {{ ucfirst($item->parameter) }}
-                    @endswitch
-                </td>
-                <td class="px-3 py-2 text-gray-800">{{ number_format($item->nilai, 2, ',', '.') }}</td>
-                <td class="px-3 py-2 text-gray-800">{{ $item->satuan }}</td>
-                <td class="px-3 py-2 text-gray-800">{{ $item->keterangan ?? '-' }}</td>
-                <td class="px-3 py-2">
-                    <form method="POST" action="{{ route('admin.ketentuan.destroy', $item->id) }}" onsubmit="return confirm('Yakin ingin menghapus ketentuan ini?')">
-                        @csrf @method('DELETE')
-                        <button class="text-red-600 hover:underline text-sm">🗑️ Hapus</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+            <table class="w-full table-auto border text-sm">
+                <thead class="bg-gray-100 text-indigo-800 font-semibold">
+                    <tr>
+                        <th class="px-3 py-2 text-left">Jenis Parameter</th>
+                        <th class="px-3 py-2 text-left">Nilai</th>
+                        <th class="px-3 py-2 text-left">Satuan</th>
+                        <th class="px-3 py-2 text-left">Keterangan</th>
+                        <th class="px-3 py-2 text-left">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data['penghasilan'] as $item)
+                        <tr class="border-t hover:bg-indigo-50">
+                            <td class="px-3 py-2 font-medium text-gray-700">
+                                @switch($item->parameter)
+                                    @case('persentase')
+                                        Persentase Zakat
+                                        @break
+                                    @case('nisab_tahun')
+                                        Nisab Tahunan
+                                        @break
+                                    @case('nisab_bulan')
+                                        Nisab Bulanan
+                                        @break
+                                    @case('nisab_harian')
+                                        Nisab Harian
+                                        @break
+                                    @default
+                                        {{ ucfirst($item->parameter) }}
+                                @endswitch
+                            </td>
+                            <td class="px-3 py-2 text-gray-800">
+                                {{ number_format($item->nilai, 2, ',', '.') }}
+                            </td>
+                            <td class="px-3 py-2 text-gray-800">{{ $item->satuan }}</td>
+                            <td class="px-3 py-2 text-gray-800">{{ $item->keterangan ?? '-' }}</td>
+                            <td class="px-3 py-2">
+                                <form method="POST" action="{{ route('admin.ketentuan.destroy', $item->id) }}" 
+                                      onsubmit="return confirm('Yakin ingin menghapus ketentuan ini?')">
+                                    @csrf 
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:underline text-sm">
+                                        🗑️ Hapus
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 @endif
+
 
     {{-- Tabel Zakat Mal --}}
     @if(isset($data['mal']))
@@ -219,7 +235,7 @@ function updateFormFields() {
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Nilai Tahunan</label>
-            <input type="number" name="nilai_tahun" step="100" value="85685972" class="input-style">
+            <input type="number" name="nilai_tahun" step="1" value="85685972" class="input-style">
         </div>
 
         <!-- Nisab Bulanan -->
@@ -233,7 +249,7 @@ function updateFormFields() {
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Nilai Bulanan</label>
-            <input type="number" name="nilai_bulan" step="100" value="7140498" class="input-style">
+            <input type="number" name="nilai_bulan" step="1" value="7140498" class="input-style">
         </div>
 
         <!-- Nisab Harian -->
@@ -247,7 +263,7 @@ function updateFormFields() {
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Nilai Harian</label>
-            <input type="number" name="nilai_harian" step="any" value="7140498" class="input-style">
+            <input type="number" name="nilai_harian" step="1" value="7140498" class="input-style">
         </div>
     `;
 } else if (jenis === 'mal') {
@@ -313,18 +329,26 @@ function updatePenghasilanDefaults() {
     const nilai = document.getElementById('nilai_penghasilan');
     const satuan = document.getElementById('satuan_penghasilan');
 
-    if (param === 'persentase') {
-        nilai.value = 2.5;
-        satuan.value = '%';
-    } else if (param === 'nisab_tahun') {
-        nilai.value = 85685972;
-        satuan.value = 'rupiah';
-    } else if (param === 'nisab_bulan') {
-        nilai.value = 7140498;
-        satuan.value = 'rupiah';
-    } else {
-        nilai.value = '';
-        satuan.value = '';
+    switch (param) {
+        case 'persentase':
+            nilai.value = 2.5;
+            satuan.value = '%';
+            break;
+        case 'nisab_tahun':
+            nilai.value = 85685972;
+            satuan.value = 'rupiah';
+            break;
+        case 'nisab_bulan':
+            nilai.value = 7140498;
+            satuan.value = 'rupiah';
+            break;
+        case 'nisab_harian':
+            nilai.value = 7140498;
+            satuan.value = 'rupiah';
+            break;
+        default:
+            nilai.value = '';
+            satuan.value = '';
     }
 }
 </script>

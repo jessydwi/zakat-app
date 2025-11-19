@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>@yield('title') - Zakat Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Tambahkan Font Awesome untuk ikon yang lebih kaya -->
@@ -125,12 +126,17 @@
                             {{ \App\Models\Notifikasi::where('user_id', Auth::id())->where('status_baca', false)->count() }}
                         </span>
                     </a>
-                    <div class="flex items-center space-x-2">
+                    <a href="{{ route('admin.profile.index') }}" 
+                    class="flex items-center space-x-2 p-1 rounded-lg hover:bg-emerald-50 transition">
+
                         <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                             {{ strtoupper(substr(Auth::user()->email ?? 'admin@zakat.com', 0, 1)) }}
                         </div>
-                        <span class="text-emerald-700 font-semibold hidden sm:block">{{ Auth::user()->email ?? 'admin@zakat.com' }}</span>
-                    </div>
+
+                        <span class="text-emerald-700 font-semibold hidden sm:block">
+                            {{ Auth::user()->email ?? 'admin@zakat.com' }}
+                        </span>
+                    </a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button class="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">

@@ -9,6 +9,7 @@ use App\Models\Muzakki;
 use App\Models\JenisZakat;
 use App\Models\MetodePembayaran;
 use App\Models\BuktiPembayaran; // tambahkan ini
+use App\Models\KetentuanZakat; // ✅ INI WAJIB ADA
 use App\Models\Notifikasi;
 use App\Models\User;
 use Carbon\Carbon;
@@ -18,10 +19,13 @@ class TransaksiZakatController extends Controller
     // 📥 Tampilkan semua transaksi zakat
     public function index()
     {
-        $transaksi = TransaksiZakat::with(['muzakki', 'jenisZakat', 'metodePembayaran'])
-            ->orderByDesc('tanggal')
-            ->get();
-
+        $transaksi = TransaksiZakat::select([
+        'id','muzakki_id','nama','jenis_zakat_id','metode_id',
+        'nominal','tanggal','status','amil_id','created_at'
+        ])
+        ->with(['muzakki','jenisZakat','metodePembayaran','amil.user'])
+        ->orderByDesc('tanggal')
+        ->get();
         return view('admin.transaksi.index', compact('transaksi'));
     }
 
@@ -31,9 +35,10 @@ class TransaksiZakatController extends Controller
         $muzakki = Muzakki::all();
         $jenisZakat = JenisZakat::select('id', 'nama_jenis')->get();
         $metode = MetodePembayaran::select('id', 'nama_metode')->get();
-        
+        $nisabHarian = KetentuanZakat::where('parameter', 'nisab_harian')->first();
 
-        return view('admin.transaksi.create', compact('muzakki', 'jenisZakat', 'metode'));
+        
+       return view('admin.transaksi.create', compact('muzakki', 'jenisZakat', 'metode', 'nisabHarian'));
     }
 
  
@@ -54,6 +59,11 @@ class TransaksiZakatController extends Controller
             'bukti_pembayaran' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
+        $fidyah = KetentuanZakat::where('parameter', 'harga_uang')->first();
+        $nominalPerHari = $fidyah->nilai ?? 0;
+        $jumlahHari = $request->jumlah_hari;
+        $totalFidyah = $jumlahHari * $nominalPerHari;
+
         // 🔍 Ambil nama jenis zakat dari database
         $jenisZakat = JenisZakat::find($request->jenis_zakat_id);
         $jenis = strtolower($jenisZakat->nama_jenis); // contoh: 'maal', 'fidyah', 'infak'
@@ -70,10 +80,11 @@ class TransaksiZakatController extends Controller
             ];
         } elseif ($jenis === 'fidyah') {
             $detail = [
-                'jumlah_hari'    => $request->jumlah_hari,
-                'nominal_fidyah' => $request->nominal_fidyah,
-                'nominal'        => $request->nominal,
+                'jumlah_hari'    => $jumlahHari,
+                'nominal_fidyah' => $nominalPerHari,
+                'nominal'        => $totalFidyah,
             ];
+
         } elseif ($jenis === 'infak') {
             $detail = [
                 'tujuan_sedekah' => $request->tujuan_sedekah,
@@ -129,10 +140,75 @@ class TransaksiZakatController extends Controller
 
     // ✅ Konfirmasi pembayaran
     public function konfirmasi($id)
-    {
-        $transaksi = TransaksiZakat::findOrFail($id);
-        $transaksi->update(['status' => 'terbayar']);
+{
+    $transaksi = TransaksiZakat::findOrFail($id);
 
-        return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi.');
+    // Ambil user yang login
+    $user = auth()->user();
+
+    // Pastikan user punya relasi amil
+    if (!$user || !$user->amil) {
+        return back()->withErrors(['error' => 'Hanya amil yang bisa melakukan konfirmasi.']);
     }
+
+    // Simpan status dan amil_id
+    $transaksi->update([
+        'status' => 'terbayar',
+        'amil_id' => $user->amil->id,
+    ]);
+
+    return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
+}
+
+
+    public function konfirmasiTransfer(Request $request)
+{
+    $validated = $request->validate([
+        'idTransaksi'     => 'required|string',
+        'bankTujuan'      => 'required|string',
+        'nomorRekening'   => 'required|string',
+        'nominalTransfer' => 'required|integer|min:1000',
+        'jenis_zakat_id'  => 'nullable|integer',
+        'metode_id'       => 'nullable|integer',
+        'tanggal'         => 'nullable|date',
+    ]);
+
+    session([
+        'idTransaksi'     => $validated['idTransaksi'],
+        'bankTujuan'      => $validated['bankTujuan'],
+        'nomorRekening'   => $validated['nomorRekening'],
+        'nominalTransfer' => $validated['nominalTransfer'],
+        'muzakki_id'      => $request->input('muzakki_id'),
+        'nama_lengkap'    => $request->input('nama_lengkap'),
+        'jenis_kelamin'   => $request->input('jenis_kelamin'),
+        'alamat'          => $request->input('alamat'),
+        'pekerjaan'       => $request->input('pekerjaan'),
+        'kontak'          => $request->input('kontak'),
+        'jenis_zakat_id'  => $request->input('jenis_zakat_id'),
+        'metode_id'       => $request->input('metode_id'),
+        'tanggal'         => $request->input('tanggal'),
+        // bukti pembayaran bisa disimpan di storage, bukan session
+    ]);
+
+    return redirect()->route('admin.transaksi.detail-transfer');
+}
+
+public function detailTransfer()
+{
+    return view('admin.transaksi.detail-transfer', [
+        'idTransaksi'     => session('idTransaksi'),
+        'bankTujuan'      => session('bankTujuan'),
+        'nomorRekening'   => session('nomorRekening'),
+        'nominalTransfer' => session('nominalTransfer'),
+        'waktuTransfer'   => now()->format('d M Y · H:i:s') . ' WIB',
+    ]);
+}
+    public function show($id)
+    {
+        $transaksi = TransaksiZakat::with(['muzakki', 'jenisZakat', 'metodePembayaran', 'buktiPembayaran'])
+            ->findOrFail($id);
+
+        return view('admin.transaksi.show', compact('transaksi'));
+    }
+
 }
