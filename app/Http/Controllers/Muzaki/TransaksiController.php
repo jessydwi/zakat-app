@@ -25,7 +25,7 @@ class TransaksiController extends Controller
     /**
      * Simpan transaksi zakat
      */
-public function store(Request $request)
+public function storePembayaran(Request $request)
 {
     // Validasi umum
     $request->validate([
@@ -88,6 +88,8 @@ public function store(Request $request)
 
     // Simpan transaksi
     TransaksiZakat::create([
+        'nama'          => $request->nama,
+        'jenis_kelamin' => $request->jenis_kelamin,
         'muzakki_id'     => $muzakkiId,
         'jenis_zakat_id' => $request->jenis_zakat_id,
         'metode_id'      => $request->metode_id,

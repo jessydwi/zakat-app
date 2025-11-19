@@ -22,26 +22,15 @@ class BuktiPembayaran extends Model
     public $timestamps = true;
 
     /**
-     * Relasi ke transaksi zakat
+     * Relasi ke Transaksi Zakat
      */
     public function transaksi(): BelongsTo
     {
         return $this->belongsTo(TransaksiZakat::class, 'transaksi_id');
     }
 
-    public function bukti()
-    {
-    return $this->hasOneThrough(
-        BuktiPembayaran::class,
-        TransaksiZakat::class,
-        'id',              // Foreign key on TransaksiZakat
-        'transaksi_id',    // Foreign key on BuktiPembayaran
-        'transaksi_id',    // Local key on RiwayatPembayaran
-        'id'               // Local key on TransaksiZakat
-    );
-    }
     /**
-     * Ambil URL file bukti pembayaran (asumsi disimpan di storage/app/public/bukti)
+     * Link file bukti pembayaran
      */
     public function getFileUrlAttribute(): string
     {
