@@ -12,7 +12,7 @@ class TransaksiZakat extends Model
     protected $table = 'transaksi_zakat';
 
     protected $fillable = [
-        'muzakki_id',
+        'id_muzakki',
         'jenis_zakat_id',
         'metode_id',
         'nominal',
@@ -22,8 +22,11 @@ class TransaksiZakat extends Model
         'jenis_kelamin',
         'kontak',
         'detail',
+
         'amil_id',
         
+        'bukti_pembayaran',
+
     ];
 
     protected $casts = [
@@ -34,12 +37,12 @@ class TransaksiZakat extends Model
 
     public function muzakki(): BelongsTo
     {
-        return $this->belongsTo(Muzakki::class);
+        return $this->belongsTo(Muzakki::class, 'muzaki_id');
     }
 
     public function jenisZakat(): BelongsTo
     {
-        return $this->belongsTo(JenisZakat::class);
+        return $this->belongsTo(JenisZakat::class, 'jenis_zakat_id');
     }
 
     // Relasi ke metode pembayaran
@@ -56,6 +59,5 @@ class TransaksiZakat extends Model
 {
     return $this->belongsTo(\App\Models\Amil::class);
 }
-
 
 }

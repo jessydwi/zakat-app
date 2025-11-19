@@ -5,6 +5,18 @@
 @section('content')
 <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-10 rounded-3xl shadow-md max-w-4xl mx-auto space-y-10 transition hover:shadow-xl animate-fade-in-up">
 
+    @if(session('success'))
+        <div class="bg-green-100 border-l-4 border-green-600 text-green-800 p-4 rounded-xl shadow-md animate-fade-in-up">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 rounded-xl shadow-md animate-fade-in-up">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Header -->
     <div class="text-center space-y-2">
         <h2 class="text-3xl font-extrabold text-emerald-700 flex items-center justify-center gap-3">
@@ -43,7 +55,7 @@
         <!-- Pilihan Jenis Zakat -->
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
             <label for="jenis_zakat_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i npmclass="fas fa-donate text-emerald-500 mr-2"></i> Jenis Dana
+                <i class="fas fa-donate text-emerald-500 mr-2"></i> Jenis Dana
             </label>
             <select name="jenis_zakat_id" id="jenis_zakat_id"
                 class="input-style text-gray-700 text-base"

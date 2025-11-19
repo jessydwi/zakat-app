@@ -67,6 +67,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
     Route::resource('transaksi', TransaksiZakatController::class);
+    Route::post('transaksi/{id}/konfirmasi', [TransaksiZakatController::class, 'konfirmasi'])->name('admin.transaksi.konfirmasi');
+
     Route::resource('distribusi', DistribusiZakatController::class);
     Route::get('/distribusi/cetak', [DistribusiZakatController::class, 'cetak'])->name('distribusi.cetak');
     Route::get('/manajemen-mustahik', [ManajemenMustahikController::class, 'index'])->name('manajemen-mustahik.index');
@@ -110,7 +112,11 @@ Route::prefix('muzaki')->name('muzaki.')->group(function () {
     Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');
     Route::get('/riwayat', [MuzakiController::class, 'riwayat'])->name('riwayat');
     Route::get('/informasi-zakat', [MuzakiController::class, 'informasi'])->name('informasi');
+    Route::get('/muzaki/transaksi/create', [TransaksiController::class, 'create'])->name('muzaki.transaksi.create');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
+    Route::get('/profil', [MuzakiController::class, 'profil'])->name('profil');
+    Route::post('/profil', [MuzakiController::class, 'updateProfil'])->name('profil.update');
+    Route::get('/bukti/{id}', [MuzakiController::class, 'showBukti'])->name('muzaki.bukti');
 });
 
 // 📦 Publik & Misc

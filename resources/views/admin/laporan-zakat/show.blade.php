@@ -33,8 +33,8 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Data Muzakki</h3>
                         <div class="space-y-3">
                             <p>Nama Muzakki: {{ $transaksi->muzakki->nama ?? $transaksi->nama_muzakki }}</p>
-                            <p>Nama: {{ $transaksi->nama ?? '-' }}</p>
-                            <p>Jenis Kelamin: {{ $transaksi->jenis_kelamin ?? '-' }}</p>
+                            <p>Nama: {{ $transaksi->detail['nama'] ?? '-' }}</p>
+                            <p>Jenis Kelamin: {{ $transaksi->detail['jenis_kelamin'] ?? '-' }}</p>
                             <p>Kontak: {{ $transaksi->kontak ?? '-' }}</p>
                         </div>
                     </div>
