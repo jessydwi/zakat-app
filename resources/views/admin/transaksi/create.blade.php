@@ -15,7 +15,7 @@
     </div>
 
     <!-- Form -->
-    <form action="{{ route('admin.transaksi.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.transaksi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
         @csrf
 
         <!-- Nama Muzakki -->
@@ -26,7 +26,10 @@
             <select name="muzakki_id" id="muzakki_id" class="input-style" onchange="isiDataMuzakki()" required>
                 <option value="">-- Pilih Muzakki --</option>
                 @foreach($muzakki as $m)
-                    <option value="{{ $m->id }}">{{ $m->nama }}</option>
+                    <option value="{{ $m->id }}"
+                        {{ session('muzakki_id') == $m->id ? 'selected' : '' }}>
+                        {{ $m->nama }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -38,6 +41,7 @@
             </label>
             <input type="text" name="nama" id="nama"
                 class="input-style"
+                value="{{ session('nama_lengkap') }}"
                 placeholder="Nama lengkap akan terisi otomatis" readonly required>
         </div>
 
@@ -48,8 +52,8 @@
             </label>
             <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" readonly required>
                 <option value="">-- Jenis kelamin akan terisi otomatis --</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
+                <option value="Laki-laki" {{ session('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="Perempuan" {{ session('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
             </select>
         </div>
 
@@ -60,6 +64,7 @@
             </label>
             <input type="text" name="alamat" id="alamat"
                 class="input-style"
+                value="{{ session('alamat') }}"
                 placeholder="Alamat akan terisi otomatis" readonly required>
         </div>
 
@@ -68,8 +73,9 @@
             <label for="pekerjaan" class="block font-semibold text-emerald-700 mb-3 text-lg">
                 <i class="fas fa-briefcase text-emerald-500 mr-2"></i> Pekerjaan
             </label>
-            <input type="text" name="pekerjaan" id="pekerjaan"
+           <input type="text" name="pekerjaan" id="pekerjaan"
                 class="input-style"
+                value="{{ session('pekerjaan') }}"
                 placeholder="Pekerjaan akan terisi otomatis" readonly required>
         </div>
 
@@ -80,9 +86,9 @@
             </label>
             <input type="text" name="kontak" id="kontak"
                 class="input-style"
+                value="{{ session('kontak') }}"
                 placeholder="Kontak akan terisi otomatis" readonly required>
         </div>
-
         <!-- Pilihan Jenis Zakat -->
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
             <label for="jenis_zakat_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
@@ -93,7 +99,9 @@
                 onchange="tampilkanFormKhusus()" required>
                 <option value="">-- Pilih Jenis Dana --</option>
                 @foreach($jenisZakat as $j)
-                    <option value="{{ $j->id }}" data-nama="{{ strtolower($j->nama_jenis) }}">
+                    <option value="{{ $j->id }}"
+                        data-nama="{{ strtolower($j->nama_jenis) }}"
+                        {{ session('jenis_zakat_id') == $j->id ? 'selected' : '' }}>
                         {{ $j->nama_jenis }}
                     </option>
                 @endforeach
@@ -109,10 +117,15 @@
                 <i class="fas fa-credit-card text-emerald-500 mr-2"></i> Metode Pembayaran
             </label>
             <div id="instruksiMetode" class="space-y-4 hidden animate-fade-in-up"></div>
-            <select name="metode_id" class="input-style" onchange="tampilkanInstruksiMetode()" required>
+            <select name="metode_id" id="metode_id"
+                class="input-style"
+                onchange="tampilkanInstruksiMetode()" required>
                 <option value="">-- Pilih Metode Pembayaran --</option>
                 @foreach($metode as $m)
-                    <option value="{{ $m->id }}">{{ $m->nama_metode }}</option>
+                    <option value="{{ $m->id }}"
+                        {{ session('metode_id') == $m->id ? 'selected' : '' }}>
+                        {{ $m->nama_metode }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -122,21 +135,19 @@
             <label for="tanggal" class="block font-semibold text-emerald-700 mb-3 text-lg">
                 <i class="fas fa-calendar-alt text-emerald-500 mr-2"></i> Tanggal Transaksi
             </label>
-            <input type="date" name="tanggal" id="tanggal" class="input-style" required>
+                <input type="date" name="tanggal" id="tanggal"
+                    class="input-style"
+                    value="{{ session('tanggal') }}"
+                    required>
         </div>
 
-        <!-- Bukti Pembayaran -->
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-            <label for="bukti_pembayaran" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i class="fas fa-file-upload text-emerald-500 mr-2"></i> Bukti Pembayaran
-            </label>
-            <input type="file" name="bukti_pembayaran" id="bukti_pembayaran"
-                class="input-style"
-                accept="image/*,application/pdf">
-            @error('bukti_pembayaran')
-                <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
-            @enderror
-        </div>
+        <!-- Bukti Pembayaran --> 
+         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+             <label for="bukti_pembayaran" class="block font-semibold text-emerald-700 mb-3 text-lg"> <i class="fas fa-file-upload text-emerald-500 mr-2">
+             </i> Bukti Pembayaran </label> <input type="file" name="bukti_pembayaran" id="bukti_pembayaran"
+            class="input-style" accept="image/*,application/pdf"> 
+         </div>
+
         <!-- Tombol Submit -->
         <div class="pt-2">
             <button type="submit"
@@ -145,6 +156,40 @@
             </button>
         </div>
     </form>
+
+    <!-- Pop-up Transfer -->
+    <div id="popupTransfer" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-lg">
+        <h3 class="text-lg font-bold text-emerald-700">Konfirmasi Transfer Zakat</h3>
+
+        <!-- ID Transaksi -->
+        <label class="block text-sm font-medium">ID Transaksi</label>
+        <input type="text" id="idTransaksi" class="input-style" readonly>
+
+        <!-- Pilih Bank -->
+        <label class="block text-sm font-medium mt-2">Pilih Bank</label>
+        <select id="bankTujuan" class="input-style" onchange="tampilkanRekening()" required>
+        <option value="">-- Pilih Bank --</option>
+        <option value="BNI">BNI</option>
+        <option value="BCA">BCA</option>
+        <option value="BRI">BRI</option>
+        <option value="Mandiri">Mandiri</option>
+        </select>
+
+        <!-- Nomor Rekening -->
+        <label class="block text-sm font-medium mt-2">Nomor Rekening</label>
+        <input type="text" id="nomorRekening" class="input-style" readonly>
+
+        <!-- Nominal Transfer -->
+        <label class="block text-sm font-medium mt-2">Nominal Transfer</label>
+        <input type="number" id="nominalTransfer" class="input-style" placeholder="Contoh: 75000" required>
+
+        <div class="flex justify-end gap-2 mt-4">
+        <button onclick="tutupPopupTransfer()" type="button" class="btn-secondary">Batal</button>
+        <button onclick="lanjutKeDetailTransfer()" type="button" class="btn-primary">Lanjutkan</button>
+        </div>
+    </div>
+    </div>
 </div>
 
 <script>
@@ -169,6 +214,7 @@ function isiDataMuzakki() {
         document.getElementById('kontak').value = '';
     }
 }
+    const nisabHarian = {{ $nisabHarian->nilai ?? 0 }};
 
 function tampilkanFormKhusus() {
     const select = document.getElementById('jenis_zakat_id');
@@ -218,18 +264,31 @@ function tampilkanFormKhusus() {
             <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah</h3>
             <div>
                 <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
-                <input type="number" name="jumlah_hari" class="input-style" placeholder="Masukkan jumlah hari" required>
+                <input type="number" name="jumlah_hari" id="jumlah_hari"  class="input-style" placeholder="Masukkan jumlah hari" required>
             </div>
             <div>
-                <label class="label"><i class="fas fa-coins text-emerald-500 mr-1"></i> Nominal Fidyah per Hari</label>
-                <input type="number" name="nominal_fidyah" class="input-style" placeholder="Masukkan nominal per hari" required>
+                <label class="label">Nisab Harian (otomatis)</label>
+                <input type="number" name="nisab_harian" id="nisab_harian" class="input-style" value="${nisabHarian}" readonly>
             </div>
             <div>
                 <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Total Fidyah</label>
-                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal total fidyah" required>
+                <input type="number" name="nominal" id="total_fidyah" class="input-style" placeholder="Masukkan nominal total fidyah" required>
             </div>
         </div>
         `;
+        setTimeout(() => {
+            const jumlahHariInput = document.getElementById('jumlah_hari');
+            const nominalPerHariInput = document.getElementById('nisab_harian');
+            const totalFidyahInput = document.getElementById('total_fidyah');
+
+            function hitungTotalFidyah() {
+                const hari = parseInt(jumlahHariInput.value) || 0;
+                const perHari = parseInt(nominalPerHariInput.value) || 0;
+                totalFidyahInput.value = hari * perHari;
+            }
+
+            jumlahHariInput.addEventListener('input', hitungTotalFidyah);
+        }, 50);
     }
 
     // ==== Infak / Sedekah ====
@@ -252,9 +311,7 @@ function tampilkanFormKhusus() {
         </div>
     </div>
     `;
-}
-
-    // ==== Zakat Fitrah / Lainnya ====
+}// ==== Zakat Fitrah / Lainnya ====
     else {
         html = `
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
@@ -293,9 +350,13 @@ function tampilkanInstruksiMetode() {
                 <li>BCA 123456789 a.n. LAZ Zakat</li>
                 <li>Mandiri 987654321 a.n. LAZ Zakat</li>
             </ul>
+            <button type="button" onclick="bukaPopupTransfer()" 
+                class="mt-4 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-700">
+                Konfirmasi Transfer
+            </button>
         </div>
         `;
-    } else if (selected.includes('e-wallet')) {
+    }else if (selected.includes('e-wallet')) {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
             <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
@@ -331,6 +392,91 @@ function tampilkanInstruksiMetode() {
     container.innerHTML = html;
     container.classList.remove('hidden');
 }
+
+function bukaPopupTransfer() {
+    // Generate ID transaksi otomatis
+    const id = 'TRX' + new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+    document.getElementById('idTransaksi').value = id;
+    document.getElementById('popupTransfer').classList.remove('hidden');
+}
+
+function tutupPopupTransfer() {
+    document.getElementById('popupTransfer').classList.add('hidden');
+}
+
+function tampilkanRekening() {
+    const bank = document.getElementById('bankTujuan').value;
+    let rekening = '';
+
+    switch(bank) {
+        case 'BNI':
+            rekening = 'BNI 1122334455 a.n. LAZ Zakat';
+            break;
+        case 'BCA':
+            rekening = 'BCA 123456789 a.n. LAZ Zakat';
+            break;
+        case 'BRI':
+            rekening = 'BRI 9988776655 a.n. LAZ Zakat';
+            break;
+        case 'Mandiri':
+            rekening = 'Mandiri 987654321 a.n. LAZ Zakat';
+            break;
+    }
+
+    document.getElementById('nomorRekening').value = rekening;
+}
+
+function lanjutKeDetailTransfer() {
+    const id = document.getElementById('idTransaksi').value;
+    const nominal = document.getElementById('nominalTransfer').value;
+    const bank = document.getElementById('bankTujuan').value;
+    const rekening = document.getElementById('nomorRekening').value;
+
+    // Tambahan data muzakki
+    const muzakkiId     = document.getElementById('muzakki_id').value;
+    const namaLengkap   = document.getElementById('nama').value;
+    const jenisKelamin  = document.getElementById('jenis_kelamin').value;
+    const alamat        = document.getElementById('alamat').value;
+    const pekerjaan     = document.getElementById('pekerjaan').value;
+    const kontak        = document.getElementById('kontak').value;
+    const jenisZakatId = document.getElementById('jenis_zakat_id').value;
+    const metodeId     = document.getElementById('metode_id').value;
+    const tanggal      = document.getElementById('tanggal').value;
+
+
+
+    if (!bank || !rekening || !id || !nominal || nominal < 1000) {
+        alert('Lengkapi semua data. Nominal minimal Rp1.000.');
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/admin/transaksi/konfirmasi-transfer';
+
+    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    form.innerHTML = `
+        <input type="hidden" name="_token" value="${csrf}">
+        <input type="hidden" name="idTransaksi" value="${id}">
+        <input type="hidden" name="nominalTransfer" value="${nominal}">
+        <input type="hidden" name="bankTujuan" value="${bank}">
+        <input type="hidden" name="nomorRekening" value="${rekening}">
+        <input type="hidden" name="muzakki_id" value="${muzakkiId}">
+        <input type="hidden" name="nama_lengkap" value="${namaLengkap}">
+        <input type="hidden" name="jenis_kelamin" value="${jenisKelamin}">
+        <input type="hidden" name="alamat" value="${alamat}">
+        <input type="hidden" name="pekerjaan" value="${pekerjaan}">
+        <input type="hidden" name="kontak" value="${kontak}">
+        <input type="hidden" name="jenis_zakat_id" value="${jenisZakatId}">
+        <input type="hidden" name="metode_id" value="${metodeId}">
+        <input type="hidden" name="tanggal" value="${tanggal}">
+
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+
 </script>
 
 <style>

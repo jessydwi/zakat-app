@@ -46,10 +46,14 @@ class AdminController extends Controller
         ->get();
 
         // Transaksi terbaru
-        $transaksiTerbaru = TransaksiZakat::with('muzakki', 'jenisZakat')
-            ->latest('tanggal')
-            ->take(5)
-            ->get();
+        $transaksiTerbaru = TransaksiZakat::select([
+        'id','muzakki_id','nama','jenis_zakat_id','metode_id',
+        'nominal','tanggal','status','amil_id','created_at'
+    ])
+    ->orderByDesc('tanggal')
+    ->limit(5)
+    ->with(['muzakki','jenisZakat','metodePembayaran','amil.user'])
+    ->get();
 
         return view('admin.dashboard', compact(
             'zakatFitrah',

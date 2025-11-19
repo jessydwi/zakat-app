@@ -13,7 +13,7 @@
                         <h1 class="text-3xl font-bold text-white">Detail Zakat Masuk</h1>
                         <p class="text-blue-100 mt-2">Informasi lengkap tentang zakat yang diterima</p>
                     </div>
-                    <a href="{{ route('admin.laporan.index') }}" 
+                    <a href="{{ route('admin.manajemen-zakat.index') }}" 
                        class="inline-flex items-center px-4 py-2 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-gray-100">
                         Kembali
                     </a>
@@ -33,8 +33,8 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Data Muzakki</h3>
                         <div class="space-y-3">
                             <p>Nama Muzakki: {{ $transaksi->muzakki->nama ?? $transaksi->nama_muzakki }}</p>
-                            <p>Nama: {{ $transaksi->detail['nama'] ?? '-' }}</p>
-                            <p>Jenis Kelamin: {{ $transaksi->detail['jenis_kelamin'] ?? '-' }}</p>
+                            <p>Nama: {{ $transaksi->nama ?? '-' }}</p>
+                            <p>Jenis Kelamin: {{ $transaksi->jenis_kelamin ?? '-' }}</p>
                             <p>Kontak: {{ $transaksi->kontak ?? '-' }}</p>
                         </div>
                     </div>
@@ -48,26 +48,6 @@
                             <p>Jumlah: Rp {{ number_format($transaksi->nominal ?? $transaksi->jumlah, 0, ',', '.') }}</p>
                         </div>
                     </div>
-                    <!-- Informasi Amil -->
-                    @if($transaksi->amil && $transaksi->amil->user)
-                        <div class="mt-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Petugas Konfirmasi (Amil)</h3>
-                            <div class="bg-gray-50 p-4 rounded-lg space-y-2">
-                                <div class="flex justify-between">
-                                    <span class="font-medium text-gray-700">Nama Amil</span>
-                                    <span class="text-gray-900">{{ $transaksi->amil->user->nama }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="font-medium text-gray-700">Jabatan</span>
-                                    <span class="text-gray-900">{{ $transaksi->amil->jabatan ?? '-' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="font-medium text-gray-700">Wilayah Tugas</span>
-                                    <span class="text-gray-900">{{ $transaksi->amil->wilayah_tugas ?? '-' }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 </div>
 
                 <!-- Detail Tambahan -->
@@ -137,7 +117,7 @@
         <div class="mt-8 flex justify-end space-x-4">
             <a href="{{ route('admin.laporan-zakat.edit', $transaksi->id) }}" 
                class="px-6 py-3 bg-yellow-500 text-white rounded-lg">Edit</a>
-            <form action="{{ route('admin.laporan-zakat.destroy', $transaksi->id) }}" method="POST" 
+            <form action="{{ route('admin.manajemen-zakat.destroy', $transaksi->id) }}" method="POST" 
                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus data zakat ini?')">
                 @csrf
                 @method('DELETE')

@@ -21,15 +21,23 @@ class ManajemenZakatController extends Controller
         $totalDistribusi = DistribusiZakat::sum('jumlah');
 
         // 📥 Semua transaksi zakat masuk (untuk tabel)
-        $transaksiMasuk = TransaksiZakat::with(['muzakki', 'jenisZakat'])
-            ->orderByDesc('tanggal')
-            ->get();
+        $transaksiMasuk = TransaksiZakat::select([
+        'id','muzakki_id','nama','jenis_zakat_id','metode_id',
+        'nominal','tanggal','status','amil_id','created_at'
+    ])
+    ->with(['muzakki','jenisZakat','metodePembayaran','amil.user'])
+    ->orderByDesc('tanggal')
+    ->get();
 
         // ⏳ Transaksi yang belum dikonfirmasi (untuk konfirmasi panel)
-        $transaksiPending = TransaksiZakat::with(['muzakki', 'jenisZakat'])
-            ->where('status', 'menunggu')
-            ->orderBy('tanggal')
-            ->get();
+        $transaksiPending = TransaksiZakat::select([
+        'id','muzakki_id','nama','jenis_zakat_id','metode_id',
+        'nominal','tanggal','status','amil_id','created_at'
+    ])
+    ->where('status', 'menunggu')
+    ->orderBy('tanggal', 'asc')
+    ->with(['muzakki','jenisZakat','metodePembayaran','amil.user'])
+    ->get();
 
         // 🎯 Distribusi zakat ke mustahik (untuk laporan dan rekap)
         $distribusiZakat = DistribusiZakat::with(['mustahik', 'kategoriMustahik', 'jenisBantuan'])

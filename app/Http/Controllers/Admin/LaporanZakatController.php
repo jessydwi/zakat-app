@@ -12,6 +12,7 @@ use App\Models\JenisBantuan;
 use App\Models\MetodePembayaran;
 use App\Models\BuktiPembayaran;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Validator;
 
 class LaporanZakatController extends Controller
@@ -156,12 +157,48 @@ class LaporanZakatController extends Controller
             ->with('success', 'Distribusi zakat berhasil diperbarui.');
     }
 
-    public function destroyDistribusi($id)
+        public function destroyDistribusi($id)
     {
         $distribusi = DistribusiZakat::findOrFail($id);
-        $distribusi->delete();
+        $distribusi->forceDelete(); // 🔥 hapus permanen
 
         return redirect()->route('admin.laporan.index')
-            ->with('success', 'Distribusi zakat berhasil dihapus.');
+            ->with('success', 'Distribusi zakat berhasil dihapus permanen.');
     }
+
+    public function exportPdf(Request $request)
+{
+    $start = $request->start ?? now()->startOfMonth()->toDateString();
+    $end   = $request->end ?? now()->endOfMonth()->toDateString();
+
+    $rekapMasuk = TransaksiZakat::with([
+        'muzakki',
+        'jenisZakat',
+        'metodePembayaran',
+        'amil.user',
+        'buktiPembayaran'
+    ])
+    ->whereBetween('tanggal', [$start, $end])
+    ->where('status', 'terbayar')
+    ->orderBy('tanggal', 'desc')
+    ->get();
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan-zakat.pdf', compact('rekapMasuk','start','end'));
+    return $pdf->download("rekap-zakat-detail-{$start}-{$end}.pdf");
+}
+
+public function exportDistribusiRekapPdf(Request $request)
+{
+    $start = $request->start ?? now()->startOfMonth()->toDateString();
+    $end   = $request->end ?? now()->endOfMonth()->toDateString();
+
+    $rekapDistribusi = DistribusiZakat::with(['mustahik','jenisBantuan'])
+        ->whereBetween('tanggal', [$start, $end])
+        ->orderBy('tanggal', 'desc')
+        ->get();
+
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.laporan-zakat.rekap-distribusi-pdf', compact('rekapDistribusi','start','end'));
+    return $pdf->download("rekap-distribusi-zakat-{$start}-{$end}.pdf");
+}
+
 }

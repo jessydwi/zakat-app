@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ManajemenZakatController;
 use App\Http\Controllers\Admin\TransaksiZakatController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\KetentuanZakatController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
 use App\Http\Controllers\PublishController;
@@ -54,10 +54,21 @@ Route::middleware('auth')->group(function () {
 // Group route khusus admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-    Route::get('/manajemen-zakat', [ManajemenZakatController::class, 'index'])->name('manajemen-zakat.index');
-    Route::get('/zakat/create', [TransaksiZakatController::class, 'create'])->name('zakat.create');
+    Route::resource('manajemen-zakat', ManajemenZakatController::class);
+
+
+    // Detail transfer (custom)
+    Route::get('/transaksi/detail-transfer', [TransaksiZakatController::class, 'detailTransfer'])
+        ->name('transaksi.detail-transfer');
+
+    // Konfirmasi transfer (custom)
+    Route::post('/transaksi/konfirmasi-transfer', [TransaksiZakatController::class, 'konfirmasiTransfer'])
+        ->name('transaksi.konfirmasi-transfer');
+
+
     Route::resource('transaksi', TransaksiZakatController::class);
     Route::post('transaksi/{id}/konfirmasi', [TransaksiZakatController::class, 'konfirmasi'])->name('admin.transaksi.konfirmasi');
+
     Route::resource('distribusi', DistribusiZakatController::class);
     Route::get('/distribusi/cetak', [DistribusiZakatController::class, 'cetak'])->name('distribusi.cetak');
     Route::get('/manajemen-mustahik', [ManajemenMustahikController::class, 'index'])->name('manajemen-mustahik.index');
@@ -72,7 +83,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('laporan-zakat/distribusi/{id}/edit', [LaporanZakatController::class, 'editDistribusi'])->name('laporan-zakat.edit-distribusi');
     Route::put('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'updateDistribusi'])->name('laporan-zakat.update-distribusi');
     Route::delete('laporan-zakat/distribusi/{id}', [LaporanZakatController::class, 'destroyDistribusi'])->name('laporan-zakat.destroy-distribusi');
-
+    Route::get('laporan-zakat/export-pdf', [LaporanZakatController::class, 'exportPdf'])->name('laporan-zakat.export-pdf');
+    Route::get('laporan-zakat/export-rekap-distribusi-pdf', [LaporanZakatController::class, 'exportDistribusiRekapPdf'])->name('laporan-zakat.export-rekap-distribusi-pdf');
 
 
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
@@ -86,6 +98,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/notifikasi/{id}', [NotificationController::class, 'show'])->name('notifikasi.show');
 
     Route::get('/zakat/{id}', [LaporanZakatController::class, 'show'])->name('zakat.show');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
 
 

@@ -4,12 +4,28 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\TransaksiZakat;
+use Illuminate\Support\Facades\Auth;
 
 class ZakatKonfirmasi extends Component
 {
     public function konfirmasi($id)
     {
-        TransaksiZakat::where('id', $id)->update(['status' => 'terbayar']);
+        $transaksi = TransaksiZakat::findOrFail($id);
+        $user = Auth::user();
+
+        // Validasi: pastikan user punya relasi amil
+        if (!$user || !$user->amil) {
+            session()->flash('error', 'User ini belum terdaftar sebagai amil.');
+            return;
+        }
+
+        // Update status dan amil_id
+        $transaksi->update([
+            'status' => 'terbayar',
+            'amil_id' => $user->amil->id,
+        ]);
+
+        session()->flash('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama);
     }
 
     public function render()
@@ -19,4 +35,3 @@ class ZakatKonfirmasi extends Component
         return view('livewire.zakat-konfirmasi', compact('pending'));
     }
 }
-

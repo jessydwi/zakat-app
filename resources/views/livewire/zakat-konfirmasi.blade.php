@@ -4,6 +4,18 @@
         <h2 class="text-lg font-semibold text-yellow-800">Konfirmasi Transaksi</h2>
     </div>
     <div class="overflow-x-auto">
+                @if (session()->has('success'))
+            <div class="bg-emerald-100 text-emerald-800 px-4 py-2 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <table class="w-full table-auto text-sm text-left border-collapse">
             <thead class="bg-yellow-100 text-yellow-700 font-semibold rounded-t-lg">
                 <tr>
@@ -19,12 +31,29 @@
                     <td class="px-4 py-3 text-gray-700">{{ $item->muzakki->nama ?? '-' }}</td>
                     <td class="px-4 py-3 text-gray-700 font-medium">Rp{{ number_format($item->nominal, 0, ',', '.') }}</td>
                     <td class="px-4 py-3 text-gray-700">{{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
-                    <td class="px-4 py-3">
+                   <td class="px-4 py-3">
+                    <div class="flex items-center gap-2">
+                        <!-- Tombol Konfirmasi -->
                         <button wire:click="konfirmasi({{ $item->id }})"
-                                class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-md flex items-center gap-2">
-                            <i class="fas fa-check"></i> Konfirmasi
+                            class="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 
+                                transition-all duration-300 transform hover:scale-105 shadow-md 
+                                flex items-center gap-2 text-sm h-10">
+                            <i class="fas fa-check"></i>
+                            Konfirmasi
                         </button>
-                    </td>
+
+                        <!-- Tombol Detail -->
+                        <a href="{{ route('admin.transaksi.show', $item->id) }}"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 
+                                transition-all duration-300 transform hover:scale-105 shadow-md 
+                                flex items-center gap-2 text-sm h-10">
+                            <i class="fas fa-info-circle"></i>
+                            Detail
+                        </a>
+
+                    </div>
+                </td>
+
                 </tr>
                 @empty
                 <tr>

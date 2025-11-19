@@ -47,4 +47,10 @@ class TransaksiZakat extends Model
     {
         return $this->hasOne(BuktiPembayaran::class, 'transaksi_id');
     }
+
+    public function amil()
+{
+    return $this->belongsTo(\App\Models\Amil::class);
+}
+
 }

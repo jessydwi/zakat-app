@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Muzakki;
+use App\Models\Amil;
 use App\Models\TransaksiZakat;
 use App\Models\DistribusiZakat;
 use Illuminate\Http\Request;
@@ -33,10 +34,11 @@ class UserController extends Controller
             'no_hp' => 'required_if:role,muzaki',
             'alamat' => 'required_if:role,muzaki',
             'pekerjaan' => 'required_if:role,muzaki',
+            'jabatan' => 'required_if:role,admin',
+            'wilayah_tugas' => 'required_if:role,admin',
         ]);
 
         try {
-            // Simpan user
             $user = User::create([
                 'nama' => $request->nama,
                 'email' => $request->email,
@@ -45,7 +47,6 @@ class UserController extends Controller
                 'password' => bcrypt($request->password),
             ]);
 
-            // Simpan muzakki jika role = muzaki
             if ($request->role === 'muzaki') {
                 Muzakki::create([
                     'user_id'   => $user->id,
@@ -57,19 +58,27 @@ class UserController extends Controller
                 ]);
             }
 
+            if ($request->role === 'admin') {
+                Amil::create([
+                    'user_id'       => $user->id,
+                    'jabatan'       => $request->jabatan,
+                    'wilayah_tugas' => $request->wilayah_tugas,
+                ]);
+            }
+
             return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
         } catch (\Exception $e) {
-            Log::error('Gagal menyimpan user/muzakki: ' . $e->getMessage());
+            Log::error('Gagal menyimpan user: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
         }
     }
 
     public function edit(User $user)
     {
-        // Ambil relasi muzakki langsung dari model
         $muzaki = $user->muzakki;
+        $amil   = $user->amil;
 
-        return view('admin.users.edit', compact('user', 'muzaki'));
+        return view('admin.users.edit', compact('user', 'muzaki', 'amil'));
     }
 
     public function update(Request $request, User $user)
@@ -81,9 +90,10 @@ class UserController extends Controller
             'no_hp' => 'required_if:role,muzaki',
             'alamat' => 'required_if:role,muzaki',
             'pekerjaan' => 'required_if:role,muzaki',
+            'jabatan' => 'required_if:role,admin',
+            'wilayah_tugas' => 'required_if:role,admin',
         ]);
 
-        // Update data user
         $user->update([
             'nama' => $request->nama,
             'email' => $request->email,
@@ -91,7 +101,6 @@ class UserController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
 
-        // Update atau buat data muzakki jika role adalah muzaki
         if ($request->role === 'muzaki') {
             Muzakki::updateOrCreate(
                 ['user_id' => $user->id],
@@ -103,46 +112,57 @@ class UserController extends Controller
                     'pekerjaan' => $request->pekerjaan,
                 ]
             );
-        } else {
-            // Jika role bukan muzaki, hapus data muzakki
+            Amil::where('user_id', $user->id)->delete();
+        } elseif ($request->role === 'admin') {
+            Amil::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'jabatan'       => $request->jabatan,
+                    'wilayah_tugas' => $request->wilayah_tugas,
+                ]
+            );
             Muzakki::where('user_id', $user->id)->delete();
+        } else {
+            Muzakki::where('user_id', $user->id)->delete();
+            Amil::where('user_id', $user->id)->delete();
         }
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diperbarui.');
     }
 
-       public function show($id)
-{
-    $user = User::findOrFail($id);
-    $muzaki = $user->muzakki;
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        $muzaki = $user->muzakki;
+        $amil   = $user->amil;
 
-    $totalZakatMasuk = 0;
-    $totalDistribusi = 0;
+        $totalZakatMasuk = 0;
+        $totalDistribusi = 0;
 
-    if ($user->role === 'muzaki' && $muzaki) {
-        // Hitung total zakat masuk berdasarkan muzakki_id dan status terbayar
-        $totalZakatMasuk = TransaksiZakat::where('muzakki_id', $muzaki->id)
-            ->where('status', 'terbayar')
-            ->sum('nominal');
+        if ($user->role === 'muzaki' && $muzaki) {
+            $totalZakatMasuk = TransaksiZakat::where('muzakki_id', $muzaki->id)
+                ->where('status', 'terbayar')
+                ->sum('nominal');
 
-        // Hitung total distribusi jika mustahik_id menunjuk ke muzakki
-        $totalDistribusi = DistribusiZakat::where('mustahik_id', $muzaki->id)
-            ->sum('jumlah');
+            $totalDistribusi = DistribusiZakat::where('mustahik_id', $muzaki->id)
+                ->sum('jumlah');
+        }
+
+        return view('admin.users.show', compact(
+            'user',
+            'muzaki',
+            'amil',
+            'totalZakatMasuk',
+            'totalDistribusi'
+        ));
     }
-
-    return view('admin.users.show', compact(
-        'user',
-        'muzaki',
-        'totalZakatMasuk',
-        'totalDistribusi'
-    ));
-}
 
     public function destroy($id)
     {
         try {
             $user = User::findOrFail($id);
-            $user->muzakki?->delete(); // jika ada relasi
+            $user->muzakki?->delete();
+            $user->amil?->delete();
             $user->delete();
 
             return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
@@ -151,6 +171,4 @@ class UserController extends Controller
             return redirect()->route('admin.users.index')->withErrors(['error' => 'Gagal menghapus user.']);
         }
     }
-
-
 }

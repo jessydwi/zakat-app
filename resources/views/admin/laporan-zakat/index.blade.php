@@ -81,9 +81,19 @@
 
     <!-- Rekap Zakat Masuk Table -->
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden mb-8">
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
-            <h2 class="text-xl font-bold text-white">Rekap Zakat Masuk</h2>
-            <p class="text-blue-100 mt-1">Data zakat yang telah diterima</p>
+        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4 flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-white">Rekap Zakat Masuk</h2>
+                <p class="text-blue-100 mt-1">Data zakat yang telah diterima</p>
+            </div>
+            <!-- Tombol Export -->
+            <a href="{{ route('admin.laporan-zakat.export-pdf', ['start' => $start, 'end' => $end]) }}" 
+                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Export PDF
+            </a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full table-auto">
@@ -151,12 +161,19 @@
         </div>
     </div>
 
-    <!-- Rekap Distribusi Table -->
+        <!-- Rekap Distribusi Table -->
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
-        <div class="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-4">
-            <h2 class="text-xl font-bold text-white">Rekap Distribusi</h2>
-            <p class="text-purple-100 mt-1">Data distribusi zakat kepada mustahik</p>
+        <div class="bg-gradient-to-r from-purple-500 to-pink-600 px-6 py-4 flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-white">Rekap Distribusi</h2>
+                <p class="text-purple-100 mt-1">Data distribusi zakat kepada mustahiq</p>
+            </div>
+            <a href="{{ route('admin.laporan-zakat.export-rekap-distribusi-pdf', ['start' => $start, 'end' => $end]) }}" 
+            class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700">
+            Export Rekap Distribusi PDF
+            </a>
         </div>
+
         <div class="overflow-x-auto">
             <table class="w-full table-auto">
                 <thead class="bg-gray-50">
@@ -172,11 +189,21 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($rekapDistribusi as $d)
                     <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ \Carbon\Carbon::parse($d->tanggal)->format('d M Y') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $d->mustahik->nama ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $d->jenisBantuan->nama_bantuan ?? '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">Rp{{ number_format($d->jumlah, 0, ',', '.') }}</td>
-                        <td class="px-6 py-4 text-sm text-gray-600">{{ Str::limit(json_encode($d->detail_json), 50) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ \Carbon\Carbon::parse($d->tanggal)->format('d M Y') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $d->mustahik->nama ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ $d->jenisBantuan->nama_bantuan ?? '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">
+                            Rp{{ number_format($d->jumlah, 0, ',', '.') }}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-600">
+                            {{ Str::limit(json_encode($d->detail_json), 50) }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
                                 <a href="{{ route('admin.laporan-zakat.show-distribusi', $d->id) }}" class="text-blue-600 hover:text-blue-900 transition-colors duration-200">

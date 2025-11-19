@@ -52,5 +52,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Muzakki::class, 'user_id', 'id');
     }
+    public function amil()
+{
+    return $this->hasOne(Amil::class);
+}
+
 
 }

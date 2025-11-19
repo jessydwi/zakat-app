@@ -25,60 +25,57 @@ class KetentuanZakatController extends Controller
     ]);
 
     if ($request->jenis_zakat === 'penghasilan') {
-        // Validasi tambahan untuk penghasilan
+        // Validasi lengkap untuk penghasilan
         $request->validate([
-            'satuan' => 'required|string|max:20',
-            'nilai' => 'required|numeric|min:0',
-            'satuan_tahun' => 'required|string|max:20',
-            'nilai_tahun' => 'required|numeric|min:0',
-            'satuan_bulan' => 'required|string|max:20',
-            'nilai_bulan' => 'required|numeric|min:0',
-            'keterangan' => 'nullable|string|max:255',
+            'satuan'         => 'required|string|max:20',
+            'nilai'          => 'required|numeric|min:0',
+            'satuan_tahun'   => 'required|string|max:20',
+            'nilai_tahun'    => 'required|numeric|min:0',
+            'satuan_bulan'   => 'required|string|max:20',
+            'nilai_bulan'    => 'required|numeric|min:0',
+            'satuan_harian'  => 'required|string|max:20',
+            'nilai_harian'   => 'required|numeric|min:0',
+            'keterangan'     => 'nullable|string|max:255',
         ]);
 
-        KetentuanZakat::create([
-            'jenis_zakat' => 'penghasilan',
-            'parameter' => 'persentase',
-            'satuan' => $request->satuan,
-            'nilai' => $request->nilai,
-            'keterangan' => $request->keterangan,
-        ]);
+        // Simpan semua parameter penghasilan
+        $penghasilanParams = [
+            ['parameter' => 'persentase',   'satuan' => $request->satuan,         'nilai' => $request->nilai],
+            ['parameter' => 'nisab_tahun',  'satuan' => $request->satuan_tahun,   'nilai' => $request->nilai_tahun],
+            ['parameter' => 'nisab_bulan',  'satuan' => $request->satuan_bulan,   'nilai' => $request->nilai_bulan],
+            ['parameter' => 'nisab_harian', 'satuan' => $request->satuan_harian,  'nilai' => $request->nilai_harian],
+        ];
 
-        KetentuanZakat::create([
-            'jenis_zakat' => 'penghasilan',
-            'parameter' => 'nisab_tahun',
-            'satuan' => $request->satuan_tahun,
-            'nilai' => $request->nilai_tahun,
-            'keterangan' => $request->keterangan,
-        ]);
-
-        KetentuanZakat::create([
-            'jenis_zakat' => 'penghasilan',
-            'parameter' => 'nisab_bulan',
-            'satuan' => $request->satuan_bulan,
-            'nilai' => $request->nilai_bulan,
-            'keterangan' => $request->keterangan,
-        ]);
-    } elseif ($request->jenis_zakat === 'fitrah' || $request->jenis_zakat === 'mal') {
+        foreach ($penghasilanParams as $param) {
+            KetentuanZakat::create([
+                'jenis_zakat' => 'penghasilan',
+                'parameter'   => $param['parameter'],
+                'satuan'      => $param['satuan'],
+                'nilai'       => $param['nilai'],
+                'keterangan'  => $request->keterangan,
+            ]);
+        }
+    } elseif (in_array($request->jenis_zakat, ['fitrah', 'mal'])) {
         // Validasi untuk fitrah dan mal
         $request->validate([
-            'parameter' => 'required|string|max:50',
-            'satuan' => 'required|string|max:20',
-            'nilai' => 'required|numeric|min:0',
+            'parameter'  => 'required|string|max:50',
+            'satuan'     => 'required|string|max:20',
+            'nilai'      => 'required|numeric|min:0',
             'keterangan' => 'nullable|string|max:255',
         ]);
 
         KetentuanZakat::create([
             'jenis_zakat' => $request->jenis_zakat,
-            'parameter' => $request->parameter,
-            'satuan' => $request->satuan,
-            'nilai' => $request->nilai,
-            'keterangan' => $request->keterangan,
+            'parameter'   => $request->parameter,
+            'satuan'      => $request->satuan,
+            'nilai'       => $request->nilai,
+            'keterangan'  => $request->keterangan,
         ]);
     }
 
     return back()->with('success', 'Ketentuan berhasil ditambahkan.');
 }
+
 
     public function update(Request $request, KetentuanZakat $ketentuan) {
         $request->validate([
