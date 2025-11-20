@@ -64,110 +64,101 @@ class MuzakiController extends Controller
         $user = Auth::user();
         if ($user->role !== 'muzaki') abort(403);
 
-        $jenisZakat = JenisZakat::all();
-        $metodePembayaran = MetodePembayaran::where('status_aktif', true)->get();
+        $muzakki = $user->muzakki;
 
-        return view('muzaki.form-pembayaran', compact('jenisZakat', 'metodePembayaran'));
+        return view('muzaki.form-pembayaran', [
+            'jenisZakat' => JenisZakat::all(),
+            'metode'     => MetodePembayaran::where('status_aktif', true)->get(),
+            'muzakki'    => $muzakki,
+            'nisabHarian'=> 15000, // Contoh nilai untuk fidyah
+        ]);
     }
+
 
     // ✅ Simpan Pembayaran Zakat
-public function storePembayaran(Request $request)
-{
-    $user = Auth::user();
-    if ($user->role !== 'muzaki') abort(403);
-
-    $request->validate([
-        'nama'           => 'required|string|max:255',
-        'jenis_kelamin'  => 'required|in:Laki-laki,Perempuan',
-        'jenis_zakat_id' => 'required|exists:jenis_zakat,id',
-        'metode_id'      => 'required|exists:metode_pembayaran,id',
-        'tanggal'        => 'required|date',
-        'kontak'         => 'required|string|max:100',
-        'nominal'        => 'required|numeric|min:1',
-        'bukti'          => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-    ]);
-
-    // Pastikan data Muzakki ada
-    $muzakki = $user->muzakki;
-    if (!$muzakki) {
-        $muzakki = Muzakki::create([
-            'user_id'   => $user->id,
-            'nama'      => $user->name,
-            'email'     => $user->email,
-            'no_hp'     => '-',
-            'pekerjaan' => '-',
-            'alamat'    => '-',
-        ]);
-    }
-
-    // Detail tambahan (jika ada)
-  $detail = [
-    'nama'          => $request->nama,
-    'jenis_kelamin' => $request->jenis_kelamin,
-    'kontak'        => $request->kontak,
-    'nominal'       => $request->nominal,
-    'metode'        => $request->metode_id,
-    'jenis_zakat'   => $request->jenis_zakat_id,
-];
-
-
-    // SIMPAN TRANSAKSI TERLEBIH DAHULU
-    $transaksi = TransaksiZakat::create([
-        'nama'          => $request->nama,
-        'jenis_kelamin' => $request->jenis_kelamin,
-        'muzakki_id'     => $muzakki->id,
-        'jenis_zakat_id' => $request->jenis_zakat_id,
-        'metode_id'      => $request->metode_id,
-        'tanggal'        => $request->tanggal,
-        'kontak'         => $request->kontak,
-        'nominal'        => $request->nominal,
-        'status'         => 'menunggu',
-        'detail'         => $detail,
-    ]);
-
-    // === UPLOAD BUKTI PEMBAYARAN (jika ada) ===
-    if ($request->hasFile('bukti')) {
-        $file = $request->file('bukti');
-        $namaFile = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
-
-        // simpan ke storage/app/public/bukti/
-        $file->storeAs('public/bukti', $namaFile);
-
-        // simpan ke DB
-        BuktiPembayaran::create([
-            'transaksi_id' => $transaksi->id,
-            'file'         => $namaFile,
-        ]);
-    }
-
-    return redirect()
-        ->route('muzaki.riwayat')
-        ->with('success', 'Pembayaran zakat berhasil disimpan! Menunggu verifikasi admin.');
-}
-
-    // ✅ Kalkulator Zakat
-    public function kalkulator()
-    {
-        $user = Auth::user();
-        if ($user->role !== 'muzaki') abort(403);
-
-        $jenisZakat = JenisZakat::all();
-        return view('muzaki.kalkulator', compact('jenisZakat'));
-    }
-
-    public function riwayat()
+    public function storePembayaran(Request $request)
     {
         $user = Auth::user();
         if ($user->role !== 'muzaki') abort(403);
 
         $muzakki = $user->muzakki;
 
-        $riwayat = TransaksiZakat::with(['jenisZakat', 'buktiPembayaran', 'muzakki'])
-            ->where('muzakki_id', $muzakki->id)
-            ->orderByDesc('tanggal')
-            ->get();
+        // Validasi umum
+        $request->validate([
+            'nama'           => 'required|string|max:255',
+            'jenis_kelamin'  => 'required|in:Laki-laki,Perempuan',
+            'kontak'         => 'required|string|max:100',
+            'jenis_zakat_id' => 'required|exists:jenis_zakat,id',
+            'metode_id'      => 'required|exists:metode_pembayaran,id',
+            'tanggal'        => 'required|date',
+            'bukti_pembayaran'=> 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-        return view('muzaki.riwayat', compact('riwayat'));
+        $jenis = JenisZakat::find($request->jenis_zakat_id);
+        $namaJenis = strtolower($jenis->nama_jenis);
+
+        // Hitung nominal berdasarkan jenis zakat
+        if (str_contains($namaJenis, 'maal')) {
+            $request->validate([
+                'emas'      => 'required|numeric|min:0',
+                'tabungan'  => 'required|numeric|min:0',
+                'aset_lain' => 'required|numeric|min:0',
+                'hutang'    => 'nullable|numeric|min:0',
+            ]);
+            $nominal = (($request->emas + $request->tabungan + $request->aset_lain) - ($request->hutang ?? 0)) * 0.025;
+        } elseif (str_contains($namaJenis, 'fidyah')) {
+            $request->validate([
+                'jumlah_hari' => 'required|numeric|min:1',
+                'nominal'     => 'required|numeric|min:1000',
+            ]);
+            $nominal = $request->jumlah_hari * $request->nominal;
+        } elseif (str_contains($namaJenis, 'infak')) {
+            $request->validate([
+                'nominal' => 'required|numeric|min:1000',
+                'tujuan_sedekah' => 'required|string',
+            ]);
+            $nominal = $request->nominal;
+        } else {
+            // Zakat Fitrah / lain-lain
+            $request->validate([
+                'nominal' => 'required|numeric|min:1000',
+            ]);
+            $nominal = $request->nominal;
+        }
+
+        // Detail tambahan
+        $detail = $request->except([
+            '_token','nama','jenis_kelamin','kontak','jenis_zakat_id','metode_id','tanggal','bukti_pembayaran','nominal'
+        ]);
+
+        // Simpan transaksi
+        $transaksi = TransaksiZakat::create([
+            'nama'          => $request->nama,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'muzakki_id'     => $muzakki->id,
+            'jenis_zakat_id' => $request->jenis_zakat_id,
+            'metode_id'      => $request->metode_id,
+            'tanggal'        => $request->tanggal,
+            'kontak'         => $request->kontak,
+            'nominal'        => $nominal,
+            'status'         => 'menunggu',
+            'detail'         => json_encode($detail),
+        ]);
+
+        // Simpan bukti pembayaran jika ada
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $namaFile = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/bukti', $namaFile);
+
+            BuktiPembayaran::create([
+                'transaksi_id' => $transaksi->id,
+                'file'         => $namaFile,
+            ]);
+        }
+
+        return redirect()->route('muzaki.riwayat')
+            ->with('success', 'Pembayaran zakat berhasil disimpan! Menunggu verifikasi admin.');
     }
 
 

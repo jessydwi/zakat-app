@@ -140,14 +140,9 @@ class TransaksiZakatController extends Controller
 
     // ✅ Konfirmasi pembayaran
     public function konfirmasi($id)
-<<<<<<< HEAD
-{
-    $transaksi = TransaksiZakat::findOrFail($id);
-=======
     {
         $transaksi = TransaksiZakat::findOrFail($id);
         $transaksi->update(['status' => 'terkonfirmasi']);
->>>>>>> d34244b5b3dfc9b9fbafaf3558f273592d1e13e5
 
     // Ambil user yang login
     $user = auth()->user();

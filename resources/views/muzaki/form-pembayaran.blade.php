@@ -5,152 +5,204 @@
 @section('content')
 <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-10 rounded-3xl shadow-md max-w-4xl mx-auto space-y-10 transition hover:shadow-xl animate-fade-in-up">
 
-    @if(session('success'))
-        <div class="bg-green-100 border-l-4 border-green-600 text-green-800 p-4 rounded-xl shadow-md animate-fade-in-up">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="bg-red-100 border-l-4 border-red-600 text-red-800 p-4 rounded-xl shadow-md animate-fade-in-up">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <!-- Header -->
     <div class="text-center space-y-2">
         <h2 class="text-3xl font-extrabold text-emerald-700 flex items-center justify-center gap-3">
             <i class="fas fa-hand-holding-dollar text-emerald-500"></i>
             Form Pembayaran Zakat
         </h2>
-        <p class="text-emerald-600 text-lg font-medium">Lengkapi data berikut untuk menunaikan zakat, infak, atau sedekah Anda.</p>
     </div>
 
-    <!-- Form -->
-    <form action="{{ route('muzaki.transaksi.store') }}" method="POST" class="space-y-8">
-        @csrf
+<form action="{{ route('muzaki.transaksi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+    @csrf
 
-                <!-- Nama Lengkap -->
-<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-    <label for="nama" class="block font-semibold text-emerald-700 mb-3 text-lg">
-        <i class="fas fa-user text-emerald-500 mr-2"></i> Nama Lengkap
-    </label>
-    <input type="text" name="nama" id="nama"
-        class="input-style"
-        placeholder="Masukkan nama lengkap Anda" required>
-</div>
+    @php
+        $muzakki = auth()->user()->muzakki; 
+        $user = auth()->user();
+    @endphp
 
-<!-- Jenis Kelamin -->
-<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-    <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
-        <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
-    </label>
-    <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" required>
-        <option value="">-- Pilih Jenis Kelamin --</option>
-        <option value="Laki-laki">Laki-laki</option>
-        <option value="Perempuan">Perempuan</option>
-    </select>
-</div>
+    <!-- Nama Lengkap -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label for="nama" class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-user text-emerald-500 mr-2"></i> Nama Lengkap
+        </label>
+        <input type="text" name="nama" id="nama"
+            class="input-style"
+            value="{{ $muzakki->nama }}"
+            placeholder="Nama lengkap otomatis" readonly required>
+    </div>
 
-        <!-- Pilihan Jenis Zakat -->
+        <!-- Jenis Kelamin -->
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-            <label for="jenis_zakat_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i class="fas fa-donate text-emerald-500 mr-2"></i> Jenis Dana
+            <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
+                <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
             </label>
-            <select name="jenis_zakat_id" id="jenis_zakat_id"
+            <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" readonly required>
+                <option value="">-- isi jenis kelamin anda --</option>
+                <option value="Laki-laki" {{ session('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="Perempuan" {{ session('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+            </select>
+        </div>
+
+    <!-- Alamat -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-map-marker-alt text-emerald-500 mr-2"></i> Alamat
+        </label>
+        <input type="text" class="input-style"
+               name="alamat"
+               value="{{ $muzakki->alamat }}"
+               readonly required>
+    </div>
+
+    <!-- Pekerjaan -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-briefcase text-emerald-500 mr-2"></i> Pekerjaan
+        </label>
+        <input type="text" class="input-style"
+               name="pekerjaan"
+               value="{{ $muzakki->pekerjaan }}"
+               readonly required>
+    </div>
+
+    <!-- Kontak -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-phone text-emerald-500 mr-2"></i> Nomor HP / Email
+        </label>
+        <input type="text" class="input-style"
+               name="kontak"
+               value="{{ $muzakki->kontak ?? $user->email }}"
+               readonly required>
+    </div>
+
+    <!-- Pilihan Jenis Zakat -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-donate text-emerald-500 mr-2"></i> Jenis Dana
+        </label>
+        <select name="jenis_zakat_id" id="jenis_zakat_id"
                 class="input-style text-gray-700 text-base"
                 onchange="tampilkanFormKhusus()" required>
-                <option value="">-- Pilih Jenis Dana --</option>
-                @foreach($jenisZakat as $jenis)
-                    <option value="{{ $jenis->id }}" data-nama="{{ strtolower($jenis->nama_jenis) }}">
-                        {{ $jenis->nama_jenis }}
+            <option value="">-- Pilih Jenis Dana --</option>
+            @foreach($jenisZakat as $j)
+                <option value="{{ $j->id }}"
+                    data-nama="{{ strtolower($j->nama_jenis) }}">
+                    {{ $j->nama_jenis }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div id="formKhusus" class="space-y-4 hidden animate-fade-in-up"></div>
+
+        <!-- Metode Pembayaran -->
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+            <label for="metode_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
+                <i class="fas fa-credit-card text-emerald-500 mr-2"></i> Metode Pembayaran
+            </label>
+            <div id="instruksiMetode" class="space-y-4 hidden animate-fade-in-up"></div>
+            <select name="metode_id" id="metode_id"
+                class="input-style"
+                onchange="tampilkanInstruksiMetode()" required>
+                <option value="">-- Pilih Metode Pembayaran --</option>
+                @foreach($metode as $m)
+                    <option value="{{ $m->id }}"
+                        {{ session('metode_id') == $m->id ? 'selected' : '' }}>
+                        {{ $m->nama_metode }}
                     </option>
                 @endforeach
             </select>
         </div>
 
-        <!-- Form Khusus Berdasarkan Jenis -->
-        <div id="formKhusus" class="space-y-4 hidden animate-fade-in-up"></div>
-
-        <!-- Kontak -->
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-            <label for="kontak" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i class="fas fa-phone text-emerald-500 mr-2"></i> Nomor HP / Email
-            </label>
-            <input type="text" name="kontak" id="kontak"
-                class="input-style"
-                placeholder="Contoh: 081234567890 atau email@domain.com" required>
-        </div>
-
-        <!-- Tanggal Transaksi -->
-<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-    <label for="tanggal" class="block font-semibold text-emerald-700 mb-3 text-lg">
-        <i class="fas fa-calendar-alt text-emerald-500 mr-2"></i> Tanggal Transaksi
-    </label>
-    <input type="date" name="tanggal" id="tanggal" class="input-style" required>
-</div>
-
-
-<!-- Metode Pembayaran -->
-<div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-    <label for="metode_pembayaran" class="block font-semibold text-emerald-700 mb-3 text-lg">
-        <i class="fas fa-credit-card text-emerald-500 mr-2"></i> Metode Pembayaran
-    </label>
-    <div id="instruksiMetode" class="space-y-4 hidden animate-fade-in-up"></div>
-    <select name="metode_id" class="input-style" onchange="tampilkanInstruksiMetode()" required>
-            <option value="">-- Pilih Metode Pembayaran --</option>
-                @foreach($metodePembayaran as $metode)
-            <option value="{{ $metode->id }}">{{ $metode->nama_metode }}</option>
-        @endforeach
-    </select>
-</div>
-
-@if(auth()->user()->muzakki)
-    <input type="hidden" name="muzakki_id" value="{{ auth()->user()->muzakki->id }}">
-@endif
-    
-        <!-- Tombol Submit -->
-        <div class="pt-2">
-            <button type="submit"
-                   class="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg">
-                <i class="fas fa-paper-plane"></i> Bayar Sekarang
-            </button>
-        </div>
-
-    </form>
-</div>
-
-<!-- Animasi dan Style -->
-<style>
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(15px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in-up {
-        animation: fadeInUp 0.5s ease-out;
-    }
-
-    .input-style {
-        @apply w-full rounded-xl border border-emerald-200 bg-white/70 backdrop-blur-sm px-4 py-3 focus:bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 shadow-sm transition;
-    }
-
-    .label {
-        @apply bg-green-600 text-white shadow-lg scale-105;
-    }
-</style>
-
-@if($errors->any())
-    <div class="bg-red-100 p-4 rounded-xl shadow-md mb-6">
-        <ul class="list-disc ml-6 text-red-700">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+    <!-- Tanggal -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-calendar-alt text-emerald-500 mr-2"></i> Tanggal Transaksi
+        </label>
+        <input type="date" name="tanggal" id="tanggal"
+               class="input-style" required>
     </div>
-@endif
 
-<!-- Script Dinamis -->
+    <!-- Bukti Pembayaran -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-file-upload text-emerald-500 mr-2"></i> Bukti Pembayaran
+        </label>
+        <input type="file" name="bukti_pembayaran"
+               class="input-style"
+               accept="image/*,application/pdf">
+    </div>
+
+    <input type="hidden" id="muzakki_id" name="muzakki_id" value="{{ $muzakki->id }}">
+    <div class="pt-2">
+        <button type="submit"
+               class="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg">
+            <i class="fas fa-paper-plane"></i> Simpan Pembayaran
+        </button>
+    </div>
+</form>
+
+    <!-- Pop-up Transfer -->
+    <div id="popupTransfer" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-lg">
+        <h3 class="text-lg font-bold text-emerald-700">Konfirmasi Transfer Zakat</h3>
+
+        <!-- ID Transaksi -->
+        <label class="block text-sm font-medium">ID Transaksi</label>
+        <input type="text" id="idTransaksi" class="input-style" readonly>
+
+        <!-- Pilih Bank -->
+        <label class="block text-sm font-medium mt-2">Pilih Bank</label>
+        <select id="bankTujuan" class="input-style" onchange="tampilkanRekening()" required>
+        <option value="">-- Pilih Bank --</option>
+        <option value="BNI">BNI</option>
+        <option value="BCA">BCA</option>
+        <option value="BRI">BRI</option>
+        <option value="Mandiri">Mandiri</option>
+        </select>
+
+        <!-- Nomor Rekening -->
+        <label class="block text-sm font-medium mt-2">Nomor Rekening</label>
+        <input type="text" id="nomorRekening" class="input-style" readonly>
+
+        <!-- Nominal Transfer -->
+        <label class="block text-sm font-medium mt-2">Nominal Transfer</label>
+        <input type="number" id="nominalTransfer" class="input-style" placeholder="Contoh: 75000" required>
+
+        <div class="flex justify-end gap-2 mt-4">
+        <button onclick="tutupPopupTransfer()" type="button" class="btn-secondary">Batal</button>
+        <button onclick="lanjutKeDetailTransfer()" type="button" class="btn-primary">Lanjutkan</button>
+        </div>
+    </div>
+    </div>
+</div>
+
 <script>
+const muzakkiData = @json($muzakki);
+
+function isiDataMuzakki() {
+    const select = document.getElementById('muzakki_id');
+    const id = select.value;
+    const muzakki = muzakkiData.find(m => m.id == id);
+
+    if (muzakki) {
+        document.getElementById('nama').value = muzakki.nama || '';
+        document.getElementById('jenis_kelamin').value = muzakki.jenis_kelamin || '';
+        document.getElementById('alamat').value = muzakki.alamat || '';
+        document.getElementById('pekerjaan').value = muzakki.pekerjaan || '';
+        document.getElementById('kontak').value = muzakki.no_hp || '';
+    } else {
+        document.getElementById('nama').value = '';
+        document.getElementById('jenis_kelamin').value = '';
+        document.getElementById('alamat').value = '';
+        document.getElementById('pekerjaan').value = '';
+        document.getElementById('kontak').value = '';
+    }
+}
+    const nisabHarian = {{ $nisabHarian->nilai ?? 15000 }};
+
 function tampilkanFormKhusus() {
     const select = document.getElementById('jenis_zakat_id');
     const selectedOption = select.options[select.selectedIndex];
@@ -184,50 +236,83 @@ function tampilkanFormKhusus() {
                 <label class="label"><i class="fas fa-file-invoice-dollar text-emerald-500 mr-1"></i> Hutang / Cicilan (Opsional)</label>
                 <input type="number" name="hutang" class="input-style" placeholder="Masukkan jumlah hutang jika ada">
             </div>
+            <div>
+                <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Zakat Maal</label>
+                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal zakat maal" required>
+            </div>
         </div>
         `;
     }
 
     // ==== Fidyah ====
-    else if (jenis.includes('fidyah')) {
-        html = `
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
-            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah</h3>
-            <div>
-                <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
-                <input type="number" name="jumlah_hari" class="input-style" placeholder="Masukkan jumlah hari" required>
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-coins text-emerald-500 mr-1"></i> Nominal Fidyah per Hari</label>
-                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal per hari" required>
-            </div>
+else if (jenis.includes('fidyah')) {
+    html = `
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
+        <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+            <i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah
+        </h3>
+        <div>
+            <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
+            <input type="number" name="jumlah_hari" id="jumlah_hari" class="input-style" placeholder="Masukkan jumlah hari" required>
         </div>
-        `;
-    }
+        <div>
+            <label class="label">Nisab Harian (otomatis)</label>
+            <input type="number" name="nisab_harian" id="nisab_harian" class="input-style" value="${nisabHarian}" readonly>
+        </div>
+        <div>
+            <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Total Fidyah</label>
+            <input type="text" name="nominal" id="total_fidyah" class="input-style" placeholder="Nominal total fidyah otomatis" readonly required>
+        </div>
+    </div>
+    `;
+
+    setTimeout(() => {
+        const jumlahHariInput = document.getElementById('jumlah_hari');
+        const nominalPerHariInput = document.getElementById('nisab_harian');
+        const totalFidyahInput = document.getElementById('total_fidyah');
+
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+        }
+
+        function hitungTotalFidyah() {
+            const hari = parseInt(jumlahHariInput.value);
+            const perHari = parseInt(nominalPerHariInput.value) || 0;
+
+            const totalHari = isNaN(hari) || hari < 1 ? 1 : hari;
+            const total = totalHari * perHari;
+            totalFidyahInput.value = formatRupiah(total);
+        }
+
+        // Hitung otomatis saat jumlah hari berubah
+        jumlahHariInput.addEventListener('input', hitungTotalFidyah);
+
+        // Hitung otomatis saat form pertama kali muncul
+        hitungTotalFidyah();
+    }, 50);
+}
 
     // ==== Infak / Sedekah ====
-    else if (jenis.includes('infak')) {
-        html = `
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
-            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-hand-holding-heart text-emerald-500"></i> Detail Sedekah</h3>
-            <div>
-                <label class="label"><i class="fas fa-hands-helping text-emerald-500 mr-1"></i> Tujuan Sedekah</label>
-                <select name="tujuan_sedekah" class="input-style" required>
-                    <option value="">-- Pilih Tujuan --</option>
-                    <option value="palestina">Sedekah Palestina</option>
-                    <option value="anak-yatim">Anak Yatim</option>
-                    <option value="masjid">Masjid & Dakwah</option>
-                </select>
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-donate text-emerald-500 mr-1"></i> Nominal Sedekah</label>
-                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal sedekah" required>
-            </div>
+   else if (jenis.includes('infak')) {
+    html = `
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
+        <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-hand-holding-heart text-emerald-500"></i> Detail Sedekah</h3>
+        <div>
+            <label class="label"><i class="fas fa-hands-helping text-emerald-500 mr-1"></i> Tujuan Sedekah</label>
+            <select name="tujuan_sedekah" class="input-style" required>
+                <option value="">-- Pilih Tujuan --</option>
+                <option value="palestina">Sedekah Palestina</option>
+                <option value="anak-yatim">Anak Yatim</option>
+                <option value="masjid">Masjid & Dakwah</option>
+            </select>
         </div>
-        `;
-    }
-
-    // ==== Zakat Fitrah / Lainnya ====
+        <div>
+            <label class="label"><i class="fas fa-donate text-emerald-500 mr-1"></i> Nominal Sedekah</label>
+            <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal sedekah" required>
+        </div>
+    </div>
+    `;
+}// ==== Zakat Fitrah / Lainnya ====
     else {
         html = `
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
@@ -266,9 +351,13 @@ function tampilkanInstruksiMetode() {
                 <li>BCA 123456789 a.n. LAZ Zakat</li>
                 <li>Mandiri 987654321 a.n. LAZ Zakat</li>
             </ul>
+            <button type="button" onclick="bukaPopupTransfer()" 
+                class="mt-4 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow hover:bg-emerald-700">
+                Konfirmasi Transfer
+            </button>
         </div>
         `;
-    } else if (selected.includes('e-wallet')) {
+    }else if (selected.includes('e-wallet')) {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
             <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
@@ -294,7 +383,7 @@ function tampilkanInstruksiMetode() {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
             <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
-                <i class="fas fa-money-bill text-emerald-500"></i> Pembayaran Tunai
+                            <i class="fas fa-money-bill text-emerald-500"></i> Pembayaran Tunai
             </h3>
             <p class="text-gray-700 mt-2">Silakan datang langsung ke kantor LAZ terdekat untuk melakukan pembayaran tunai.</p>
         </div>
@@ -305,5 +394,116 @@ function tampilkanInstruksiMetode() {
     container.classList.remove('hidden');
 }
 
+function bukaPopupTransfer() {
+    // Generate ID transaksi otomatis
+    const id = 'TRX' + new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+    document.getElementById('idTransaksi').value = id;
+    document.getElementById('popupTransfer').classList.remove('hidden');
+}
+
+function tutupPopupTransfer() {
+    document.getElementById('popupTransfer').classList.add('hidden');
+}
+
+function tampilkanRekening() {
+    const bank = document.getElementById('bankTujuan').value;
+    let rekening = '';
+
+    switch(bank) {
+        case 'BNI':
+            rekening = 'BNI 1122334455 a.n. LAZ Zakat';
+            break;
+        case 'BCA':
+            rekening = 'BCA 123456789 a.n. LAZ Zakat';
+            break;
+        case 'BRI':
+            rekening = 'BRI 9988776655 a.n. LAZ Zakat';
+            break;
+        case 'Mandiri':
+            rekening = 'Mandiri 987654321 a.n. LAZ Zakat';
+            break;
+    }
+
+    document.getElementById('nomorRekening').value = rekening;
+}
+
+function lanjutKeDetailTransfer() {
+    const id = document.getElementById('idTransaksi').value;
+    const nominal = document.getElementById('nominalTransfer').value;
+    const bank = document.getElementById('bankTujuan').value;
+    const rekening = document.getElementById('nomorRekening').value;
+
+    // Tambahan data muzakki
+    const muzakkiId     = document.getElementById('muzakki_id').value;
+    const namaLengkap   = document.getElementById('nama').value;
+    const jenisKelamin  = document.getElementById('jenis_kelamin').value;
+    const alamat        = document.getElementById('alamat').value;
+    const pekerjaan     = document.getElementById('pekerjaan').value;
+    const kontak        = document.getElementById('kontak').value;
+    const jenisZakatId = document.getElementById('jenis_zakat_id').value;
+    const metodeId     = document.getElementById('metode_id').value;
+    const tanggal      = document.getElementById('tanggal').value;
+
+
+
+    if (!bank || !rekening || !id || !nominal || nominal < 1000) {
+        alert('Lengkapi semua data. Nominal minimal Rp1.000.');
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'muzaki/riwayat';
+
+    const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+    form.innerHTML = `
+        <input type="hidden" name="_token" value="${csrf}">
+        <input type="hidden" name="idTransaksi" value="${id}">
+        <input type="hidden" name="nominalTransfer" value="${nominal}">
+        <input type="hidden" name="bankTujuan" value="${bank}">
+        <input type="hidden" name="nomorRekening" value="${rekening}">
+        <input type="hidden" name="muzakki_id" value="${muzakkiId}">
+        <input type="hidden" name="nama_lengkap" value="${namaLengkap}">
+        <input type="hidden" name="jenis_kelamin" value="${jenisKelamin}">
+        <input type="hidden" name="alamat" value="${alamat}">
+        <input type="hidden" name="pekerjaan" value="${pekerjaan}">
+        <input type="hidden" name="kontak" value="${kontak}">
+        <input type="hidden" name="jenis_zakat_id" value="${jenisZakatId}">
+        <input type="hidden" name="metode_id" value="${metodeId}">
+        <input type="hidden" name="tanggal" value="${tanggal}">
+
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+
 </script>
+
+<style>
+.input-style {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #374151;
+    background-color: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-style:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.label {
+    display: block;
+    font-weight: 600;
+    color: #065f46;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+</style>
 @endsection
