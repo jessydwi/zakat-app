@@ -8,21 +8,21 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <x-stat-card 
                 title="Total Zakat Masuk" 
-                :value="$totalZakatMasuk" 
+                :value="number_format($totalZakatMasuk, 0, ',', '.') . ' (' . $transaksiMasuk->count() . ' transaksi)'" 
                 icon="fas fa-money-bill-wave" 
                 color="emerald" 
                 subtitle="Zakat yang sudah diterima dan dikonfirmasi"
             />
             <x-stat-card 
-                title="Transaksi Belum Terkonfirmasi" 
-                :value="$belumTerkonfirmasi" 
+                title="Belum Terkonfirmasi" 
+                :value="number_format($nominalBelumTerkonfirmasi, 0, ',', '.') . ' (' . $belumTerkonfirmasi . ' transaksi)'" 
                 icon="fas fa-hourglass-half" 
-                color="yellow" 
+                color="amber" 
                 subtitle="Menunggu verifikasi admin"
             />
             <x-stat-card 
-                title="Total Distribusi ke Mustahik" 
-                :value="$totalDistribusi" 
+                title="Distribusi ke Mustahik" 
+                :value="number_format($totalDistribusi, 0, ',', '.') . ' (' . $jumlahDistribusi . ' distribusi)'" 
                 icon="fas fa-hand-holding-usd" 
                 color="blue" 
                 subtitle="Zakat yang telah disalurkan"
@@ -54,16 +54,19 @@
 
         {{-- Konfirmasi Pembayaran --}}
         <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
-            <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center gap-3 mb-2">
                 <i class="fas fa-check-circle text-yellow-500 text-2xl"></i>
-                <h2 class="text-2xl font-bold text-yellow-700">Konfirmasi Pembayaran</h2>
+                <h2 class="text-2xl font-bold text-yellow-700">Detail Transaksi Menunggu Konfirmasi</h2>
             </div>
+            <p class="text-sm text-gray-500 mb-4">
+                Berikut adalah daftar {{ $belumTerkonfirmasi }} transaksi yang belum dikonfirmasi oleh admin.
+            </p>
             @livewire('zakat-konfirmasi')
         </div>
 
         {{-- Distribusi Zakat --}}
         <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-shadow duration-300">
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-3">
                     <i class="fas fa-share text-blue-600 text-2xl"></i>
                     <h2 class="text-2xl font-bold text-blue-800">Distribusi Zakat ke Mustahik</h2>
@@ -72,7 +75,9 @@
                     <i class="fas fa-plus mr-2"></i> Tambah Distribusi
                 </a>
             </div>
-            {{-- Tabel Index Distribusi --}}
+            <p class="text-sm text-gray-500 mb-4">
+                Total distribusi: {{ $jumlahDistribusi }} mustahik menerima bantuan sebesar Rp{{ number_format($totalDistribusi, 0, ',', '.') }}.
+            </p>
             @livewire('distribusi-zakat-table')
         </div>
 
@@ -109,7 +114,6 @@
     </div>
 </div>
 
-<!-- Font Awesome CDN (Tambahkan di layout utama jika belum ada) -->
+<!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 @endsection

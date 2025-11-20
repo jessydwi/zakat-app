@@ -12,7 +12,7 @@ class TransaksiZakat extends Model
     protected $table = 'transaksi_zakat';
 
     protected $fillable = [
-        'id_muzakki',
+        'muzakki_id',
         'jenis_zakat_id',
         'metode_id',
         'nominal',
@@ -22,9 +22,7 @@ class TransaksiZakat extends Model
         'jenis_kelamin',
         'kontak',
         'detail',
-
         'amil_id',
-        
         'bukti_pembayaran',
 
     ];
@@ -37,7 +35,7 @@ class TransaksiZakat extends Model
 
     public function muzakki(): BelongsTo
     {
-        return $this->belongsTo(Muzakki::class, 'muzaki_id');
+        return $this->belongsTo(Muzakki::class, 'muzakki_id');
     }
 
     public function jenisZakat(): BelongsTo

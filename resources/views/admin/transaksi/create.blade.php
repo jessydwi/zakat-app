@@ -191,9 +191,17 @@
     </div>
     </div>
 </div>
+@php
+    $nisabGram = $nisabMal->nilai ?? 85;
+    $hargaEmasPerGram = $hargaEmas->nilai ?? 1100000;
+    $nisabRupiah = $nisabGram * $hargaEmasPerGram;
+@endphp
+
+
 
 <script>
 const muzakkiData = @json($muzakki);
+const nisabRupiah = {{ $nisabRupiah }};
 
 function isiDataMuzakki() {
     const select = document.getElementById('muzakki_id');
@@ -228,68 +236,111 @@ function tampilkanFormKhusus() {
 
     let html = '';
 
-    // ==== Zakat Maal ====
-    if (jenis.includes('maal')) {
-        html = `
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
-            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-gem text-emerald-500"></i> Detail Zakat Maal</h3>
-            <div>
-                <label class="label"><i class="fas fa-ring text-emerald-500 mr-1"></i> Nilai Emas / Perak / Permata</label>
-                <input type="number" name="emas" class="input-style" placeholder="Masukkan nilai aset emas/perak" required>
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-piggy-bank text-emerald-500 mr-1"></i> Uang Tunai / Tabungan</label>
-                <input type="number" name="tabungan" class="input-style" placeholder="Masukkan total tabungan" required>
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-car text-emerald-500 mr-1"></i> Aset Lain (Rumah, Kendaraan, dll)</label>
-                <input type="number" name="aset_lain" class="input-style" placeholder="Masukkan nilai aset lainnya" required>
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-file-invoice-dollar text-emerald-500 mr-1"></i> Hutang / Cicilan (Opsional)</label>
-                <input type="number" name="hutang" class="input-style" placeholder="Masukkan jumlah hutang jika ada">
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Zakat Maal</label>
-                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal zakat maal" required>
-            </div>
+    if (jenis.includes('mal')) {
+    html = `
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
+        <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+            <i class="fas fa-gem text-emerald-500"></i> Detail Zakat Maal
+        </h3>
+        <div>
+            <label class="label"><i class="fas fa-ring text-emerald-500 mr-1"></i> Nilai Emas / Perak / Permata</label>
+            <input type="number" name="emas" class="input-style" placeholder="Masukkan nilai aset emas/perak" required>
         </div>
-        `;
-    }
-
-    // ==== Fidyah ====
-    else if (jenis.includes('fidyah')) {
-        html = `
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
-            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah</h3>
-            <div>
-                <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
-                <input type="number" name="jumlah_hari" id="jumlah_hari"  class="input-style" placeholder="Masukkan jumlah hari" required>
-            </div>
-            <div>
-                <label class="label">Nisab Harian (otomatis)</label>
-                <input type="number" name="nisab_harian" id="nisab_harian" class="input-style" value="${nisabHarian}" readonly>
-            </div>
-            <div>
-                <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Total Fidyah</label>
-                <input type="number" name="nominal" id="total_fidyah" class="input-style" placeholder="Masukkan nominal total fidyah" required>
-            </div>
+        <div>
+            <label class="label"><i class="fas fa-piggy-bank text-emerald-500 mr-1"></i> Uang Tunai / Tabungan</label>
+            <input type="number" name="tabungan" class="input-style" placeholder="Masukkan total tabungan" required>
         </div>
-        `;
-        setTimeout(() => {
-            const jumlahHariInput = document.getElementById('jumlah_hari');
-            const nominalPerHariInput = document.getElementById('nisab_harian');
-            const totalFidyahInput = document.getElementById('total_fidyah');
+        <div>
+            <label class="label"><i class="fas fa-car text-emerald-500 mr-1"></i> Aset Lain (Rumah, Kendaraan, dll)</label>
+            <input type="number" name="aset_lain" class="input-style" placeholder="Masukkan nilai aset lainnya" required>
+        </div>
+        <div>
+            <label class="label"><i class="fas fa-file-invoice-dollar text-emerald-500 mr-1"></i> Hutang / Cicilan (Opsional)</label>
+            <input type="number" name="hutang" class="input-style" placeholder="Masukkan jumlah hutang jika ada">
+        </div>
+        <div>
+            <label class="label"><i class="fas fa-coins text-emerald-500 mr-1"></i> Total Harta Bersih</label>
+            <input type="number" id="total_harta" class="input-style bg-gray-100" readonly>
+        </div>
+        <div>
+            <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Zakat Maal (2.5%)</label>
+            <input type="number" name="nominal" class="input-style bg-gray-100" readonly required>
+            <p id="nisab_warning" class="text-sm text-red-500 mt-1"></p>
+        </div>
+    </div>
+    `;
 
-            function hitungTotalFidyah() {
-                const hari = parseInt(jumlahHariInput.value) || 0;
-                const perHari = parseInt(nominalPerHariInput.value) || 0;
-                totalFidyahInput.value = hari * perHari;
+    setTimeout(() => {
+        const emasInput = document.querySelector('input[name="emas"]');
+        const tabunganInput = document.querySelector('input[name="tabungan"]');
+        const asetInput = document.querySelector('input[name="aset_lain"]');
+        const hutangInput = document.querySelector('input[name="hutang"]');
+        const totalHartaInput = document.getElementById('total_harta');
+        const nominalInput = document.querySelector('input[name="nominal"]');
+        const warning = document.getElementById('nisab_warning');
+
+        const hitungZakat = () => {
+            const emas = parseFloat(emasInput.value) || 0;
+            const tabungan = parseFloat(tabunganInput.value) || 0;
+            const aset = parseFloat(asetInput.value) || 0;
+            const hutang = parseFloat(hutangInput.value) || 0;
+
+            const totalHarta = emas + tabungan + aset - hutang;
+            totalHartaInput.value = totalHarta;
+
+            if (totalHarta >= nisabRupiah) {
+                const zakat = totalHarta * 0.025;
+                nominalInput.value = Math.floor(zakat);
+                warning.textContent = '';
+            } else {
+                nominalInput.value = 0;
+                warning.textContent = 'Total harta belum mencapai nisab. Zakat tidak wajib.';
             }
+        };
 
-            jumlahHariInput.addEventListener('input', hitungTotalFidyah);
-        }, 50);
-    }
+        [emasInput, tabunganInput, asetInput, hutangInput].forEach(input => {
+            input.addEventListener('input', hitungZakat);
+        });
+    }, 100);
+}
+
+// ==== Zakat Fidyah ====
+else if (jenis.includes('fidyah')) {
+    html = `
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
+        <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+            <i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah
+        </h3>
+        <div>
+            <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
+            <input type="number" name="jumlah_hari" id="jumlah_hari" class="input-style" placeholder="Masukkan jumlah hari" required>
+        </div>
+        <div>
+            <label class="label">Nisab Harian (otomatis)</label>
+            <input type="number" name="nisab_harian" id="nisab_harian" class="input-style bg-gray-100" value="${nisabHarian}" readonly>
+        </div>
+        <div>
+            <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Total Fidyah</label>
+            <input type="number" name="nominal" id="total_fidyah" class="input-style bg-gray-100" readonly required>
+        </div>
+    </div>
+    `;
+
+    setTimeout(() => {
+        const jumlahHariInput = document.getElementById('jumlah_hari');
+        const nominalPerHariInput = document.getElementById('nisab_harian');
+        const totalFidyahInput = document.getElementById('total_fidyah');
+
+        function hitungTotalFidyah() {
+            const hari = parseInt(jumlahHariInput.value) || 0;
+            const perHari = parseInt(nominalPerHariInput.value) || 0;
+            totalFidyahInput.value = hari * perHari;
+        }
+
+        jumlahHariInput.addEventListener('input', hitungTotalFidyah);
+    }, 50);
+}
+
 
     // ==== Infak / Sedekah ====
    else if (jenis.includes('infak')) {
@@ -375,7 +426,7 @@ function tampilkanInstruksiMetode() {
                 <i class="fas fa-qrcode text-emerald-500"></i> Scan QRIS
             </h3>
             <p class="text-gray-700 mt-2">Scan QR berikut untuk menyelesaikan pembayaran:</p>
-            <img src="/storage/qris.png" alt="QRIS" class="w-48 mx-auto mt-4 rounded-lg shadow-md">
+            <img src="/storage/WhatsApp Image 2025-11-19 at 15.48.33.jpeg" alt="QRIS" class="w-48 mx-auto mt-4 rounded-lg shadow-md">
         </div>
         `;
     } else if (selected.includes('tunai')) {
@@ -473,6 +524,13 @@ function lanjutKeDetailTransfer() {
         <input type="hidden" name="tanggal" value="${tanggal}">
 
     `;
+    const detailInputs = document.querySelectorAll('#formKhusus input, #formKhusus select');
+detailInputs.forEach(input => {
+    if (input.name && input.value !== undefined) {
+        form.innerHTML += `<input type="hidden" name="${input.name}" value="${input.value}">`;
+    }
+});
+
     document.body.appendChild(form);
     form.submit();
 }

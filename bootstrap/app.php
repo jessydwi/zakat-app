@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use App\Http\Middleware\CheckActive;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => \App\Http\Middleware\IsAdmin::class,
+            'check.active' => CheckActive::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

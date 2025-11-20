@@ -17,6 +17,23 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
             </path> </svg> Create New Account </a> </div> </div> </div> <!-- Kanan: Form Login --> <div class="p-8 sm:p-12 lg:p-16 bg-gray-50 dark:bg-gray-800"> <div class="max-w-md mx-auto"> <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Sign In</h3> 
             <p class="text-gray-600 dark:text-gray-400 mb-8">Enter your credentials to access your account</p>
+            @if($errors->any())
+                <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-xl shadow-sm">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M6.938 20h10.124c1.54 0 2.502-1.667 1.732-2.5L13.732 5.5c-.77-.833-1.964-.833-2.732 0L5.206 17.5c-.77.833.192 2.5 1.732 2.5z" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700 font-medium">
+                                {{ $errors->first() }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
              <form method="POST" action="{{ route('login') }}" class="space-y-8 animate-slide-up delay-300">
                  @csrf
 
