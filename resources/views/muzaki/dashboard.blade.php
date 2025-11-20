@@ -5,38 +5,6 @@
 @section('content')
 <div class="bg-gradient-to-b from-green-50 to-gray-50 py-10 px-6 rounded-2xl shadow-inner space-y-10 animate-fade-in-up">
 
-    <!-- Tentang Zakat -->
-    <section class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-green-100 transition">
-        <h2 class="text-2xl font-bold text-green-800 mb-4 flex items-center gap-2">
-            <i class="fas fa-hand-holding-heart text-green-600"></i>
-            Tentang Zakat, Infak, dan Sedekah
-        </h2>
-
-        <p class="text-gray-700 leading-relaxed text-justify">
-            <strong>Zakat</strong> adalah kewajiban harta bagi umat Islam yang mampu...
-        </p>
-
-        <p class="mt-4 text-sm text-gray-500 italic border-l-4 border-green-400 pl-4">
-            “Ambillah zakat dari sebagian harta mereka...”
-            <span class="block mt-1">— (QS. At-Taubah: 103)</span>
-        </p>
-    </section>
-
-    <!-- Keutamaan -->
-    <section class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-green-100 transition">
-        <h2 class="text-2xl font-bold text-green-800 mb-4 flex items-center gap-2">
-            <i class="fas fa-star text-yellow-500"></i>
-            Keutamaan Menunaikan Zakat
-        </h2>
-
-        <ul class="list-disc pl-6 text-gray-700 space-y-2 leading-relaxed">
-            <li>Menyucikan jiwa dan harta</li>
-            <li>Menolong fakir miskin</li>
-            <li>Menumbuhkan solidaritas sosial</li>
-            <li>Mendatangkan keberkahan</li>
-        </ul>
-    </section>
-
     <!-- Statistik -->
     <section class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-green-100 transition">
         <h2 class="text-2xl font-bold text-green-800 mb-8 flex items-center gap-3">
@@ -116,7 +84,40 @@
         @endif
     </section>
 
-    <!-- Tombol -->
+
+        <!-- Tentang Zakat -->
+    <section class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-green-100 transition">
+        <h2 class="text-2xl font-bold text-green-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-hand-holding-heart text-green-600"></i>
+            Tentang Zakat, Infak, dan Sedekah
+        </h2>
+
+        <p class="text-gray-700 leading-relaxed text-justify">
+            <strong>Zakat</strong> adalah kewajiban harta bagi umat Islam yang mampu...
+        </p>
+
+        <p class="mt-4 text-sm text-gray-500 italic border-l-4 border-green-400 pl-4">
+            “Ambillah zakat dari sebagian harta mereka...”
+            <span class="block mt-1">— (QS. At-Taubah: 103)</span>
+        </p>
+    </section>
+
+    <!-- Keutamaan -->
+    <section class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md border border-green-100 transition">
+        <h2 class="text-2xl font-bold text-green-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-star text-yellow-500"></i>
+            Keutamaan Menunaikan Zakat
+        </h2>
+
+        <ul class="list-disc pl-6 text-gray-700 space-y-2 leading-relaxed">
+            <li>Menyucikan jiwa dan harta</li>
+            <li>Menolong fakir miskin</li>
+            <li>Menumbuhkan solidaritas sosial</li>
+            <li>Mendatangkan keberkahan</li>
+        </ul>
+    </section>
+
+        <!-- Tombol -->
     <div class="text-center mt-10">
         <a href="{{ route('muzaki.bayar') }}"
            class="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-3 rounded-full text-lg font-semibold shadow hover:bg-green-700 hover:shadow-md transition-all duration-300">

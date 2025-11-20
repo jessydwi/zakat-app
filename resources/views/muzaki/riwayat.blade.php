@@ -31,15 +31,22 @@
             <tbody class="divide-y divide-emerald-50">
                 @forelse($riwayat as $item)
                     <tr class="hover:bg-emerald-50 transition duration-200">
+                        <!-- Tanggal -->
                         <td class="px-6 py-3 text-gray-800">
                             {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
                         </td>
+
+                        <!-- Jenis Zakat -->
                         <td class="px-6 py-3 text-gray-700 font-medium">
-                            {{ $item->jenisZakat->nama_jenis }}
+                            {{ $item->jenisZakat->nama_jenis ?? '-' }}
                         </td>
+
+                        <!-- Nominal -->
                         <td class="px-6 py-3 font-semibold text-gray-900">
                             Rp {{ number_format($item->nominal, 0, ',', '.') }}
                         </td>
+
+                        <!-- Status -->
                         <td class="px-6 py-3">
                             @if($item->status === 'terbayar')
                                 <span class="px-3 py-1 text-sm font-semibold text-emerald-800 bg-emerald-100 rounded-full">
@@ -55,20 +62,18 @@
                                 </span>
                             @endif
                         </td>
-<td class="px-6 py-3">
-    @if($item->buktiPembayaran && $item->buktiPembayaran->file_path)
-        @php
-            $ext = pathinfo($item->buktiPembayaran->file_path, PATHINFO_EXTENSION);
-        @endphp
 
-        <a href="{{ $item->buktiPembayaran->file_url }}" target="_blank"
-           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
-            <i class="fas fa-eye"></i> Lihat Bukti
-        </a>
-    @else
-        <span class="text-gray-400">Belum tersedia</span>
-    @endif
-</td>
+                        <!-- Bukti Pembayaran -->
+                        <td class="px-6 py-3">
+                            @if($item->buktiPembayaran && $item->buktiPembayaran->file_path)
+                                <a href="{{ $item->buktiPembayaran->file_url }}" target="_blank"
+                                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
+                                    <i class="fas fa-eye"></i> Lihat Bukti
+                                </a>
+                            @else
+                                <span class="text-gray-400">Belum tersedia</span>
+                            @endif
+                        </td>
                     </tr>
                 @empty
                     <tr>
