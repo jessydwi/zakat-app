@@ -144,26 +144,36 @@
         document.getElementById('hasilZakatWrapper').classList.add('hidden');
     }
 
-    function hitungZakat() {
-        const isMaal = !document.getElementById('formMaal').classList.contains('hidden');
-        let zakat = 0;
+function hitungZakat() {
+    const isMaal = !document.getElementById('formMaal').classList.contains('hidden');
+    
+    let data = {
+        jenis: isMaal ? 'maal' : 'penghasilan',
+        _token: '{{ csrf_token() }}'
+    };
 
-        if (isMaal) {
-            const emas = parseFloat(document.getElementById('emas').value) || 0;
-            const tabungan = parseFloat(document.getElementById('tabungan').value) || 0;
-            const aset = parseFloat(document.getElementById('aset').value) || 0;
-            const hutang = parseFloat(document.getElementById('hutang').value) || 0;
-            const total = emas + tabungan + aset - hutang;
-            zakat = total > 0 ? total * 0.025 : 0;
-        } else {
-            const penghasilan = parseFloat(document.getElementById('penghasilan').value) || 0;
-            zakat = penghasilan * 0.025;
-        }
-
-        document.getElementById('hasilZakat').innerText = formatRupiah(zakat);
-        document.getElementById('hasilZakatWrapper').classList.remove('hidden');
+    if (isMaal) {
+    data.emas = parseFloat(document.getElementById('emas').value || 0);
+    data.tabungan = parseFloat(document.getElementById('tabungan').value || 0);
+    data.aset = parseFloat(document.getElementById('aset').value || 0);
+    data.hutang = parseFloat(document.getElementById('hutang').value || 0);
+    } else {
+    data.penghasilan = parseFloat(document.getElementById('penghasilan').value || 0);
     }
 
+    fetch('{{ route("muzaki.kalkulator.hitung") }}', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            document.getElementById('hasilZakat').innerText = res.formatted;
+            document.getElementById('hasilZakatWrapper').classList.remove('hidden');
+        }
+    });
+}
     function formatRupiah(angka) {
         return 'Rp ' + angka.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }

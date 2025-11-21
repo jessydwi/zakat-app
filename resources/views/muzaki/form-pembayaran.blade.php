@@ -3,6 +3,7 @@
 @section('title', 'Form Pembayaran Zakat')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-10 rounded-3xl shadow-md max-w-4xl mx-auto space-y-10 transition hover:shadow-xl animate-fade-in-up">
 
     <!-- Header -->
@@ -17,7 +18,7 @@
     @csrf
 
     @php
-        $muzakki = auth()->user()->muzakki; 
+        $muzakki = auth()->user()->muzakki;
         $user = auth()->user();
     @endphp
 
@@ -28,21 +29,21 @@
         </label>
         <input type="text" name="nama" id="nama"
             class="input-style"
-            value="{{ $muzakki->nama }}"
+            value="{{ $muzakki->nama ?? $user->name }}"
             placeholder="Nama lengkap otomatis" readonly required>
     </div>
 
-        <!-- Jenis Kelamin -->
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-            <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
-            </label>
-            <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" readonly required>
-                <option value="">-- isi jenis kelamin anda --</option>
-                <option value="Laki-laki" {{ session('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                <option value="Perempuan" {{ session('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-            </select>
-        </div>
+    <!-- Jenis Kelamin -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
+        </label>
+        <select name="jenis_kelamin" id="jenis_kelamin" class="input-style" readonly required>
+            <option value="">-- isi jenis kelamin anda --</option>
+            <option value="Laki-laki" {{ (old('jenis_kelamin') ?? ($muzakki->jenis_kelamin ?? '')) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+            <option value="Perempuan" {{ (old('jenis_kelamin') ?? ($muzakki->jenis_kelamin ?? '')) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+        </select>
+    </div>
 
     <!-- Alamat -->
     <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
@@ -51,7 +52,7 @@
         </label>
         <input type="text" class="input-style"
                name="alamat"
-               value="{{ $muzakki->alamat }}"
+               value="{{ $muzakki->alamat ?? '' }}"
                readonly required>
     </div>
 
@@ -62,7 +63,7 @@
         </label>
         <input type="text" class="input-style"
                name="pekerjaan"
-               value="{{ $muzakki->pekerjaan }}"
+               value="{{ $muzakki->pekerjaan ?? '' }}"
                readonly required>
     </div>
 
@@ -97,24 +98,24 @@
 
     <div id="formKhusus" class="space-y-4 hidden animate-fade-in-up"></div>
 
-        <!-- Metode Pembayaran -->
-        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
-            <label for="metode_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
-                <i class="fas fa-credit-card text-emerald-500 mr-2"></i> Metode Pembayaran
-            </label>
-            <div id="instruksiMetode" class="space-y-4 hidden animate-fade-in-up"></div>
-            <select name="metode_id" id="metode_id"
-                class="input-style"
-                onchange="tampilkanInstruksiMetode()" required>
-                <option value="">-- Pilih Metode Pembayaran --</option>
-                @foreach($metode as $m)
-                    <option value="{{ $m->id }}"
-                        {{ session('metode_id') == $m->id ? 'selected' : '' }}>
-                        {{ $m->nama_metode }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+    <!-- Metode Pembayaran -->
+    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+        <label for="metode_id" class="block font-semibold text-emerald-700 mb-3 text-lg">
+            <i class="fas fa-credit-card text-emerald-500 mr-2"></i> Metode Pembayaran
+        </label>
+        <div id="instruksiMetode" class="space-y-4 hidden animate-fade-in-up"></div>
+        <select name="metode_id" id="metode_id"
+            class="input-style"
+            onchange="tampilkanInstruksiMetode()" required>
+            <option value="">-- Pilih Metode Pembayaran --</option>
+            @foreach($metode as $m)
+                <option value="{{ $m->id }}"
+                    {{ session('metode_id') == $m->id ? 'selected' : '' }}>
+                    {{ $m->nama_metode }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
     <!-- Tanggal -->
     <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
@@ -135,7 +136,7 @@
                accept="image/*,application/pdf">
     </div>
 
-    <input type="hidden" id="muzakki_id" name="muzakki_id" value="{{ $muzakki->id }}">
+    <input type="hidden" id="muzakki_id" name="muzakki_id" value="{{ $muzakki->id ?? '' }}">
     <div class="pt-2">
         <button type="submit"
                class="inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg">
@@ -146,67 +147,60 @@
 
     <!-- Pop-up Transfer -->
     <div id="popupTransfer" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-lg">
-        <h3 class="text-lg font-bold text-emerald-700">Konfirmasi Transfer Zakat</h3>
+        <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-lg">
+            <h3 class="text-lg font-bold text-emerald-700">Konfirmasi Transfer Zakat</h3>
 
-        <!-- ID Transaksi -->
-        <label class="block text-sm font-medium">ID Transaksi</label>
-        <input type="text" id="idTransaksi" class="input-style" readonly>
+            <!-- ID Transaksi -->
+            <label class="block text-sm font-medium">ID Transaksi</label>
+            <input type="text" id="idTransaksi" class="input-style" readonly>
 
-        <!-- Pilih Bank -->
-        <label class="block text-sm font-medium mt-2">Pilih Bank</label>
-        <select id="bankTujuan" class="input-style" onchange="tampilkanRekening()" required>
-        <option value="">-- Pilih Bank --</option>
-        <option value="BNI">BNI</option>
-        <option value="BCA">BCA</option>
-        <option value="BRI">BRI</option>
-        <option value="Mandiri">Mandiri</option>
-        </select>
+            <!-- Pilih Bank -->
+            <label class="block text-sm font-medium mt-2">Pilih Bank</label>
+            <select id="bankTujuan" class="input-style" onchange="tampilkanRekening()" required>
+                <option value="">-- Pilih Bank --</option>
+                <option value="BNI">BNI</option>
+                <option value="BCA">BCA</option>
+                <option value="BRI">BRI</option>
+                <option value="Mandiri">Mandiri</option>
+            </select>
 
-        <!-- Nomor Rekening -->
-        <label class="block text-sm font-medium mt-2">Nomor Rekening</label>
-        <input type="text" id="nomorRekening" class="input-style" readonly>
+            <!-- Nomor Rekening -->
+            <label class="block text-sm font-medium mt-2">Nomor Rekening</label>
+            <input type="text" id="nomorRekening" class="input-style" readonly>
 
-        <!-- Nominal Transfer -->
-        <label class="block text-sm font-medium mt-2">Nominal Transfer</label>
-        <input type="number" id="nominalTransfer" class="input-style" placeholder="Contoh: 75000" required>
+            <!-- Nominal Transfer -->
+            <label class="block text-sm font-medium mt-2">Nominal Transfer</label>
+            <input type="number" id="nominalTransfer" class="input-style" placeholder="Contoh: 75000" required>
 
-        <div class="flex justify-end gap-2 mt-4">
-        <button onclick="tutupPopupTransfer()" type="button" class="btn-secondary">Batal</button>
-        <button onclick="lanjutKeDetailTransfer()" type="button" class="btn-primary">Lanjutkan</button>
+            <div class="flex justify-end gap-2 mt-4">
+                <button onclick="tutupPopupTransfer()" type="button" class="btn-secondary">Batal</button>
+                <button onclick="lanjutKeDetailTransfer()" type="button" class="btn-primary">Lanjutkan</button>
+            </div>
         </div>
-    </div>
     </div>
 </div>
 
 <script>
 const muzakkiData = @json($muzakki);
 
+// isiDataMuzakki tidak wajib digunakan (data sudah diisi server-side).
 function isiDataMuzakki() {
-    const select = document.getElementById('muzakki_id');
-    const id = select.value;
-    const muzakki = muzakkiData.find(m => m.id == id);
-
+    const muzakki = muzakkiData || {};
     if (muzakki) {
         document.getElementById('nama').value = muzakki.nama || '';
         document.getElementById('jenis_kelamin').value = muzakki.jenis_kelamin || '';
         document.getElementById('alamat').value = muzakki.alamat || '';
         document.getElementById('pekerjaan').value = muzakki.pekerjaan || '';
-        document.getElementById('kontak').value = muzakki.no_hp || '';
-    } else {
-        document.getElementById('nama').value = '';
-        document.getElementById('jenis_kelamin').value = '';
-        document.getElementById('alamat').value = '';
-        document.getElementById('pekerjaan').value = '';
-        document.getElementById('kontak').value = '';
+        document.getElementById('kontak').value = muzakki.kontak || muzakki.no_hp || '';
     }
 }
-    const nisabHarian = {{ $nisabHarian->nilai ?? 15000 }};
+
+const nisabHarian = {{ $nisabHarian ?? 15000 }};
 
 function tampilkanFormKhusus() {
     const select = document.getElementById('jenis_zakat_id');
     const selectedOption = select.options[select.selectedIndex];
-    const jenis = selectedOption.dataset.nama;
+    const jenis = selectedOption ? selectedOption.dataset.nama : '';
     const container = document.getElementById('formKhusus');
 
     container.innerHTML = '';
@@ -237,82 +231,81 @@ function tampilkanFormKhusus() {
                 <input type="number" name="hutang" class="input-style" placeholder="Masukkan jumlah hutang jika ada">
             </div>
             <div>
-                <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Zakat Maal</label>
-                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal zakat maal" required>
+                <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Zakat Maal (opsional jika ingin override)</label>
+                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal zakat maal">
             </div>
         </div>
         `;
     }
 
     // ==== Fidyah ====
-else if (jenis.includes('fidyah')) {
-    html = `
-    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
-        <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
-            <i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah
-        </h3>
-        <div>
-            <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
-            <input type="number" name="jumlah_hari" id="jumlah_hari" class="input-style" placeholder="Masukkan jumlah hari" required>
+    else if (jenis.includes('fidyah')) {
+        html = `
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+                <i class="fas fa-bread-slice text-emerald-500"></i> Detail Zakat Fidyah
+            </h3>
+            <div>
+                <label class="label"><i class="fas fa-calendar-day text-emerald-500 mr-1"></i> Jumlah Hari</label>
+                <input type="number" name="jumlah_hari" id="jumlah_hari" class="input-style" placeholder="Masukkan jumlah hari" required>
+            </div>
+            <div>
+                <label class="label">Nisab Harian (otomatis)</label>
+                <input type="number" name="nisab_harian" id="nisab_harian" class="input-style" value="${nisabHarian}" readonly>
+            </div>
+            <div>
+                <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Total Fidyah</label>
+                <input type="text" name="nominal" id="total_fidyah" class="input-style" placeholder="Nominal total fidyah otomatis" readonly required>
+            </div>
         </div>
-        <div>
-            <label class="label">Nisab Harian (otomatis)</label>
-            <input type="number" name="nisab_harian" id="nisab_harian" class="input-style" value="${nisabHarian}" readonly>
-        </div>
-        <div>
-            <label class="label"><i class="fas fa-money-bill-wave text-emerald-500 mr-1"></i> Nominal Total Fidyah</label>
-            <input type="text" name="nominal" id="total_fidyah" class="input-style" placeholder="Nominal total fidyah otomatis" readonly required>
-        </div>
-    </div>
-    `;
+        `;
 
-    setTimeout(() => {
-        const jumlahHariInput = document.getElementById('jumlah_hari');
-        const nominalPerHariInput = document.getElementById('nisab_harian');
-        const totalFidyahInput = document.getElementById('total_fidyah');
+        setTimeout(() => {
+            const jumlahHariInput = document.getElementById('jumlah_hari');
+            const nominalPerHariInput = document.getElementById('nisab_harian');
+            const totalFidyahInput = document.getElementById('total_fidyah');
 
-        function formatRupiah(angka) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
-        }
+            function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(angka);
+            }
 
-        function hitungTotalFidyah() {
-            const hari = parseInt(jumlahHariInput.value);
-            const perHari = parseInt(nominalPerHariInput.value) || 0;
+            function hitungTotalFidyah() {
+                const hari = parseInt(jumlahHariInput.value);
+                const perHari = parseInt(nominalPerHariInput.value) || 0;
 
-            const totalHari = isNaN(hari) || hari < 1 ? 1 : hari;
-            const total = totalHari * perHari;
-            totalFidyahInput.value = formatRupiah(total);
-        }
+                const totalHari = isNaN(hari) || hari < 1 ? 1 : hari;
+                const total = totalHari * perHari;
+                totalFidyahInput.value = formatRupiah(total);
+            }
 
-        // Hitung otomatis saat jumlah hari berubah
-        jumlahHariInput.addEventListener('input', hitungTotalFidyah);
-
-        // Hitung otomatis saat form pertama kali muncul
-        hitungTotalFidyah();
-    }, 50);
-}
+            jumlahHariInput.addEventListener('input', hitungTotalFidyah);
+            hitungTotalFidyah();
+        }, 50);
+    }
 
     // ==== Infak / Sedekah ====
-   else if (jenis.includes('infak')) {
-    html = `
-    <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
-        <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-hand-holding-heart text-emerald-500"></i> Detail Sedekah</h3>
-        <div>
-            <label class="label"><i class="fas fa-hands-helping text-emerald-500 mr-1"></i> Tujuan Sedekah</label>
-            <select name="tujuan_sedekah" class="input-style" required>
-                <option value="">-- Pilih Tujuan --</option>
-                <option value="palestina">Sedekah Palestina</option>
-                <option value="anak-yatim">Anak Yatim</option>
-                <option value="masjid">Masjid & Dakwah</option>
-            </select>
+    else if (jenis.includes('infak')) {
+        html = `
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2"><i class="fas fa-hand-holding-heart text-emerald-500"></i> Detail Sedekah</h3>
+            <div>
+                <label class="label"><i class="fas fa-hands-helping text-emerald-500 mr-1"></i> Tujuan Sedekah</label>
+                <select name="tujuan_sedekah" class="input-style" required>
+                    <option value="">-- Pilih Tujuan --</option>
+                    <option value="palestina">Sedekah Palestina</option>
+                    <option value="anak-yatim">Anak Yatim</option>
+                    <option value="masjid">Masjid & Dakwah</option>
+                </select>
+            </div>
+            <div>
+                <label class="label"><i class="fas fa-donate text-emerald-500 mr-1"></i> Nominal Sedekah</label>
+                <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal sedekah" required>
+            </div>
         </div>
-        <div>
-            <label class="label"><i class="fas fa-donate text-emerald-500 mr-1"></i> Nominal Sedekah</label>
-            <input type="number" name="nominal" class="input-style" placeholder="Masukkan nominal sedekah" required>
-        </div>
-    </div>
-    `;
-}// ==== Zakat Fitrah / Lainnya ====
+        `;
+    }
+
+    // ==== Zakat Fitrah / Lainnya ====
     else {
         html = `
         <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition space-y-4">
@@ -357,7 +350,7 @@ function tampilkanInstruksiMetode() {
             </button>
         </div>
         `;
-    }else if (selected.includes('e-wallet')) {
+    } else if (selected.includes('e-wallet')) {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
             <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
@@ -428,24 +421,23 @@ function tampilkanRekening() {
 }
 
 function lanjutKeDetailTransfer() {
-    const id = document.getElementById('idTransaksi').value;
-    const nominal = document.getElementById('nominalTransfer').value;
-    const bank = document.getElementById('bankTujuan').value;
-    const rekening = document.getElementById('nomorRekening').value;
+    const id           = document.getElementById('idTransaksi').value;
+    const nominal      = document.getElementById('nominalTransfer').value;
+    const bank         = document.getElementById('bankTujuan').value;
+    const rekening     = document.getElementById('nomorRekening').value;
 
-    // Tambahan data muzakki
-    const muzakkiId     = document.getElementById('muzakki_id').value;
-    const namaLengkap   = document.getElementById('nama').value;
-    const jenisKelamin  = document.getElementById('jenis_kelamin').value;
-    const alamat        = document.getElementById('alamat').value;
-    const pekerjaan     = document.getElementById('pekerjaan').value;
-    const kontak        = document.getElementById('kontak').value;
+    // Data Muzakki
+    const muzakkiId    = document.getElementById('muzakki_id').value;
+    const namaLengkap  = document.getElementById('nama').value;
+    const jenisKelamin = document.getElementById('jenis_kelamin').value;
+    const alamat       = document.getElementById('alamat').value;
+    const pekerjaan    = document.getElementById('pekerjaan').value;
+    const kontak       = document.getElementById('kontak').value;
     const jenisZakatId = document.getElementById('jenis_zakat_id').value;
     const metodeId     = document.getElementById('metode_id').value;
     const tanggal      = document.getElementById('tanggal').value;
 
-
-
+    // Validasi
     if (!bank || !rekening || !id || !nominal || nominal < 1000) {
         alert('Lengkapi semua data. Nominal minimal Rp1.000.');
         return;
@@ -453,7 +445,7 @@ function lanjutKeDetailTransfer() {
 
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = 'muzaki/riwayat';
+    form.action = '/muzaki/transaksi/store';
 
     const csrf = document.querySelector('meta[name="csrf-token"]').content;
 
@@ -472,8 +464,8 @@ function lanjutKeDetailTransfer() {
         <input type="hidden" name="jenis_zakat_id" value="${jenisZakatId}">
         <input type="hidden" name="metode_id" value="${metodeId}">
         <input type="hidden" name="tanggal" value="${tanggal}">
-
     `;
+
     document.body.appendChild(form);
     form.submit();
 }

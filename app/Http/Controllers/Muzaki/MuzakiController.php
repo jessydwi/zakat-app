@@ -58,7 +58,115 @@ class MuzakiController extends Controller
         ));
     }
 
-    // ✅ Form Pembayaran Zakat
+public function kalkulator()
+{
+    $user = Auth::user();
+    if ($user->role !== 'muzaki') abort(403);
+
+    // Tampilkan halaman. Jika ingin menampilkan nisab di UI, kirimkan juga nilai defaultnya.
+    $nisabBulanan = 7140498; // SK BAZNAS 2025
+    return view('muzaki.kalkulator', compact('nisabBulanan'));
+}
+
+public function hitung(Request $request)
+{
+    // Jenis wajib ada dan valid
+    $request->validate([
+        'jenis' => 'required|in:maal,penghasilan',
+    ]);
+
+    $jenis  = $request->input('jenis');
+    $zakat  = 0.0;
+    $total  = 0.0;
+    $nisab  = null;
+    $wajib  = false;
+
+    if ($jenis === 'maal') {
+        // Input wajib untuk total harta, hutang opsional
+        $request->validate([
+            'emas'        => 'required|numeric|min:0',
+            'tabungan'    => 'required|numeric|min:0',
+            'aset'        => 'required|numeric|min:0',
+            'hutang'      => 'nullable|numeric|min:0',
+            // opsional: tentukan nisab langsung (rupiah) ATAU harga emas per gram
+            'nisab'       => 'nullable|numeric|min:0',
+            'harga_emas'  => 'nullable|numeric|min:0',
+        ]);
+
+        // Bersihkan angka
+        $emas     = (float) ($request->input('emas', 0));
+        $tabungan = (float) ($request->input('tabungan', 0));
+        $aset     = (float) ($request->input('aset', 0));
+        $hutang   = (float) ($request->input('hutang', 0));
+
+        // Total harta kena zakat
+        $total = $emas + $tabungan + $aset - $hutang;
+        if ($total < 0) $total = 0.0;
+
+        // Tentukan nisab maal:
+        // 1) Jika nisab rupiah diberikan → pakai itu
+        // 2) Jika harga emas/gram diberikan → 85 gram × harga/gram
+        // 3) Jika tidak ada keduanya → tetap cek zakat 2.5% (tanpa threshold)
+        if ($request->filled('nisab')) {
+            $nisab = (float) $request->input('nisab');
+            
+        } elseif ($request->filled('harga_emas')) {
+            $nisab = 85.0 * (float) $request->input('harga_emas');
+        }
+
+        if ($nisab !== null) {
+            $wajib = $total >= $nisab;
+            $zakat = $wajib ? ($total * 0.025) : 0.0;
+        } else {
+            // Tanpa nisab tersedia, tampilkan zakat 2.5% sebagai simulasi
+            $zakat = $total * 0.025;
+            $wajib = $zakat > 0;
+        }
+    } elseif ($jenis === 'penghasilan') {
+        // Wajib ada penghasilan
+        $request->validate([
+            'penghasilan' => 'required|numeric|min:0',
+            // opsi override nisab bulanan
+            'nisab'       => 'nullable|numeric|min:0',
+        ]);
+
+        $penghasilan = (float) ($request->input('penghasilan', 0));
+        $total       = $penghasilan;
+
+        // Nisab bulanan default sesuai SK BAZNAS 2025
+        $defaultNisabBulanan = 7140498;
+        $nisab = $request->filled('nisab')
+            ? (float) $request->input('nisab')
+            : $defaultNisabBulanan;
+
+        // Wajib zakat hanya jika penghasilan >= nisab bulanan
+        $wajib = $penghasilan >= $nisab;
+        $zakat = $wajib ? ($penghasilan * 0.025) : 0.0;
+    }
+
+    // Format hasil (pembulatan pada output tampilan saja)
+    $zakatRounded      = (int) round($zakat);
+    $formattedZakat    = 'Rp ' . number_format($zakatRounded, 0, ',', '.');
+    $totalRounded      = (int) round($total);
+    $formattedTotal    = 'Rp ' . number_format($totalRounded, 0, ',', '.');
+    $nisabRounded      = $nisab !== null ? (int) round($nisab) : null;
+    $formattedNisab    = $nisabRounded !== null ? 'Rp ' . number_format($nisabRounded, 0, ',', '.') : null;
+
+    return response()->json([
+        'success'          => true,
+        'jenis'            => $jenis,
+        'total'            => $totalRounded,
+        'formatted_total'  => $formattedTotal,
+        'nisab'            => $nisabRounded,
+        'formatted_nisab'  => $formattedNisab,
+        'wajib'            => $wajib,
+        'zakat'            => $zakatRounded,
+        'formatted'        => $formattedZakat,
+    ]);
+}
+
+
+// ✅ Form Pembayaran Zakat
     public function formPembayaran()
     {
         $user = Auth::user();
@@ -74,9 +182,8 @@ class MuzakiController extends Controller
         ]);
     }
 
-
     // ✅ Simpan Pembayaran Zakat
-    public function storePembayaran(Request $request)
+    public function store(Request $request)
     {
         $user = Auth::user();
         if ($user->role !== 'muzaki') abort(403);
@@ -161,6 +268,26 @@ class MuzakiController extends Controller
             ->with('success', 'Pembayaran zakat berhasil disimpan! Menunggu verifikasi admin.');
     }
 
+// ✅ Riwayat Transaksi Zakat
+public function riwayat()
+{
+    $user = Auth::user();
+
+    // Ambil data muzakki berdasarkan user_id
+    $muzakki = Muzakki::where('user_id', $user->id)->first();
+
+    if (!$muzakki) {
+        return back()->with('error', 'Data muzakki tidak ditemukan.');
+    }
+
+    // Ambil transaksi berdasarkan kolom yang benar → muzakki_id
+    $riwayat = TransaksiZakat::with(['jenisZakat', 'buktiPembayaran'])
+        ->where('muzakki_id', $muzakki->id)
+        ->orderBy('tanggal', 'DESC')
+        ->get();
+
+    return view('muzaki.riwayat', compact('riwayat'));
+}
 
     // ✅ Informasi & Edukasi
     public function informasi()
@@ -226,7 +353,12 @@ class MuzakiController extends Controller
                 $q->where('muzakki_id', $user->muzakki->id);
             })
             ->firstOrFail();
+            
+        $transaksi = $bukti->transaksi; // ambil transaksi terkait
 
-        return view('muzaki.bukti', compact('bukti'));
+            $path = storage_path('app/' . $bukti->file_path);
+
+        return view('muzaki.bukti', compact('bukti', 'transaksi'));
+        return response()->file($path);
     }
 }

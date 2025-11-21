@@ -66,7 +66,7 @@
                         <!-- Bukti Pembayaran -->
                         <td class="px-6 py-3">
                             @if($item->buktiPembayaran && $item->buktiPembayaran->file_path)
-                                <a href="{{ $item->buktiPembayaran->file_url }}" target="_blank"
+                                <a href="{{ route('muzaki.bukti', ['id' => $item->id]) }}"
                                    class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition">
                                     <i class="fas fa-eye"></i> Lihat Bukti
                                 </a>

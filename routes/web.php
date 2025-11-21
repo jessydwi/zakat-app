@@ -110,10 +110,11 @@ Route::middleware(['auth'])->prefix('muzaki')->name('muzaki.')->group(function (
     Route::get('/dashboard', [MuzakiController::class, 'dashboard'])->name('dashboard');
     Route::get('/bayar-zakat', [MuzakiController::class, 'formPembayaran'])->name('bayar');
     Route::get('/kalkulator-zakat', [MuzakiController::class, 'kalkulator'])->name('kalkulator');
+    Route::post('/kalkulator-zakat/hitung', [MuzakiController::class, 'hitung'])->name('kalkulator.hitung');
     Route::get('/riwayat', [MuzakiController::class, 'riwayat'])->name('riwayat');
     Route::get('/informasi-zakat', [MuzakiController::class, 'informasi'])->name('informasi');
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');
-    Route::post('/transaksi/store', [TransaksiController::class, 'storePembayaran'])->name('transaksi.store');
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/profil', [MuzakiController::class, 'profil'])->name('profil');
     Route::post('/profil', [MuzakiController::class, 'updateProfil'])->name('profil.update');
     Route::get('/bukti/{id}', [MuzakiController::class, 'showBukti'])->name('bukti');
