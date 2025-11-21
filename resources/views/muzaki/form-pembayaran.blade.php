@@ -421,6 +421,8 @@ function tampilkanRekening() {
 }
 
 function lanjutKeDetailTransfer() {
+
+    
     const id           = document.getElementById('idTransaksi').value;
     const nominal      = document.getElementById('nominalTransfer').value;
     const bank         = document.getElementById('bankTujuan').value;

@@ -20,12 +20,8 @@ class TransaksiZakat extends Model
         'jenis_kelamin',
         'kontak',
         'detail',
-<<<<<<< HEAD
         'amil_id',
         'bukti_pembayaran',
-
-=======
->>>>>>> 179287d610194bf813729e6a42cd2200e56b1424
     ];
 
     protected $casts = [
@@ -54,9 +50,8 @@ class TransaksiZakat extends Model
         return $this->hasOne(BuktiPembayaran::class, 'transaksi_id');
     }
 
-    public function amil()
-{
-    return $this->belongsTo(\App\Models\Amil::class);
-}
-
+    public function amil(): BelongsTo
+    {
+        return $this->belongsTo(Amil::class, 'amil_id');
+    }
 }
