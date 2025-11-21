@@ -20,12 +20,10 @@ class TransaksiZakat extends Model
         'jenis_kelamin',
         'kontak',
         'detail',
-<<<<<<< HEAD
+
         'amil_id',
         'bukti_pembayaran',
 
-=======
->>>>>>> 179287d610194bf813729e6a42cd2200e56b1424
     ];
 
     protected $casts = [
@@ -58,5 +56,10 @@ class TransaksiZakat extends Model
 {
     return $this->belongsTo(\App\Models\Amil::class);
 }
+public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'muzakki_id');
+}
+
 
 }

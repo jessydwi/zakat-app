@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
 use App\Http\Controllers\PublishController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -118,6 +119,8 @@ Route::middleware(['auth'])->prefix('muzaki')->name('muzaki.')->group(function (
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/profil', [MuzakiController::class, 'profil'])->name('profil');
     Route::post('/profil', [MuzakiController::class, 'updateProfil'])->name('profil.update');
+    Route::match(['get','post'], '/transaksi/detail-transfer', [MuzakiController::class, 'detailTransfer'])
+    ->name('transaksi.detail-transfer');
     Route::get('/bukti/{id}', [MuzakiController::class, 'showBukti'])->name('bukti');
 });
 

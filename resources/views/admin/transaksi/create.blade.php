@@ -198,7 +198,6 @@
 @endphp
 
 
-
 <script>
 const muzakkiData = @json($muzakki);
 const nisabRupiah = {{ $nisabRupiah }};

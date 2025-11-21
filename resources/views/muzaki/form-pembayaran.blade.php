@@ -27,6 +27,7 @@
         <label for="nama" class="block font-semibold text-emerald-700 mb-3 text-lg">
             <i class="fas fa-user text-emerald-500 mr-2"></i> Nama Lengkap
         </label>
+<<<<<<< HEAD
         <input type="text" name="nama" id="nama"
             class="input-style"
             value="{{ $muzakki->nama ?? $user->name }}"
@@ -44,16 +45,35 @@
             <option value="Perempuan" {{ (old('jenis_kelamin') ?? ($muzakki->jenis_kelamin ?? '')) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
         </select>
     </div>
+=======
+            <input type="text" name="nama" id="nama" value="{{ $muzakki->nama }}" readonly required>
+    </div>
+
+        <!-- Jenis Kelamin -->
+        <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
+            <label for="jenis_kelamin" class="block font-semibold text-emerald-700 mb-3 text-lg">
+                <i class="fas fa-venus-mars text-emerald-500 mr-2"></i> Jenis Kelamin
+            </label>
+            <select name="jenis_kelamin" id="jenis_kelamin" required>
+                <option value="Laki-laki" {{ $muzakki->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                <option value="Perempuan" {{ $muzakki->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+            </select>
+        </div>
+>>>>>>> 5a23c3c (Perbaikan tampilan detail transfer & penambahan data muzakki)
 
     <!-- Alamat -->
     <div class="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-emerald-100 hover:shadow-md transition">
         <label class="block font-semibold text-emerald-700 mb-3 text-lg">
             <i class="fas fa-map-marker-alt text-emerald-500 mr-2"></i> Alamat
         </label>
+<<<<<<< HEAD
         <input type="text" class="input-style"
                name="alamat"
                value="{{ $muzakki->alamat ?? '' }}"
                readonly required>
+=======
+            <input type="text" name="alamat" id="alamat" value="{{ $muzakki->alamat }}" readonly required>
+>>>>>>> 5a23c3c (Perbaikan tampilan detail transfer & penambahan data muzakki)
     </div>
 
     <!-- Pekerjaan -->
@@ -61,10 +81,14 @@
         <label class="block font-semibold text-emerald-700 mb-3 text-lg">
             <i class="fas fa-briefcase text-emerald-500 mr-2"></i> Pekerjaan
         </label>
+<<<<<<< HEAD
         <input type="text" class="input-style"
                name="pekerjaan"
                value="{{ $muzakki->pekerjaan ?? '' }}"
                readonly required>
+=======
+            <input type="text" name="pekerjaan" id="pekerjaan" value="{{ $muzakki->pekerjaan }}" readonly required>
+>>>>>>> 5a23c3c (Perbaikan tampilan detail transfer & penambahan data muzakki)
     </div>
 
     <!-- Kontak -->
@@ -72,10 +96,7 @@
         <label class="block font-semibold text-emerald-700 mb-3 text-lg">
             <i class="fas fa-phone text-emerald-500 mr-2"></i> Nomor HP / Email
         </label>
-        <input type="text" class="input-style"
-               name="kontak"
-               value="{{ $muzakki->kontak ?? $user->email }}"
-               readonly required>
+            <input type="text" name="kontak" id="kontak" value="{{ $muzakki->kontak ?? $user->email }}" readonly required>
     </div>
 
     <!-- Pilihan Jenis Zakat -->
@@ -388,7 +409,6 @@ function tampilkanInstruksiMetode() {
 }
 
 function bukaPopupTransfer() {
-    // Generate ID transaksi otomatis
     const id = 'TRX' + new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
     document.getElementById('idTransaksi').value = id;
     document.getElementById('popupTransfer').classList.remove('hidden');
@@ -400,27 +420,17 @@ function tutupPopupTransfer() {
 
 function tampilkanRekening() {
     const bank = document.getElementById('bankTujuan').value;
-    let rekening = '';
-
-    switch(bank) {
-        case 'BNI':
-            rekening = 'BNI 1122334455 a.n. LAZ Zakat';
-            break;
-        case 'BCA':
-            rekening = 'BCA 123456789 a.n. LAZ Zakat';
-            break;
-        case 'BRI':
-            rekening = 'BRI 9988776655 a.n. LAZ Zakat';
-            break;
-        case 'Mandiri':
-            rekening = 'Mandiri 987654321 a.n. LAZ Zakat';
-            break;
-    }
-
-    document.getElementById('nomorRekening').value = rekening;
+    const map = {
+        BNI: 'BNI 1122334455 a.n. LAZ Zakat',
+        BCA: 'BCA 123456789 a.n. LAZ Zakat',
+        BRI: 'BRI 9988776655 a.n. LAZ Zakat',
+        Mandiri: 'Mandiri 987654321 a.n. LAZ Zakat'
+    };
+    document.getElementById('nomorRekening').value = map[bank] || '';
 }
 
 function lanjutKeDetailTransfer() {
+<<<<<<< HEAD
     const id           = document.getElementById('idTransaksi').value;
     const nominal      = document.getElementById('nominalTransfer').value;
     const bank         = document.getElementById('bankTujuan').value;
@@ -438,25 +448,50 @@ function lanjutKeDetailTransfer() {
     const tanggal      = document.getElementById('tanggal').value;
 
     // Validasi
+    console.log('Tombol Lanjutkan diklik');
+
+    const id = document.getElementById('idTransaksi').value;
+    const nominal = parseInt(document.getElementById('nominalTransfer').value, 10);
+    const bank = document.getElementById('bankTujuan').value;
+    const rekening = document.getElementById('nomorRekening').value;
+
     if (!bank || !rekening || !id || !nominal || nominal < 1000) {
         alert('Lengkapi semua data. Nominal minimal Rp1.000.');
         return;
     }
 
+    // langsung render dari Blade
+    const csrf = "{{ csrf_token() }}";
+    const action = "{{ route('muzaki.transaksi.detail-transfer') }}";
+
+    const muzakkiId   = document.getElementById('muzakki_id').value;
+    const namaLengkap = document.getElementById('nama').value;
+    const jenisKelamin= document.getElementById('jenis_kelamin').value;
+    const alamat      = document.getElementById('alamat').value;
+    const pekerjaan   = document.getElementById('pekerjaan').value;
+    const kontak      = document.getElementById('kontak').value;
+    const jenisZakatId= document.getElementById('jenis_zakat_id').value;
+    const metodeId    = document.getElementById('metode_id').value;
+    const tanggal     = document.getElementById('tanggal').value;
+
     const form = document.createElement('form');
     form.method = 'POST';
+<<<<<<< HEAD
     form.action = '/muzaki/transaksi/store';
 
     const csrf = document.querySelector('meta[name="csrf-token"]').content;
+=======
+    form.action = action;
+>>>>>>> 5a23c3c (Perbaikan tampilan detail transfer & penambahan data muzakki)
 
     form.innerHTML = `
         <input type="hidden" name="_token" value="${csrf}">
         <input type="hidden" name="idTransaksi" value="${id}">
-        <input type="hidden" name="nominalTransfer" value="${nominal}">
+        <input type="hidden" name="nominal" value="${nominal}">
         <input type="hidden" name="bankTujuan" value="${bank}">
         <input type="hidden" name="nomorRekening" value="${rekening}">
         <input type="hidden" name="muzakki_id" value="${muzakkiId}">
-        <input type="hidden" name="nama_lengkap" value="${namaLengkap}">
+        <input type="hidden" name="nama" value="${namaLengkap}">
         <input type="hidden" name="jenis_kelamin" value="${jenisKelamin}">
         <input type="hidden" name="alamat" value="${alamat}">
         <input type="hidden" name="pekerjaan" value="${pekerjaan}">
@@ -469,7 +504,6 @@ function lanjutKeDetailTransfer() {
     document.body.appendChild(form);
     form.submit();
 }
-
 </script>
 
 <style>

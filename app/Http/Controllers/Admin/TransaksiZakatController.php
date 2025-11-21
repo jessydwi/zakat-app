@@ -159,15 +159,12 @@ class TransaksiZakatController extends Controller
 
     // ✅ Konfirmasi pembayaran
     public function konfirmasi($id)
-<<<<<<< HEAD
+
 {
     $transaksi = TransaksiZakat::findOrFail($id);
-=======
     {
         $transaksi = TransaksiZakat::findOrFail($id);
         $transaksi->update(['status' => 'terkonfirmasi']);
->>>>>>> 179287d610194bf813729e6a42cd2200e56b1424
-
     // Ambil user yang login
     $user = auth()->user();
 
@@ -185,7 +182,7 @@ class TransaksiZakatController extends Controller
     return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
 }
 
-
+}
     public function konfirmasiTransfer(Request $request)
 {
     $validated = $request->validate([
@@ -229,11 +226,15 @@ public function detailTransfer()
     ]);
 }
     public function show($id)
-    {
-        $transaksi = TransaksiZakat::with(['muzakki', 'jenisZakat', 'metodePembayaran', 'buktiPembayaran'])
-            ->findOrFail($id);
+{
+    $transaksi = TransaksiZakat::with([
+        'muzakki',
+        'jenisZakat',
+        'metodePembayaran',
+        'buktiPembayaran'
+    ])->findOrFail($id);
 
-        return view('admin.transaksi.show', compact('transaksi'));
-    }
+    return view('admin.transaksi.show', compact('transaksi'));
+}
 
 }
