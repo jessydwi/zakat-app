@@ -118,7 +118,7 @@
                 <div class="pt-6 flex justify-end">
                     <button type="submit" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-8 py-4 rounded-2xl hover:from-emerald-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 shadow-xl flex items-center gap-3 font-semibold text-lg">
                         <i class="fas fa-save"></i>
-                        Simpan Distribusi
+                        Simpan Distribusii
                         <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>

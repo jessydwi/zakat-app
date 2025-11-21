@@ -184,6 +184,30 @@
                     @error('nominal') <span class="text-red-600 text-sm mt-1 block animate-fade-in">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- Amil --}}
+            <div class="space-y-3">
+                <label for="amil_id" class="block text-sm font-semibold text-gray-800 tracking-wide">Amil</label>
+                <div class="relative group">
+                    <select id="amil_id" name="amil_id"
+                            class="w-full pl-12 pr-12 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-yellow-100 focus:border-yellow-400 transition-all duration-300 bg-gray-50 focus:bg-white shadow-sm group-hover:shadow-md appearance-none" required>
+                        <option value="">-- Pilih Amil --</option>
+                        @foreach($amils as $amil)
+                            <option value="{{ $amil->id }}" {{ $transaksi->amil_id == $amil->id ? 'selected' : '' }}>
+                                {{ $amil->user->nama ?? 'Tanpa Nama' }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <svg class="absolute left-4 top-4 h-6 w-6 text-gray-400 group-focus-within:text-yellow-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <svg class="absolute right-4 top-4 h-6 w-6 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                @error('amil_id') 
+                    <span class="text-red-600 text-sm mt-1 block animate-fade-in">{{ $message }}</span> 
+                @enderror
+            </div>
                 {{-- Status --}}
                 <div class="space-y-3">
                     <label for="status" class="block text-sm font-semibold text-gray-800 tracking-wide">Status</label>

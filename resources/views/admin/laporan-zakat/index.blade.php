@@ -77,7 +77,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="bg-white shadow-xl rounded-2xl overflow-hidden transform hover:scale-105 transition-all duration-200">
+            <div class="bg-gradient-to-r from-purple-500 to-indigo-600 p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H9a2 2 0 00-2 2v2m0 0v6a2 2 0 002 2h6a2 2 0 002-2V9m-6 4h.01"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <h2 class="text-sm font-semibold text-purple-100">Sisa Zakat</h2>
+                        <div class="text-3xl font-bold text-white">
+                            Rp {{ number_format(max($totalMasuk - $totalDistribusi, 0), 0, ',', '.') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <!-- Rekap Zakat Masuk Table -->
     <div class="bg-white shadow-xl rounded-2xl overflow-hidden mb-8">
