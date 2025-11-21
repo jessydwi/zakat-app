@@ -169,19 +169,26 @@ class UserController extends Controller
     }
 
     public function destroy($id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            $user->muzakki?->delete();
-            $user->amil?->delete();
-            $user->delete();
+{
+    try {
+        $user = User::findOrFail($id);
 
-            return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus user: ' . $e->getMessage());
-            return redirect()->route('admin.users.index')->withErrors(['error' => 'Gagal menghapus user.']);
-        }
+        // hapus relasi dulu
+        $user->transaksiZakat()->delete();
+        $user->distribusiZakat()->delete();
+        $user->notifikasi()->delete();
+        $user->muzakki()?->delete();
+        $user->amil()?->delete();
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+    } catch (\Exception $e) {
+        Log::error('Gagal menghapus user: ' . $e->getMessage());
+        return redirect()->route('admin.users.index')->withErrors(['error' => 'Gagal menghapus user: ' . $e->getMessage()]);
     }
+}
+
     public function deactivate($id)
 {
     $user = User::findOrFail($id);

@@ -1,13 +1,14 @@
-@extends('layouts.admin')
+@extends('layouts.muzaki')
 
 @section('title', 'Detail Transfer Zakat')
 
 @php
-    $idTransaksi   = $idTransaksi ?? '-';
-    $bankTujuan    = $bankTujuan ?? '-';
-    $nomorRekening = $nomorRekening ?? '-';
-    $nominal       = is_numeric($nominalTransfer ?? null) ? (float) $nominalTransfer : 0;
-    $waktuTransfer = $waktuTransfer ?? \Carbon\Carbon::now()->format('d M Y · H:i:s') . ' WIB';
+    $idTransaksi     = session('idTransaksi') ?? '-';
+    $bankTujuan      = session('bankTujuan') ?? '-';
+    $nomorRekening   = session('nomorRekening') ?? '-';
+    $nominalTransfer = session('nominalTransfer');
+    $nominal         = is_numeric($nominalTransfer) ? (float) $nominalTransfer : 0;
+    $waktuTransfer   = session('waktuTransfer') ?? now()->format('d M Y · H:i:s') . ' WIB';
 @endphp
 
 @section('content')
@@ -32,7 +33,7 @@
                 </div>
             </div>
 
-            <!-- Detail Section -->
+            <!-- Details Section -->
             <div class="p-8 space-y-6">
                 <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
                     <div class="flex items-center mb-2">
@@ -80,7 +81,7 @@
                     <button onclick="window.print()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <i class="fas fa-download mr-2"></i> Unduh / Cetak Bukti
                     </button>
-                    <a href="{{ route('admin.transaksi.create') }}" class="flex-1 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-center">
+                    <a href="{{ route('muzaki.bayar') }}" class="flex-1 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-4 px-6 rounded-xl border border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-center">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali
                     </a>
                 </div>

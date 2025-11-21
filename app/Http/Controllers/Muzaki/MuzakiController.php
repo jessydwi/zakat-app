@@ -361,4 +361,37 @@ public function riwayat()
         return view('muzaki.bukti', compact('bukti', 'transaksi'));
         return response()->file($path);
     }
+
+
+public function detailTransfer(Request $request)
+{
+    $validated = $request->validate([
+        'idTransaksi'     => 'required|string',
+        'bankTujuan'      => 'required|string',
+        'nomorRekening'   => 'required|string',
+        'nominal'         => 'required|numeric|min:1000',
+        'muzakki_id'      => 'nullable|integer',
+        'nama'            => 'nullable|string',
+        'jenis_kelamin'   => 'nullable|string',
+        'alamat'          => 'nullable|string',
+        'pekerjaan'       => 'nullable|string',
+        'kontak'          => 'nullable|string',
+        'jenis_zakat_id'  => 'nullable|integer',
+        'metode_id'       => 'nullable|integer',
+        'tanggal'         => 'nullable|date',
+    ]);
+
+    // Simpan ke session agar bisa dipakai di Blade
+    session([
+        'idTransaksi'     => $validated['idTransaksi'],
+        'bankTujuan'      => $validated['bankTujuan'],
+        'nomorRekening'   => $validated['nomorRekening'],
+        'nominalTransfer' => $validated['nominal'],
+        'waktuTransfer'   => now()->format('d M Y · H:i:s') . ' WIB',
+    ]);
+
+    return view('muzaki.detail-transfer');
+}
+
+    
 }

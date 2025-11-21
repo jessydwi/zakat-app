@@ -58,5 +58,20 @@ class User extends Authenticatable
     return $this->hasOne(Amil::class);
 }
 
+public function transaksiZakat()
+{
+    return $this->hasMany(TransaksiZakat::class, 'muzakki_id');
+}
+
+public function distribusiZakat()
+{
+    return $this->hasMany(DistribusiZakat::class, 'mustahik_id');
+}
+
+public function notifikasi()
+{
+    return $this->hasMany(Notifikasi::class, 'user_id');
+}
+
 
 }

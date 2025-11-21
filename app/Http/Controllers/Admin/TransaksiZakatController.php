@@ -175,7 +175,6 @@ class TransaksiZakatController extends Controller
     public function konfirmasi($id)
     {
         $transaksi = TransaksiZakat::findOrFail($id);
-
         $user = auth()->user();
 
         if (!$user || !$user->amil) {
