@@ -28,6 +28,13 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
+           // ✅ Cek status user
+        if ($user->status !== 'aktif') {
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda nonaktif. Silakan hubungi admin.',
+            ]);
+        }
 
         // Redirect berdasarkan role
         switch ($user->role) {

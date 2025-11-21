@@ -71,6 +71,48 @@
                     @error('email') <span class="text-red-600 text-sm mt-1 block animate-fade-in">{{ $message }}</span> @enderror
                 </div>
 
+                {{-- Password Lama (opsional, bisa dihapus kalau admin langsung override) --}}
+                <div class="space-y-3">
+                    <label for="password" class="block text-sm font-semibold text-gray-800 tracking-wide">Password Lama</label>
+                    <div class="relative group">
+                        <input type="password" id="password" name="password"
+                            placeholder="Masukkan password lama"
+                            class="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 transition-all duration-300 bg-gray-50 focus:bg-white shadow-sm group-hover:shadow-md">
+                        <svg class="absolute left-4 top-4 h-6 w-6 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.1.9-2 2-2h6m-8 6h8m-8 6h8M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </div>
+                    @error('password') <span class="text-red-600 text-sm mt-1 block animate-fade-in">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Password Baru --}}
+                <div class="space-y-3">
+                    <label for="new_password" class="block text-sm font-semibold text-gray-800 tracking-wide">Password Baru</label>
+                    <div class="relative group">
+                        <input type="password" id="new_password" name="new_password"
+                            placeholder="Masukkan password baru"
+                            class="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 transition-all duration-300 bg-gray-50 focus:bg-white shadow-sm group-hover:shadow-md">
+                        <svg class="absolute left-4 top-4 h-6 w-6 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0-1.1.9-2 2-2h6m-8 6h8m-8 6h8M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </div>
+                    @error('new_password') <span class="text-red-600 text-sm mt-1 block animate-fade-in">{{ $message }}</span> @enderror
+                </div>
+
+                {{-- Konfirmasi Password Baru --}}
+                <div class="space-y-3">
+                    <label for="new_password_confirmation" class="block text-sm font-semibold text-gray-800 tracking-wide">Konfirmasi Password Baru</label>
+                    <div class="relative group">
+                        <input type="password" id="new_password_confirmation" name="new_password_confirmation"
+                            placeholder="Ulangi password baru"
+                            class="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-400 transition-all duration-300 bg-gray-50 focus:bg-white shadow-sm group-hover:shadow-md">
+                        <svg class="absolute left-4 top-4 h-6 w-6 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    @error('new_password_confirmation') <span class="text-red-600 text-sm mt-1 block animate-fade-in">{{ $message }}</span> @enderror
+                </div>
+
                 {{-- Role --}}
                 <div class="space-y-3">
                     <label for="role" class="block text-sm font-semibold text-gray-800 tracking-wide">Peran</label>

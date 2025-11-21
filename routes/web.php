@@ -25,31 +25,28 @@ use App\Http\Controllers\PublishController;
 |--------------------------------------------------------------------------
 */
 
-// Route login
+// 🔑 Login
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
     ->middleware('guest')
     ->name('login');
-
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->middleware('guest');
 
-// Redirect root URL langsung ke halaman login
-Route::get('/', function () {
-    return redirect()->route('login');
+// Root → login
+Route::get('/', fn () => redirect()->route('login'));
+
+// 📊 Dashboard (hanya untuk user aktif & terverifikasi)
+Route::middleware(['auth', 'verified', 'check.active'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });
 
-// Dashboard umum (untuk semua user login dan terverifikasi)
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Group route untuk user login
+// 👤 Profil user
 Route::middleware('auth')->group(function () {
-    // Profil user
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 // Group route khusus admin
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -100,6 +97,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/zakat/{id}', [LaporanZakatController::class, 'show'])->name('zakat.show');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::patch('/users/{id}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+    Route::patch('/users/{id}/activate', [UserController::class, 'activate'])->name('users.activate');
+
 
 
 

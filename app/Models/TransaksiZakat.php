@@ -20,6 +20,12 @@ class TransaksiZakat extends Model
         'jenis_kelamin',
         'kontak',
         'detail',
+<<<<<<< HEAD
+        'amil_id',
+        'bukti_pembayaran',
+
+=======
+>>>>>>> 179287d610194bf813729e6a42cd2200e56b1424
     ];
 
     protected $casts = [

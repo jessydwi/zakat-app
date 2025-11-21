@@ -31,15 +31,18 @@ class TransaksiZakatController extends Controller
 
     // ➕ Tampilkan form input zakat
     public function create()
-    {
-        $muzakki = Muzakki::all();
-        $jenisZakat = JenisZakat::select('id', 'nama_jenis')->get();
-        $metode = MetodePembayaran::select('id', 'nama_metode')->get();
-        $nisabHarian = KetentuanZakat::where('parameter', 'nisab_harian')->first();
+{
+    $muzakki = Muzakki::all();
+    $jenisZakat = JenisZakat::select('id', 'nama_jenis')->get();
+    $metode = MetodePembayaran::select('id', 'nama_metode')->get();
+    $nisabHarian = KetentuanZakat::where('parameter', 'nisab_harian')->first();
 
-        
-       return view('admin.transaksi.create', compact('muzakki', 'jenisZakat', 'metode', 'nisabHarian'));
-    }
+    // Ambil nisab maal dan harga emas dari database
+    $nisabMal = KetentuanZakat::where('jenis_zakat', 'mal')->where('parameter', 'nisab')->first();
+    $hargaEmas = KetentuanZakat::where('parameter', 'harga_emas')->first();
+
+    return view('admin.transaksi.create', compact('muzakki', 'jenisZakat', 'metode', 'nisabHarian', 'nisabMal', 'hargaEmas'));
+}
 
  
     // 💾 Simpan transaksi baru
@@ -68,16 +71,32 @@ class TransaksiZakatController extends Controller
         $jenisZakat = JenisZakat::find($request->jenis_zakat_id);
         $jenis = strtolower($jenisZakat->nama_jenis); // contoh: 'maal', 'fidyah', 'infak'
 
+        $hargaEmas = KetentuanZakat::where('parameter', 'harga_emas')->first();
+        $nisabMal = KetentuanZakat::where('jenis_zakat', 'mal')->where('parameter', 'nisab')->first();
+
+        $hargaPerGram = $hargaEmas->nilai ?? 1100000;
+        $nisabGram = $nisabMal->nilai ?? 85;
+        $nisabMaal = $hargaPerGram * $nisabGram;
+
         // 🔍 Susun detail sesuai jenis zakat
         $detail = [];
-        if ($jenis === 'maal') {
-            $detail = [
-                'emas'      => $request->emas,
-                'tabungan'  => $request->tabungan,
-                'aset_lain' => $request->aset_lain,
-                'hutang'    => $request->hutang,
-                'nominal'   => $request->nominal,
-            ];
+        if ($jenis === 'mal') {
+        $totalHarta = ($request->emas ?? 0) + ($request->tabungan ?? 0) + ($request->aset_lain ?? 0) - ($request->hutang ?? 0);
+        $zakatMaal = $totalHarta >= $nisabMaal ? $totalHarta * 0.025 : 0;
+
+        $detail = [
+            'emas'        => $request->emas,
+            'tabungan'    => $request->tabungan,
+            'aset_lain'   => $request->aset_lain,
+            'hutang'      => $request->hutang,
+            'total_harta' => $totalHarta,
+            'nisab_maal'  => $nisabMaal,
+            'nominal'     => $zakatMaal,
+        ];
+
+        // Pastikan nominal yang disimpan sesuai hasil kalkulasi
+        $request->merge(['nominal' => $zakatMaal]);
+
         } elseif ($jenis === 'fidyah') {
             $detail = [
                 'jumlah_hari'    => $jumlahHari,
@@ -140,9 +159,14 @@ class TransaksiZakatController extends Controller
 
     // ✅ Konfirmasi pembayaran
     public function konfirmasi($id)
+<<<<<<< HEAD
+{
+    $transaksi = TransaksiZakat::findOrFail($id);
+=======
     {
         $transaksi = TransaksiZakat::findOrFail($id);
         $transaksi->update(['status' => 'terkonfirmasi']);
+>>>>>>> 179287d610194bf813729e6a42cd2200e56b1424
 
     // Ambil user yang login
     $user = auth()->user();
