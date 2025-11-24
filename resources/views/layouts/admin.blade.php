@@ -123,7 +123,7 @@
                     <a href="{{ route('admin.notifikasi.index') }}" class="relative p-2 text-emerald-600 hover:text-emerald-800 transition-colors duration-200" aria-label="Notifikasi">
                         <i class="fas fa-bell text-xl"></i>
                         <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">
-                            {{ \App\Models\Notifikasi::where('user_id', Auth::id())->where('status_baca', false)->count() }}
+                            {{ \App\Models\Notifikasi::where('status_baca', false)->count() }}
                         </span>
                     </a>
                     <a href="{{ route('admin.profile.index') }}" 

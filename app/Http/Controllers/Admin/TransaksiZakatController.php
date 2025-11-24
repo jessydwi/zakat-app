@@ -20,12 +20,20 @@ class TransaksiZakatController extends Controller
     public function index()
     {
         $transaksi = TransaksiZakat::select([
-            'id','muzakki_id','nama','jenis_zakat_id','metode_id',
-            'nominal','tanggal','status','amil_id','created_at'
+            'id',
+            'muzakki_id',
+            'nama',
+            'jenis_zakat_id',
+            'metode_id',
+            'nominal',
+            'tanggal',
+            'status',
+            'amil_id',
+            'created_at'
         ])
-        ->with(['muzakki','jenisZakat','metodePembayaran','amil.user'])
-        ->orderByDesc('tanggal')
-        ->get();
+            ->with(['muzakki', 'jenisZakat', 'metodePembayaran', 'amil.user'])
+            ->orderByDesc('tanggal')
+            ->get();
 
         return view('admin.transaksi.index', compact('transaksi'));
     }
@@ -36,14 +44,18 @@ class TransaksiZakatController extends Controller
         $muzakki = Muzakki::all();
         $jenisZakat = JenisZakat::select('id', 'nama_jenis')->get();
         $metode = MetodePembayaran::select('id', 'nama_metode')->get();
-        
+
         $nisabHarian = KetentuanZakat::where('parameter', 'nisab_harian')->first();
         $nisabMal = KetentuanZakat::where('jenis_zakat', 'mal')->where('parameter', 'nisab')->first();
         $hargaEmas = KetentuanZakat::where('parameter', 'harga_emas')->first();
 
         return view('admin.transaksi.create', compact(
-            'muzakki', 'jenisZakat', 'metode', 
-            'nisabHarian', 'nisabMal', 'hargaEmas'
+            'muzakki',
+            'jenisZakat',
+            'metode',
+            'nisabHarian',
+            'nisabMal',
+            'hargaEmas'
         ));
     }
 
@@ -87,9 +99,9 @@ class TransaksiZakatController extends Controller
         if ($jenis === 'mal') {
 
             $totalHarta = ($request->emas ?? 0)
-                        + ($request->tabungan ?? 0)
-                        + ($request->aset_lain ?? 0)
-                        - ($request->hutang ?? 0);
+                + ($request->tabungan ?? 0)
+                + ($request->aset_lain ?? 0)
+                - ($request->hutang ?? 0);
 
             $zakatMaal = $totalHarta >= $nisabMaal ? $totalHarta * 0.025 : 0;
 
@@ -104,7 +116,6 @@ class TransaksiZakatController extends Controller
             ];
 
             $request->merge(['nominal' => $zakatMaal]);
-
         } elseif ($jenis === 'fidyah') {
 
             $detail = [
@@ -112,14 +123,12 @@ class TransaksiZakatController extends Controller
                 'nominal_fidyah' => $nominalPerHari,
                 'nominal'        => $totalFidyah,
             ];
-
         } elseif ($jenis === 'infak') {
 
             $detail = [
                 'tujuan_sedekah' => $request->tujuan_sedekah,
                 'nominal'        => $request->nominal,
             ];
-
         } else {
             $detail = [
                 'nominal' => $request->nominal,
@@ -181,37 +190,25 @@ class TransaksiZakatController extends Controller
             return back()->withErrors(['error' => 'Hanya amil yang bisa melakukan konfirmasi.']);
         }
 
+        // Simpan status dan amil_id
         $transaksi->update([
-            'status'  => 'terbayar',
+            'status' => 'terbayar',
             'amil_id' => $user->amil->id,
+        ]);
+
+        // 🔔 Kirim notifikasi ke Muzakki bahwa pembayaran telah diverifikasi
+        Notifikasi::create([
+            'user_id' => $transaksi->muzakki->user_id, // pastikan field ini ada
+            'judul'   => 'Pembayaran Terkonfirmasi',
+            'pesan'   => 'Pembayaran zakat Anda telah terkonfirmasi oleh amil pada ' . now()->format('d M Y H:i'),
+            'tanggal' => now(),
+            'status_baca' => 0,
         ]);
 
         return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
     }
 
-<<<<<<< HEAD
-    // 📌 Konfirmasi Transfer
-=======
-    // Simpan status dan amil_id
-    $transaksi->update([
-        'status' => 'terbayar',
-        'amil_id' => $user->amil->id,
-    ]);
 
-    // 🔔 Kirim notifikasi ke Muzakki bahwa pembayaran telah diverifikasi
-    Notifikasi::create([
-    'user_id' => $transaksi->muzakki->user_id, // pastikan field ini ada
-    'judul'   => 'Pembayaran Terkonfirmasi',
-    'pesan'   => 'Pembayaran zakat Anda telah terkonfirmasi oleh amil pada ' . now()->format('d M Y H:i'),
-    'tanggal' => now(),
-    'status_baca' => 0,
-    ]);
-
-    return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
-}
-
-}
->>>>>>> 82edd85d844181cd2625190bfd06156ad7cfbb96
     public function konfirmasiTransfer(Request $request)
     {
         $validated = $request->validate([
