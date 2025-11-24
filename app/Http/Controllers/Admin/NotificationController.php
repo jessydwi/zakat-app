@@ -12,9 +12,14 @@ class NotificationController extends Controller
     // Menampilkan semua notifikasi milik user yang login
     public function index()
     {
-        $notifikasi = Notifikasi::where('user_id', Auth::id())
-            ->latest('created_at') // lebih idiomatik daripada orderBy
-            ->get();
+        $notifikasi = [];
+        if (!Auth::user()->role === 'admin') {
+            $notifikasi = Notifikasi::where('user_id', Auth::id())
+                ->latest('created_at') // lebih idiomatik daripada orderBy
+                ->get();
+        } else {
+            $notifikasi = Notifikasi::latest('created_at')->get();
+        }
 
         return view('admin.notifications.index', compact('notifikasi'));
     }
