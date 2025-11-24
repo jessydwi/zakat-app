@@ -11,9 +11,11 @@ class BuktiPembayaran extends Model
 
     protected $fillable = [
         'transaksi_id',
-        'file_path',
+        'file',
         'tanggal_upload',
     ];
+
+    protected $appends = ['file_url', 'file_path'];
 
     protected $casts = [
         'tanggal_upload' => 'datetime',
@@ -21,9 +23,11 @@ class BuktiPembayaran extends Model
 
     public $timestamps = true;
 
-    /**
-     * Relasi ke Transaksi Zakat
-     */
+    public function getFilePathAttribute()
+    {
+        return 'storage/bukti/' . $this->file;
+    }
+
     public function transaksi(): BelongsTo
     {
         return $this->belongsTo(TransaksiZakat::class, 'transaksi_id');
@@ -34,6 +38,6 @@ class BuktiPembayaran extends Model
      */
     public function getFileUrlAttribute(): string
     {
-        return asset('storage/' . $this->file_path);
+        return asset('storage/bukti' . $this->file);
     }
 }

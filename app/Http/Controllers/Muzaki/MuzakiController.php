@@ -10,6 +10,7 @@ use App\Models\JenisZakat;
 use App\Models\MetodePembayaran;
 use App\Models\Muzakki;
 use App\Models\BuktiPembayaran;
+use App\Models\Notifikasi;
 
 class MuzakiController extends Controller
 {
@@ -23,6 +24,7 @@ class MuzakiController extends Controller
         if (!$muzakki) return back()->with('error', 'Data muzakki tidak ditemukan.');
 
         $muzakkiId = $muzakki->id;
+        $userId = $user->id;
 
         // Total zakat per jenis
         $zakatFitrah = TransaksiZakat::whereRaw('"muzakki_id"::bigint = ?', [$muzakkiId])
@@ -53,8 +55,12 @@ class MuzakiController extends Controller
             ->take(5)
             ->get();
 
+        $jumlahNotifikasiBelumDibaca = Notifikasi::where('user_id', $userId)
+            ->whereNull('status_baca')
+            ->count();
+
         return view('muzaki.dashboard', compact(
-            'zakatFitrah', 'zakatMal', 'zakatFidyah', 'zakatInfak', 'totalZakat', 'riwayatZakat'
+            'zakatFitrah', 'zakatMal', 'zakatFidyah', 'zakatInfak', 'totalZakat', 'riwayatZakat', 'jumlahNotifikasiBelumDibaca'
         ));
     }
 
@@ -256,7 +262,7 @@ public function hitung(Request $request)
         if ($request->hasFile('bukti_pembayaran')) {
             $file = $request->file('bukti_pembayaran');
             $namaFile = 'bukti_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/bukti', $namaFile);
+            $file->storeAs('bukti', $namaFile, 'public');
 
             BuktiPembayaran::create([
                 'transaksi_id' => $transaksi->id,

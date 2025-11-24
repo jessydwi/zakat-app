@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
+use App\Http\Controllers\Muzaki\NotifikasiController;
 use App\Http\Controllers\PublishController;
 use App\Http\Controllers\DashboardController;
 
@@ -119,9 +120,11 @@ Route::middleware(['auth'])->prefix('muzaki')->name('muzaki.')->group(function (
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get('/profil', [MuzakiController::class, 'profil'])->name('profil');
     Route::post('/profil', [MuzakiController::class, 'updateProfil'])->name('profil.update');
-    Route::match(['get','post'], '/transaksi/detail-transfer', [MuzakiController::class, 'detailTransfer'])
-    ->name('transaksi.detail-transfer');
+    Route::match(['get','post'], '/transaksi/detail-transfer', [MuzakiController::class, 'detailTransfer'])->name('transaksi.detail-transfer');
     Route::get('/bukti/{id}', [MuzakiController::class, 'showBukti'])->name('bukti');
+    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+    Route::get('/notifikasi/{id}', [NotifikasiController::class, 'show'])->name('notifikasi.show');
+    Route::post('/notifikasi/{id}/baca', [NotifikasiController::class, 'baca'])->name('notifikasi.baca');
 });
 
 // 📦 Publik & Misc
