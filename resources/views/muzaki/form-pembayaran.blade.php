@@ -344,6 +344,21 @@ function tampilkanInstruksiMetode() {
             </button>
         </div>
         `;
+<<<<<<< HEAD
+=======
+    }else if (selected.includes('e-wallet')) {
+        html = `
+        <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
+            <h3 class="text-emerald-700 font-bold text-lg flex items-center gap-2">
+                <i class="fas fa-mobile-alt text-emerald-500"></i> Instruksi E-Wallet
+            </h3>
+            <p class="text-gray-700 mt-2">Kirim ke nomor berikut:</p>
+            <ul class="list-disc ml-6 text-gray-700 mt-2">
+                <li>OVO / GoPay / DANA: 081234567890</li>
+            </ul>
+        </div>
+        `;
+>>>>>>> 51a30e38c08255638e43b1991f14755220f85e5a
     } else if (selected.includes('qris')) {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm text-center">

@@ -37,10 +37,11 @@ class DistribusiZakatRequest extends FormRequest
                 'detail.nominal' => 'required|numeric|min:1',
             ],
             'beasiswa' => [
-                'detail.nama_siswa' => 'required|string',
-                'detail.jenjang' => 'required|string',
-                'detail.biaya' => 'required|numeric|min:1',
-            ],
+            'detail.nama_siswa' => 'required|string',
+            'detail.jenjang' => 'required|string',
+            'detail.nominal' => 'required|numeric|min:1',
+        ],
+
             default => [],
         };
 
