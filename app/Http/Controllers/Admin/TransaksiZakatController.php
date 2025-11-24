@@ -179,6 +179,15 @@ class TransaksiZakatController extends Controller
         'amil_id' => $user->amil->id,
     ]);
 
+    // 🔔 Kirim notifikasi ke Muzakki bahwa pembayaran telah diverifikasi
+    Notifikasi::create([
+    'user_id' => $transaksi->muzakki->user_id, // pastikan field ini ada
+    'judul'   => 'Pembayaran Terkonfirmasi',
+    'pesan'   => 'Pembayaran zakat Anda telah terkonfirmasi oleh amil pada ' . now()->format('d M Y H:i'),
+    'tanggal' => now(),
+    'status_baca' => 0,
+    ]);
+
     return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
 }
 
