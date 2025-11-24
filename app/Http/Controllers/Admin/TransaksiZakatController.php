@@ -189,7 +189,29 @@ class TransaksiZakatController extends Controller
         return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
     }
 
+<<<<<<< HEAD
     // 📌 Konfirmasi Transfer
+=======
+    // Simpan status dan amil_id
+    $transaksi->update([
+        'status' => 'terbayar',
+        'amil_id' => $user->amil->id,
+    ]);
+
+    // 🔔 Kirim notifikasi ke Muzakki bahwa pembayaran telah diverifikasi
+    Notifikasi::create([
+    'user_id' => $transaksi->muzakki->user_id, // pastikan field ini ada
+    'judul'   => 'Pembayaran Terkonfirmasi',
+    'pesan'   => 'Pembayaran zakat Anda telah terkonfirmasi oleh amil pada ' . now()->format('d M Y H:i'),
+    'tanggal' => now(),
+    'status_baca' => 0,
+    ]);
+
+    return redirect()->back()->with('success', 'Transaksi berhasil dikonfirmasi oleh ' . $user->nama . '.');
+}
+
+}
+>>>>>>> 82edd85d844181cd2625190bfd06156ad7cfbb96
     public function konfirmasiTransfer(Request $request)
     {
         $validated = $request->validate([

@@ -97,7 +97,7 @@
             <button type="submit" wire:loading.attr="disabled" 
                     class="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                 <i class="fas fa-save"></i>
-                <span wire:loading.remove>💾 Simpan Distribusi</span>
+                <span wire:loading.remove>💾 Simpan Distribusiii</span>
                 <span wire:loading>Menyimpan...</span>
             </button>
         </div>

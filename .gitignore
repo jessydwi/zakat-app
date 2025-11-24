@@ -22,3 +22,8 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+!storage/app/public/bukti/
+!storage/app/public/bukti/*.pdf
+!storage/app/public/bukti/*.png
+

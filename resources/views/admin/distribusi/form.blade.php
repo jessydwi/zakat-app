@@ -75,7 +75,7 @@
         {{-- Tombol Submit --}}
         <div class="pt-4 flex justify-end">
             <button type="submit" class="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2">
-                <i class="fas fa-save"></i> Simpan Distribusi
+                <i class="fas fa-save"></i> Simpan Distribusii
             </button>
         </div>
     </form>

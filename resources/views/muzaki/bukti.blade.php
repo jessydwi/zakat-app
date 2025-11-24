@@ -71,7 +71,7 @@
                                 @foreach($detail as $key => $value)
                                     <div class="flex justify-between">
                                         <span class="font-medium text-gray-700">{{ Str::headline($key) }}</span>
-                                        <span class="text-gray-900">{{ is_numeric($value) ? 'Rp ' . number_format($value, 0, ',', '.') : $value }}</span>
+                                        <span class="text-gray-900">{{ is_numeric($value) ?  number_format($value, 0, ',', '.') : $value }}</span>
                                     </div>
                                 @endforeach
                             </div>
@@ -80,23 +80,29 @@
                 @endif
 
                 <!-- Bukti Pembayaran -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Bukti Pembayaran</h3>
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        @php
-                            $ext = pathinfo($bukti->file_path, PATHINFO_EXTENSION);
-                        @endphp
+                @if($transaksi->buktiPembayaran)
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Bukti Pembayaran</h3>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            @php
+                                $file = $transaksi->buktiPembayaran->file;
+                                $ext = pathinfo($transaksi->buktiPembayaran->file, PATHINFO_EXTENSION);
+                                $url = asset('storage/bukti/' . $file);
+                            @endphp
 
-                        @if(in_array(strtolower($ext), ['jpg','jpeg','png']))
-                            <img src="{{ $bukti->file_url }}" alt="Bukti Pembayaran" class="rounded-lg shadow-md max-h-64">
-                        @else
-                            <a href="{{ route('muzaki.bukti', $bukti->id) }}" target="_blank" 
-                               class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-700">
-                                Lihat Bukti
-                            </a>
-                        @endif
+                            @if(in_array(strtolower($ext), ['jpg','jpeg','png']))
+                                <img src="{{ $transaksi->buktiPembayaran->file_url }}" 
+                                     alt="Bukti Pembayaran" 
+                                     class="rounded-lg shadow-md max-h-64">
+                            @else
+                                <a href="{{ asset('storage/bukti/' . $transaksi->buktiPembayaran->file) }}" target="_blank" 
+                                    class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-700">
+                                    Lihat Bukti
+                                </a>
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @endif
 
             </div>
         </div>

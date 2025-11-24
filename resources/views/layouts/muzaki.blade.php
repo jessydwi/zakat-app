@@ -149,11 +149,15 @@
             <!-- Right -->
             <div class="flex items-center space-x-4">
 
-                <!-- Bell -->
-                <button class="relative p-2 text-emerald-600">
-                    <i class="fas fa-bell text-xl"></i>
-                    <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">2</span>
-                </button>
+<a href="{{ route('muzaki.notifikasi.index') }}" class="relative p-2 text-emerald-600">
+    <i class="fas fa-bell text-xl"></i>
+
+    @if($jumlahNotifikasiBelumDibaca > 0)
+        <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">
+            {{ $jumlahNotifikasiBelumDibaca }}
+        </span>
+    @endif
+</a>
 
                 <!-- Avatar -->
                 @php

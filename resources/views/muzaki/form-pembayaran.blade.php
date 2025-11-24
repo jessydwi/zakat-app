@@ -344,6 +344,11 @@ function tampilkanInstruksiMetode() {
             </button>
         </div>
         `;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 82edd85d844181cd2625190bfd06156ad7cfbb96
     }else if (selected.includes('e-wallet')) {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm">
@@ -356,6 +361,7 @@ function tampilkanInstruksiMetode() {
             </ul>
         </div>
         `;
+>>>>>>> 51a30e38c08255638e43b1991f14755220f85e5a
     } else if (selected.includes('qris')) {
         html = `
         <div class="bg-white/90 p-6 rounded-2xl border border-emerald-100 shadow-sm text-center">

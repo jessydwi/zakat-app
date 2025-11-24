@@ -1,7 +1,7 @@
 <div class="space-y-4">
     <div>
         <label class="block font-semibold mb-1">Nama Pasien</label>
-        <input type="text" name="detail[nama_pasien]" value="{{ $detail['nama_pasien'] ??  }}" class="w-full border rounded px-3 py-2">
+        <input type="text" name="detail[nama_pasien]" value="{{ $detail['nama_pasien'] ?? '' }}" class="w-full border rounded px-3 py-2">
     </div>
 
     <div>

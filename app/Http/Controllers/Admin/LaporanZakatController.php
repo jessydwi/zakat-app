@@ -11,6 +11,7 @@ use App\Models\JenisZakat;
 use App\Models\JenisBantuan;
 use App\Models\MetodePembayaran;
 use App\Models\BuktiPembayaran;
+use App\Models\Amil;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Validator;
@@ -64,8 +65,9 @@ class LaporanZakatController extends Controller
         $muzakki = Muzakki::all();
         $jenisZakat = JenisZakat::all();
         $metodePembayaran = MetodePembayaran::all();
+        $amils = Amil::with('user')->get();
 
-        return view('admin.laporan-zakat.edit', compact('transaksi', 'muzakki', 'jenisZakat', 'metodePembayaran'));
+        return view('admin.laporan-zakat.edit', compact('transaksi', 'muzakki', 'jenisZakat', 'metodePembayaran', 'amils'));
     }
 
     public function update(Request $request, $id)
@@ -82,6 +84,8 @@ class LaporanZakatController extends Controller
             'status' => 'required|in:terbayar,pending',
             'detail_json' => 'nullable|json',
             'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'amil_id' => 'required|exists:amil,id',
+
         ]);
 
         if ($validator->fails()) {
@@ -91,7 +95,7 @@ class LaporanZakatController extends Controller
         $transaksi = TransaksiZakat::findOrFail($id);
         $transaksi->update($request->only([
             'muzakki_id', 'nama', 'jenis_kelamin', 'kontak', 'tanggal',
-            'jenis_zakat_id', 'metode_pembayaran_id', 'nominal', 'status', 'detail_json'
+            'jenis_zakat_id', 'metode_pembayaran_id', 'nominal', 'status', 'detail_json', 'amil_id'
         ]));
 
         // Simpan bukti pembayaran jika ada file

@@ -67,7 +67,7 @@ class ZakatDistribusiForm extends Component
             ],
             'beasiswa' => [
                 'detail.jenjang' => 'required|string',
-                'detail.biaya' => 'required|numeric|min:1',
+                'detail.nominal' => 'required|numeric|min:1',
             ],
             default => [],
         };
@@ -90,7 +90,7 @@ class ZakatDistribusiForm extends Component
             'beasiswa' => [
                 'nama_siswa' => $this->detail['nama_siswa'] ?? $mustahik?->nama,
                 'jenjang' => $this->detail['jenjang'] ?? null,
-                'biaya' => $this->detail['biaya'] ?? $this->jumlah,
+                 'nominal' => $this->detail['nominal'] ?? $this->jumlah,
             ],
             'kesehatan' => [
                 'nama_pasien' => $this->detail['nama_pasien'] ?? $mustahik?->nama,
@@ -115,33 +115,34 @@ class ZakatDistribusiForm extends Component
     {
         return match ($this->jenis_bantuan_slug) {
             'uang-tunai' => (int) ($this->detail['nominal'] ?? $this->jumlah),
-            'beasiswa' => (int) ($this->detail['biaya'] ?? $this->jumlah),
+            'beasiswa' => (int) ($this->detail['nominal'] ?? $this->jumlah),
             'kesehatan' => (int) ($this->detail['biaya'] ?? $this->jumlah),
             'modal-usaha' => (int) ($this->detail['modal'] ?? $this->jumlah),
             default => (int) ($this->jumlah ?? 0),
         };
     }
 
-    public function submit()
-    {
-        $this->validate();
-        $this->syncJenisBantuanSlug($this->jenis_bantuan_id);
+  public function submit()
+{
+    $this->syncJenisBantuanSlug($this->jenis_bantuan_id);
+    $this->validate();
 
-        $detail = $this->buildDetailJson();
-        $jumlah = $this->resolveJumlah();
+    $detail = $this->buildDetailJson();
+    $jumlah = $this->resolveJumlah();
 
-        DistribusiZakat::create([
-            'mustahik_id' => $this->mustahik_id,
-            'jenis_bantuan_id' => $this->jenis_bantuan_id,
-            'jumlah' => $jumlah,
-            'tanggal' => $this->tanggal,
-            'status' => $this->status,
-            'detail_json' => json_encode($detail),
-        ]);
+    DistribusiZakat::create([
+        'mustahik_id' => $this->mustahik_id,
+        'jenis_bantuan_id' => $this->jenis_bantuan_id,
+        'jumlah' => $jumlah,
+        'tanggal' => $this->tanggal,
+        'status' => $this->status,
+        'detail_json' => json_encode($detail),
+    ]);
 
-        $this->resetForm();
-        session()->flash('success', 'Distribusi zakat berhasil disimpan.');
-    }
+    $this->resetForm();
+    session()->flash('success', 'Distribusi zakat berhasil disimpan.');
+}
+
 
     protected function resetForm()
     {
