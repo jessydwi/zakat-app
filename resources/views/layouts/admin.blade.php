@@ -81,7 +81,7 @@
             </nav>
             <!-- Footer Sidebar -->
             <div class="mt-auto p-6 border-t border-emerald-200">
-                <p class="text-xs text-emerald-600 text-center">© 2023 Zakat System. All rights reserved.</p>
+                <p class="text-xs text-emerald-600 text-center">© 2025 Zakat System. All rights reserved.</p>
             </div>
         </aside>
 

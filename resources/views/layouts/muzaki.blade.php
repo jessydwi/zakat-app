@@ -129,42 +129,41 @@
 
             <!-- TOPBAR -->
             <header class="bg-white shadow-xl px-8 py-5 flex justify-between items-center border-b border-emerald-200 rounded-bl-xl">
+    <!-- Left -->
+    <div class="flex items-center">
+        <!-- Mobile hamburger -->
+        <button id="hamburger" class="md:hidden mr-4 p-2 text-emerald-600" onclick="toggleSidebar()">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
 
-                <!-- Left -->
-                <div class="flex items-center">
+        <nav class="flex mb-2 text-sm">
+            <ol class="inline-flex items-center space-x-2">
+                <li>
+                    <a href="{{ route('muzaki.dashboard') }}" class="flex items-center text-emerald-700 font-medium">
+                        <i class="fas fa-home mr-2"></i> Dashboard
+                    </a>
+                </li>
+            </ol>
+        </nav>
+    </div>
 
-                    <!-- Mobile hamburger -->
-                    <button id="hamburger" class="md:hidden mr-4 p-2 text-emerald-600" onclick="toggleSidebar()">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
+    <!-- Right (Avatar + Email) -->
+    @php
+        $user = Auth::user();
+        $name = $user->name ?? explode('@', $user->email)[0] ?? 'M';
+        $initial = strtoupper(substr($name, 0, 1));
+    @endphp
 
-                    <div>
-                        <nav class="flex mb-2 text-sm">
-                            <ol class="inline-flex items-center space-x-2">
-                                <li>
-                                    <a href="{{ route('muzaki.dashboard') }}"
-                                        class="flex items-center text-emerald-700 font-medium">
-                                        <i class="fas fa-home mr-2"></i> Dashboard
-                                    </a>
-                                </li>
+    <div class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+            {{ $initial }}
+        </div>
+        <span class="font-semibold text-emerald-700 hidden sm:block">
+            {{ $user->email ?? 'muzakki@zakat.com' }}
+        </span>
+    </div>
+</header>
 
-                    <!-- Avatar -->
-                    @php
-                    $user = Auth::user();
-                    $name = $user->name ?? explode('@', $user->email)[0] ?? 'M';
-                    $initial = strtoupper(substr($name, 0, 1));
-                    @endphp
-
-                    <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                            {{ $initial }}
-                        </div>
-                        <span class="font-semibold text-emerald-700 hidden sm:block">
-                            {{ $user->email ?? 'muzakki@zakat.com' }}
-                        </span>
-                    </div>
-                </div>
-            </header>
 
             <!-- MAIN CONTENT -->
             <main class="flex-1 p-8 bg-white/95 backdrop-blur-sm rounded-tl-xl shadow-inner">
