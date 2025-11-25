@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Muzaki\MuzakiController;
 use App\Http\Controllers\Muzaki\TransaksiController;
-use App\Http\Controllers\Muzaki\NotifikasiController;
 use App\Http\Controllers\PublishController;
 use App\Http\Controllers\DashboardController;
 

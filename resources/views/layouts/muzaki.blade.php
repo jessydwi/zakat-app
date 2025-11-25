@@ -147,32 +147,6 @@
                                         <i class="fas fa-home mr-2"></i> Dashboard
                                     </a>
                                 </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-chevron-right text-emerald-400 mx-1"></i>
-                                    <span class="text-emerald-500 font-medium">@yield('title')</span>
-                                </li>
-                            </ol>
-                        </nav>
-
-                        <h1 class="text-3xl font-bold text-emerald-900">@yield('title')</h1>
-                        <p class="text-sm text-gray-600 mt-1">
-                            {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Right -->
-                <div class="flex items-center space-x-4">
-
-                    <a href="{{ route('muzaki.notifikasi.index') }}" class="relative p-2 text-emerald-600">
-                        <i class="fas fa-bell text-xl"></i>
-                        @if(($jumlahNotifikasiBelumDibaca ?? 0) > 0)
-                        <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">
-                            {{ $jumlahNotifikasiBelumDibaca }}
-                        </span>
-                        @endif
-
-                    </a>
 
                     <!-- Avatar -->
                     @php

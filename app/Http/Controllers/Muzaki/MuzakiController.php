@@ -55,12 +55,8 @@ class MuzakiController extends Controller
             ->take(5)
             ->get();
 
-        $jumlahNotifikasiBelumDibaca = Notifikasi::where('user_id', $userId)
-            ->whereNull('status_baca')
-            ->count();
-
         return view('muzaki.dashboard', compact(
-            'zakatFitrah', 'zakatMal', 'zakatFidyah', 'zakatInfak', 'totalZakat', 'riwayatZakat', 'jumlahNotifikasiBelumDibaca'
+            'zakatFitrah', 'zakatMal', 'zakatFidyah', 'zakatInfak', 'totalZakat', 'riwayatZakat'
         ));
     }
 
