@@ -122,9 +122,6 @@ Route::middleware(['auth'])->prefix('muzaki')->name('muzaki.')->group(function (
     Route::post('/profil', [MuzakiController::class, 'updateProfil'])->name('profil.update');
     Route::match(['get','post'], '/transaksi/detail-transfer', [MuzakiController::class, 'detailTransfer'])->name('transaksi.detail-transfer');
     Route::get('/bukti/{id}', [MuzakiController::class, 'showBukti'])->name('bukti');
-    Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
-    Route::get('/notifikasi/{id}', [NotifikasiController::class, 'show'])->name('notifikasi.show');
-    Route::post('/notifikasi/{id}/baca', [NotifikasiController::class, 'baca'])->name('notifikasi.baca');
 });
 
 // 📦 Publik & Misc
